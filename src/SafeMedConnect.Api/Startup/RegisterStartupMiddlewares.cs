@@ -1,4 +1,7 @@
+using MediatR;
+using Microsoft.AspNetCore.Mvc;
 using SafeMedConnect.Api.Endpoints;
+using SafeMedConnect.Application.Queries;
 
 namespace SafeMedConnect.Api.Startup;
 
@@ -14,8 +17,12 @@ internal static class RegisterStartupMiddlewares
 
         app.UseHttpsRedirection();
 
+        // Only test purposes
+        var mediator = app.Services.GetService<IMediator>();
+        app.MapPost("/test", ([FromBody] GetAccountNameQuery query) => mediator!.Send(query));
+
+        //? (maybe change to use reflection or pass mediator as parameter)
         // Map endpoints
-        //? (maybe change to use reflection)
         app.RegisterAccountEndpoints();
         return app;
     }

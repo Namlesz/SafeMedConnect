@@ -6,6 +6,7 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <InvariantGlobalization>true</InvariantGlobalization>
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     </PropertyGroup>
 
     <ItemGroup>
@@ -14,20 +15,20 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Content Include="..\..\.dockerignore">
-        <Link>.dockerignore</Link>
-      </Content>
+        <Content Include="..\..\.dockerignore">
+            <Link>.dockerignore</Link>
+        </Content>
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Middlewares\" />
-      <Folder Include="Settings\" />
+        <Folder Include="Middlewares\" />
+        <Folder Include="Settings\" />
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\SafeMedConnect.Application\SafeMedConnect.Application.csproj" />
-      <ProjectReference Include="..\SafeMedConnect.Common\SafeMedConnect.Common.csproj" />
-      <ProjectReference Include="..\SafeMedConnect.Infrastructure\SafeMedConnect.Infrastructure.csproj" />
+        <ProjectReference Include="..\SafeMedConnect.Application\SafeMedConnect.Application.csproj" />
+        <ProjectReference Include="..\SafeMedConnect.Common\SafeMedConnect.Common.csproj" />
+        <ProjectReference Include="..\SafeMedConnect.Infrastructure\SafeMedConnect.Infrastructure.csproj" />
     </ItemGroup>
 
 </Project>
