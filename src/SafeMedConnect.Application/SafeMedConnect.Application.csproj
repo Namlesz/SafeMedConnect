@@ -14,4 +14,8 @@
       <Folder Include="Validators\" />
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\SafeMedConnect.Domain\SafeMedConnect.Domain.csproj" />
+    </ItemGroup>
+
 </Project>
