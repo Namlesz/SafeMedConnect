@@ -20,14 +20,13 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Endpoints\" />
       <Folder Include="Middlewares\" />
       <Folder Include="Settings\" />
-      <Folder Include="Startup\" />
     </ItemGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\SafeMedConnect.Application\SafeMedConnect.Application.csproj" />
+      <ProjectReference Include="..\SafeMedConnect.Common\SafeMedConnect.Common.csproj" />
       <ProjectReference Include="..\SafeMedConnect.Infrastructure\SafeMedConnect.Infrastructure.csproj" />
     </ItemGroup>
 
