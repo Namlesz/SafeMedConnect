@@ -1,4 +1,4 @@
-using SafeMedConnect.Api.Endpoints;
+using SafeMedConnect.Api.Extensions;
 
 namespace SafeMedConnect.Api.Startup;
 
@@ -14,9 +14,10 @@ internal static class RegisterStartupMiddlewares
 
         app.UseHttpsRedirection();
 
-        // TODO: Maybe initialize via reflection(?)
-        // Map endpoints
-        app.RegisterAccountEndpoints();
+        var root = app.MapGroup(string.Empty);
+        root.AddEndpointFilterFactory(ValidationFilter.ValidationFilterFactory);
+        root.MapRoutes();
+
         return app;
     }
 }

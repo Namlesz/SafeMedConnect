@@ -14,10 +14,9 @@ public static class ServiceCollectionExtensions
         return services;
     }
 
-    // TODO: Fix, now it's not auto validate data
     private static void RegisterFluentValidation(this IServiceCollection services)
     {
-        services.AddValidatorsFromAssemblyContaining<GetAccountNameQueryValidator>();
+        services.AddValidatorsFromAssemblyContaining<GetAccountNameQueryValidator>(ServiceLifetime.Singleton);
     }
 
     private static void RegisterMediatR(this IServiceCollection services)

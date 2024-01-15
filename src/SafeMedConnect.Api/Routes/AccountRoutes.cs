@@ -1,15 +1,17 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using SafeMedConnect.Api.Attributes;
+using SafeMedConnect.Api.Interfaces;
 using SafeMedConnect.Application.Queries;
 using static SafeMedConnect.Common.Constants.ApiPrefixConstants;
 
-namespace SafeMedConnect.Api.Endpoints;
+namespace SafeMedConnect.Api.Routes;
 
-internal static class AccountEndpoints
+internal class AccountRoutes : IRoutes
 {
-    public static void RegisterAccountEndpoints(this WebApplication app)
+    public void RegisterRoutes(RouteGroupBuilder root)
     {
-        var group = app.MapGroup(BaseApiPrefix + "/account")
+        var group = root.MapGroup(BaseApiPrefix + "/account")
             .WithOpenApi()
             .WithTags("Account");
 
@@ -19,7 +21,10 @@ internal static class AccountEndpoints
             .Produces<string>();
     }
 
-    private static async Task<IResult> HelloWorld([FromBody] GetAccountNameQuery query, IMediator mediator)
+    private static async Task<IResult> HelloWorld(
+        [Validate][FromBody] GetAccountNameQuery query,
+        IMediator mediator
+    )
     {
         var res = await mediator.Send(query);
         return Results.Ok(res);
