@@ -15,6 +15,7 @@ public static class ServiceCollectionExtensions
     {
         services.AddSingleton<MongoContext>();
         services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<IApplicationUserRepository, ApplicationUserRepository>();
         return services;
     }
 }

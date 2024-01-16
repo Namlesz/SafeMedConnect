@@ -13,4 +13,8 @@
         <Folder Include="Models\" />
     </ItemGroup>
 
+    <ItemGroup>
+      <PackageReference Include="MongoDB.Bson" Version="2.23.1" />
+    </ItemGroup>
+
 </Project>
