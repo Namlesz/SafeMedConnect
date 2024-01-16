@@ -23,10 +23,12 @@ internal class AccountRoutes : IRoutes
 
     private static async Task<IResult> HelloWorld(
         [Validate][FromBody] GetAccountNameQuery query,
-        IMediator mediator
+        IMediator mediator,
+        ILogger<AccountRoutes> logger
     )
     {
         var res = await mediator.Send(query);
+        logger.LogInformation("Hello world!");
         return Results.Ok(res);
     }
 }
