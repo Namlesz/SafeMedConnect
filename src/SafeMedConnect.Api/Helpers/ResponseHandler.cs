@@ -8,9 +8,9 @@ namespace SafeMedConnect.Api.Helpers;
 
 internal sealed class ResponseHandler(IMediator mediator) : IResponseHandler
 {
-    public async Task<IResult> SendAndHandle(IRequest<ResponseWrapper> request)
+    public async Task<IResult> SendAndHandle(IRequest<ResponseWrapper> request, CancellationToken cnl = default)
     {
-        return await mediator.Send(request) switch
+        return await mediator.Send(request, cnl) switch
         {
             { ResponseType: Success }
                 => Results.NoContent(),
@@ -34,9 +34,9 @@ internal sealed class ResponseHandler(IMediator mediator) : IResponseHandler
         };
     }
 
-    public async Task<IResult> SendAndHandle<T>(IRequest<ResponseWrapper<T>> request) where T : class
+    public async Task<IResult> SendAndHandle<T>(IRequest<ResponseWrapper<T>> request, CancellationToken cnl) where T : class
     {
-        return await mediator.Send(request) switch
+        return await mediator.Send(request, cnl) switch
         {
             { ResponseType: Success } res
                 => Results.Ok(res.Data),

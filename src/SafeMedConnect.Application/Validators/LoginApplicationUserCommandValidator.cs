@@ -7,5 +7,10 @@ public sealed class LoginApplicationUserCommandValidator : AbstractValidator<Log
 {
     public LoginApplicationUserCommandValidator()
     {
+        RuleFor(x => x.Login)
+            .NotEmpty();
+
+        RuleFor(x => x.Password)
+            .NotEmpty();
     }
 }

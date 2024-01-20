@@ -8,11 +8,13 @@ public sealed class RegisterApplicationUserCommandValidator : AbstractValidator<
     public RegisterApplicationUserCommandValidator()
     {
         RuleFor(x => x.Login)
-            .NotEmpty()
-            .WithMessage("Login cannot be empty");
+            .NotEmpty();
 
         RuleFor(x => x.Password)
+            .NotEmpty();
+
+        RuleFor(x => x.Email)
             .NotEmpty()
-            .WithMessage("Password cannot be empty");
+            .EmailAddress();
     }
 }

@@ -10,9 +10,10 @@ public sealed class RegisterApplicationUserCommand : IRequest<ResponseWrapper>
 {
     public string Login { get; set; } = null!;
     public string Password { get; set; } = null!;
+    public string Email { get; set; } = null!;
 }
 
-public class RegisterApplicationUserCommandHandler(
+internal sealed class RegisterApplicationUserCommandHandler(
     IApplicationUserRepository repository,
     ILogger<RegisterApplicationUserCommandHandler> logger
 ) : IRequestHandler<RegisterApplicationUserCommand, ResponseWrapper>
@@ -36,7 +37,8 @@ public class RegisterApplicationUserCommandHandler(
         var user = new ApplicationUserEntity
         {
             Login = request.Login,
-            PasswordHash = hash
+            PasswordHash = hash,
+            Email = request.Email
         };
 
         var isSaved = await repository.RegisterUserAsync(user, cancellationToken);

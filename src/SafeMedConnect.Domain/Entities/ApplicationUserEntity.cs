@@ -9,9 +9,12 @@ public sealed class ApplicationUserEntity
     [BsonRepresentation(BsonType.ObjectId)]
     public string? Id { get; set; }
 
-    [BsonElement("Login")]
+    [BsonElement("login")]
     public string Login { get; set; } = null!;
 
-    [BsonElement("PasswordHash")]
+    [BsonElement("password_hash")]
     public string PasswordHash { get; set; } = null!;
+
+    [BsonElement("email")]
+    public string Email { get; set; } = null!;
 }

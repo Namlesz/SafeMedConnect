@@ -23,19 +23,21 @@ internal class AccountRoutes : IRoutes
 
         group.MapPost("/login", LoginApplicationUser)
             // .AllowAnonymous()
-            .WithSummary("Register a new user")
-            .WithDescription("Register a new user")
+            .WithSummary("Login user")
+            .WithDescription("Login user")
             .Produces<string>();
     }
 
     // TODO: Implement
     private static async Task<IResult> LoginApplicationUser(
         [Validate][FromBody] LoginApplicationUserCommand command,
-        IResponseHandler responseHandler
-    ) => await responseHandler.SendAndHandle(command);
+        IResponseHandler responseHandler,
+        CancellationToken cnl
+    ) => await responseHandler.SendAndHandle(command, cnl);
 
     private static async Task<IResult> RegisterApplicationUser(
         [Validate][FromBody] RegisterApplicationUserCommand command,
-        IResponseHandler responseHandler
-    ) => await responseHandler.SendAndHandle(command);
+        IResponseHandler responseHandler,
+        CancellationToken cnl
+    ) => await responseHandler.SendAndHandle(command, cnl);
 }
