@@ -3,7 +3,7 @@ using SafeMedConnect.Api.Attributes;
 using System.Net;
 using System.Reflection;
 
-namespace SafeMedConnect.Api.Extensions;
+namespace SafeMedConnect.Api.Helpers;
 
 internal static class ValidationFilter
 {

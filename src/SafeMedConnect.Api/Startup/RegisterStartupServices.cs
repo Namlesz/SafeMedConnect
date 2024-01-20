@@ -1,4 +1,6 @@
 using Microsoft.OpenApi.Models;
+using SafeMedConnect.Api.Helpers;
+using SafeMedConnect.Api.Interfaces;
 
 namespace SafeMedConnect.Api.Startup;
 
@@ -19,6 +21,9 @@ internal static class RegisterStartupServices
                 Description = "Web api interface for secure management and sharing of medical data."
             });
         });
+
+        services.AddProblemDetails();
+        services.AddScoped<IResponseHandler, ResponseHandler>();
         return services;
     }
 }
