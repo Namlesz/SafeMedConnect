@@ -7,11 +7,10 @@ namespace SafeMedConnect.Application;
 
 public static class ServiceCollectionExtensions
 {
-    public static IServiceCollection RegisterApplicationServices(this IServiceCollection services)
+    public static void RegisterApplicationServices(this IServiceCollection services)
     {
         services.RegisterMediatR();
         services.RegisterFluentValidation();
-        return services;
     }
 
     private static void RegisterFluentValidation(this IServiceCollection services)

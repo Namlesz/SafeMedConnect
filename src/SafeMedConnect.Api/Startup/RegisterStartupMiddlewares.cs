@@ -16,6 +16,9 @@ internal static class RegisterStartupMiddlewares
         app.UseHttpsRedirection();
         app.UseStatusCodePages();
 
+        app.UseAuthentication();
+        app.UseAuthorization();
+
         var root = app
             .MapGroup(string.Empty)
             .AddEndpointFilterFactory(ValidationFilter.ValidationFilterFactory)

@@ -49,7 +49,7 @@ internal static class ValidationFilter
         return await next.Invoke(invocationContext);
     }
 
-    static IEnumerable<ValidationDescriptor> GetValidators(MethodInfo methodInfo, IServiceProvider serviceProvider)
+    private static IEnumerable<ValidationDescriptor> GetValidators(MethodInfo methodInfo, IServiceProvider serviceProvider)
     {
         var parameters = methodInfo.GetParameters();
 

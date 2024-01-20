@@ -24,8 +24,7 @@ internal sealed class ApplicationUserRepository(MongoContext db, ILogger<Applica
         }
     }
 
-    // TODO: Add ignore case sensitivity
     public async Task<ApplicationUserEntity?> GetUserAsync(string login, CancellationToken cnl = default) =>
         await db.ApplicationUsers.AsQueryable()
-            .FirstOrDefaultAsync(x => x.Login == login, cancellationToken: cnl);
+            .FirstOrDefaultAsync(x => x.Login.Equals(login, StringComparison.CurrentCultureIgnoreCase), cancellationToken: cnl);
 }

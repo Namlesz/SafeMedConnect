@@ -6,7 +6,7 @@ using static SafeMedConnect.Domain.Responses.ResponseTypes;
 
 namespace SafeMedConnect.Api.Helpers;
 
-internal sealed class ResponseHandler(IMediator mediator) : IResponseHandler
+internal sealed class ResponseHandler(ISender mediator) : IResponseHandler
 {
     public async Task<IResult> SendAndHandle(IRequest<ResponseWrapper> request, CancellationToken cnl = default)
     {
