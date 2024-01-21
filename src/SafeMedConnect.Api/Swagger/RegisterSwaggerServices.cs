@@ -1,6 +1,6 @@
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
-using Swashbuckle.AspNetCore.Filters;
+using SafeMedConnect.Api.Helpers;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace SafeMedConnect.Api.Swagger;
@@ -17,8 +17,7 @@ internal static class RegisterSwaggerServices
                 Version = "v1",
                 Description = "Web api interface for secure management and sharing of medical data."
             });
-            // this operation filters doesn't work
-            // config.OperationFilter<AppendAuthorizeToSummaryOperationFilter>();
+            config.OperationFilter<BasicAuthOperationsFilter>();
         });
         services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
     }

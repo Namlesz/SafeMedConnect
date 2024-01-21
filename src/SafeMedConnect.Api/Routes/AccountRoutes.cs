@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SafeMedConnect.Api.Attributes;
 using SafeMedConnect.Api.Interfaces;
@@ -16,25 +17,27 @@ internal class AccountRoutes : IRoutes
             .WithTags(RouteName);
 
         group.MapPost("/register", RegisterApplicationUser)
-            .AllowAnonymous()
+            // .AllowAnonymous()
             .WithDescription("Register a new user")
             .Produces<string>();
 
         group.MapPost("/login", LoginApplicationUser)
-            .AllowAnonymous()
+            // .AllowAnonymous()
             .WithDescription("Login user")
             .Produces<string>();
 
-        group.MapGet("/authorization", () => "With autorization");
-        group.MapGet("/no-authorization", () => "Without autorization").AllowAnonymous();
+        group.MapGet("/authorization", () => "With authorization");
+        group.MapGet("/no-authorization", [AllowAnonymous]() => "Without authorization");
     }
 
+    [AllowAnonymous]
     private static async Task<IResult> LoginApplicationUser(
         [Validate][FromBody] LoginApplicationUserCommand command,
         IResponseHandler responseHandler,
         CancellationToken cnl
     ) => await responseHandler.SendAndHandle(command, cnl);
 
+    [AllowAnonymous]
     private static async Task<IResult> RegisterApplicationUser(
         [Validate][FromBody] RegisterApplicationUserCommand command,
         IResponseHandler responseHandler,
