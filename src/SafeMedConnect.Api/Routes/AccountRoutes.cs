@@ -16,17 +16,19 @@ internal class AccountRoutes : IRoutes
             .WithTags(RouteName);
 
         group.MapPost("/register", RegisterApplicationUser)
-            // .AllowAnonymous()
+            .AllowAnonymous()
             .WithDescription("Register a new user")
             .Produces<string>();
 
         group.MapPost("/login", LoginApplicationUser)
-            // .AllowAnonymous()
+            .AllowAnonymous()
             .WithDescription("Login user")
             .Produces<string>();
+
+        group.MapGet("/authorization", () => "With autorization");
+        group.MapGet("/no-authorization", () => "Without autorization").AllowAnonymous();
     }
 
-    // TODO: Implement token generation
     private static async Task<IResult> LoginApplicationUser(
         [Validate][FromBody] LoginApplicationUserCommand command,
         IResponseHandler responseHandler,

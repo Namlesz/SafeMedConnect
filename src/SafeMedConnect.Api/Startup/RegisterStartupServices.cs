@@ -1,9 +1,11 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using SafeMedConnect.Api.Helpers;
 using SafeMedConnect.Api.Interfaces;
 using SafeMedConnect.Api.Swagger;
 using SafeMedConnect.Domain.Authorization;
+using System.Security.Claims;
 using System.Text;
 
 namespace SafeMedConnect.Api.Startup;
@@ -30,12 +32,12 @@ internal static class RegisterStartupServices
         {
             options.AddPolicy(PolicyNames.UserPolicy, policy =>
             {
-                policy.RequireClaim(ClaimNames.Role, Roles.User);
+                policy.RequireClaim(ClaimTypes.Role, Roles.User);
             });
 
             options.AddPolicy(PolicyNames.GuestPolicy, policy =>
             {
-                policy.RequireClaim(ClaimNames.Role, Roles.Guest);
+                policy.RequireClaim(ClaimTypes.Role, Roles.Guest);
             });
 
             options.DefaultPolicy = options.GetPolicy(PolicyNames.UserPolicy)
@@ -65,6 +67,23 @@ internal static class RegisterStartupServices
                 ValidateAudience = true,
                 ValidateLifetime = true,
                 ValidateIssuerSigningKey = true,
+            };
+            x.Events = new JwtBearerEvents
+            {
+                OnChallenge = async context =>
+                {
+                    context.HandleResponse();
+
+                    context.Response.ContentType = "application/json";
+                    context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                    await context.Response.WriteAsJsonAsync(new ProblemDetails
+                    {
+                        Status = StatusCodes.Status401Unauthorized,
+                        Title = "Unauthorized",
+                        Detail = "Missing or invalid token",
+                        Instance = context.Request.Path
+                    });
+                }
             };
         });
     }

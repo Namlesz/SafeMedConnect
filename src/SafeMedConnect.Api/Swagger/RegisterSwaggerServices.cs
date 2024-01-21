@@ -17,7 +17,8 @@ internal static class RegisterSwaggerServices
                 Version = "v1",
                 Description = "Web api interface for secure management and sharing of medical data."
             });
-            config.OperationFilter<AppendAuthorizeToSummaryOperationFilter>();
+            // this operation filters doesn't work
+            // config.OperationFilter<AppendAuthorizeToSummaryOperationFilter>();
         });
         services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
     }

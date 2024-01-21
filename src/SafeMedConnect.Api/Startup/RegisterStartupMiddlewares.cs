@@ -21,6 +21,7 @@ internal static class RegisterStartupMiddlewares
 
         var root = app
             .MapGroup(string.Empty)
+            .RequireAuthorization()
             .AddEndpointFilterFactory(ValidationFilter.ValidationFilterFactory)
             .MapGroup("api");
 
