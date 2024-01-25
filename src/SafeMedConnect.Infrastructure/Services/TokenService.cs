@@ -33,7 +33,7 @@ internal sealed class TokenService(IConfiguration configuration) : ITokenService
             {
                 new Claim(ClaimTypes.Email, user.Email),
                 new Claim(ClaimTypes.Role, Roles.User),
-                new Claim(CustomClaimTypes.UserId, user.Id!)
+                new Claim(CustomClaimTypes.UserId, user.UserId)
             }),
             SigningCredentials = new SigningCredentials(
                 new SymmetricSecurityKey(secret), SecurityAlgorithms.HmacSha256Signature

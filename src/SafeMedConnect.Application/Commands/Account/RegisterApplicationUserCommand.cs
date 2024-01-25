@@ -4,7 +4,7 @@ using SafeMedConnect.Domain.Entities;
 using SafeMedConnect.Domain.Interfaces.Repositories;
 using SafeMedConnect.Domain.Responses;
 
-namespace SafeMedConnect.Application.Commands;
+namespace SafeMedConnect.Application.Commands.Account;
 
 public sealed class RegisterApplicationUserCommand : IRequest<ResponseWrapper>
 {

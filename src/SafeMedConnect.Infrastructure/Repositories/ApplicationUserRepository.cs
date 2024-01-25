@@ -10,11 +10,19 @@ namespace SafeMedConnect.Infrastructure.Repositories;
 internal sealed class ApplicationUserRepository(MongoContext db, ILogger<ApplicationUserRepository> logger)
     : IApplicationUserRepository
 {
-    public async Task<bool> RegisterUserAsync(ApplicationUserEntity user, CancellationToken cnl = default)
+    public async Task<bool> RegisterUserAsync(ApplicationUserEntity appUser, CancellationToken cnl = default)
     {
         try
         {
-            await db.ApplicationUsers.InsertOneAsync(user, cancellationToken: cnl);
+            var userInfo = new UserEntity();
+            await db.Users.InsertOneAsync(userInfo, cancellationToken: cnl);
+            if (userInfo.Id is null)
+            {
+                throw new InvalidOperationException("UserInfo not created");
+            }
+
+            appUser.UserId = userInfo.Id;
+            await db.ApplicationUsers.InsertOneAsync(appUser, cancellationToken: cnl);
             return true;
         }
         catch (Exception exception)

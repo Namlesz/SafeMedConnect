@@ -1,5 +1,5 @@
 using FluentValidation;
-using SafeMedConnect.Application.Commands;
+using SafeMedConnect.Application.Commands.Account;
 
 namespace SafeMedConnect.Application.Validators;
 

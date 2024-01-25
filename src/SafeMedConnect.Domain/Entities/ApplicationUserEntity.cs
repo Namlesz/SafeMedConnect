@@ -17,4 +17,7 @@ public sealed class ApplicationUserEntity
 
     [BsonElement("email")]
     public string Email { get; set; } = null!;
+
+    [BsonElement("user_id")]
+    public string UserId { get; set; } = null!;
 }

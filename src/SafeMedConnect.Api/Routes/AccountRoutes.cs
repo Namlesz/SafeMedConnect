@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using SafeMedConnect.Api.Attributes;
 using SafeMedConnect.Api.Interfaces;
-using SafeMedConnect.Application.Commands;
+using SafeMedConnect.Application.Commands.Account;
 using SafeMedConnect.Application.Dto;
 
 namespace SafeMedConnect.Api.Routes;

@@ -25,5 +25,5 @@ internal sealed class MongoContext
         _database.GetCollection<UserEntity>("Users");
 
     public IMongoCollection<ApplicationUserEntity> ApplicationUsers =>
-        _database.GetCollection<ApplicationUserEntity>("Users");
+        _database.GetCollection<ApplicationUserEntity>("AppUsers");
 }

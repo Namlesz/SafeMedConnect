@@ -4,7 +4,7 @@ using SafeMedConnect.Domain.Interfaces.Repositories;
 using SafeMedConnect.Domain.Interfaces.Services;
 using SafeMedConnect.Domain.Responses;
 
-namespace SafeMedConnect.Application.Commands;
+namespace SafeMedConnect.Application.Commands.Account;
 
 public sealed class LoginApplicationUserCommand : IRequest<ResponseWrapper<TokenResponseDto>>
 {
