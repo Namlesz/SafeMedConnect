@@ -18,11 +18,13 @@ internal class AccountRoutes : IRoutes
 
         group.MapPost("/register", RegisterApplicationUser)
             .AllowAnonymous()
-            .WithDescription("Register a new user");
+            .WithSummary("Register a new user")
+            .WithDescription("Create a new user account in the system");
 
         group.MapPost("/login", LoginApplicationUser)
             .AllowAnonymous()
-            .WithDescription("Login user")
+            .WithSummary("Login user")
+            .WithDescription("Login a user and return a JWT token")
             .Produces<TokenResponseDto>();
     }
 

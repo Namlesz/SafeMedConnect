@@ -1,28 +1,45 @@
+using AutoMapper;
 using MediatR;
 using SafeMedConnect.Domain.Entities;
+using SafeMedConnect.Domain.Interfaces.Repositories;
+using SafeMedConnect.Domain.Interfaces.Services;
 using SafeMedConnect.Domain.Responses;
 
 namespace SafeMedConnect.Application.Commands.User;
 
 public sealed class UpdateUserInformationCommand : IRequest<ResponseWrapper<UserEntity>>
 {
-    public string? FirstName { get; set; }
-    public string? LastName { get; set; }
-    public DateTime? DateOfBirth { get; set; }
-    public double? Weight { get; set; }
-    public double? Height { get; set; }
-    public string? BloodType { get; set; }
-    public List<string>? Allergies { get; set; }
-    public List<string>? Medications { get; set; }
-    public string? HealthInsuranceNumber { get; set; }
+    public string? FirstName { get; init; }
+    public string? LastName { get; init; }
+    public DateTime? DateOfBirth { get; init; }
+    public double? Weight { get; init; }
+    public double? Height { get; init; }
+    public string? BloodType { get; init; }
+    public List<string>? Allergies { get; init; }
+    public List<string>? Medications { get; init; }
+    public string? HealthInsuranceNumber { get; init; }
 }
 
-// TODO: Use session service to find user by id
-// TODO: Update user information model
-public class UpdateUserInformationCommandHandler : IRequestHandler<UpdateUserInformationCommand, ResponseWrapper<UserEntity>>
+public class UpdateUserInformationCommandHandler(IUserRepository repository, ISessionService session, IMapper mapper)
+    : IRequestHandler<UpdateUserInformationCommand, ResponseWrapper<UserEntity>>
 {
-    public Task<ResponseWrapper<UserEntity>> Handle(UpdateUserInformationCommand request, CancellationToken cancellationToken)
+    public async Task<ResponseWrapper<UserEntity>> Handle(
+        UpdateUserInformationCommand request,
+        CancellationToken cancellationToken
+    )
     {
-        throw new NotImplementedException();
+        var user = mapper.Map<UserEntity>(request);
+        var userId = session.GetUserClaims().UserId;
+        if (userId is null)
+        {
+            return new ResponseWrapper<UserEntity>(ResponseTypes.Error, "User not found");
+        }
+
+        user.Id = userId;
+
+        var updatedUser = await repository.UpdateUserAsync(user, cancellationToken);
+        return updatedUser is null
+            ? new ResponseWrapper<UserEntity>(ResponseTypes.Error, "Error while updating user")
+            : new ResponseWrapper<UserEntity>(ResponseTypes.Success, data: updatedUser);
     }
 }

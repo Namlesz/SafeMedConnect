@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Mvc;
-using SafeMedConnect.Api.Attributes;
 using SafeMedConnect.Api.Interfaces;
 using SafeMedConnect.Application.Commands.User;
 using SafeMedConnect.Domain.Entities;
@@ -17,13 +16,26 @@ internal sealed class UserRoutes : IRoutes
             .WithTags(RouteName);
 
         group.MapPost("", UpdateUserInformation)
-            .WithDescription("Update user information")
+            .WithSummary("Update user information")
+            .WithDescription("Replace all user information with the provided information (including null values)")
+            .Produces<UserEntity>();
+
+        group.MapGet("", GetUserInformation)
+            .WithSummary("Get user information")
+            .WithDescription("Get all user information from the database")
             .Produces<UserEntity>();
     }
 
     private static async Task<IResult> UpdateUserInformation(
-        [Validate][FromBody] UpdateUserInformationCommand command,
+        [FromBody] UpdateUserInformationCommand command,
         IResponseHandler responseHandler,
         CancellationToken cnl
     ) => await responseHandler.SendAndHandle(command, cnl);
+
+    private static Task<IResult> GetUserInformation(
+        // [FromBody] UpdateUserInformationCommand command,
+        // IResponseHandler responseHandler,
+        // CancellationToken cnl
+    // ) => await responseHandler.SendAndHandle(command, cnl);
+    ) => throw new NotImplementedException();
 }

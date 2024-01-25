@@ -11,6 +11,7 @@ public static class ServiceCollectionExtensions
     {
         services.RegisterMediatR();
         services.RegisterFluentValidation();
+        services.AddAutoMapper(typeof(ServiceCollectionExtensions).Assembly);
     }
 
     private static void RegisterFluentValidation(this IServiceCollection services)
