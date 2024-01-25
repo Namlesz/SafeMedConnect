@@ -24,6 +24,7 @@ internal static class RegisterStartupServices
 
         services.AddProblemDetails();
         services.AddScoped<IResponseHandler, ResponseHandler>();
+        services.AddHttpContextAccessor();
     }
 
     private static void AddAuthorizationWithPolicy(this IServiceCollection services)

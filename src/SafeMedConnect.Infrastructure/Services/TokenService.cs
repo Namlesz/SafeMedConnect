@@ -14,12 +14,16 @@ internal sealed class TokenService(IConfiguration configuration) : ITokenService
     public string GenerateJwtToken(ApplicationUserEntity user)
     {
         var jwtSettings = configuration.GetSection("JwtSettings");
+
         var secret = Encoding.ASCII.GetBytes(jwtSettings["Key"]
             ?? throw new InvalidOperationException("JwtSettings:Key is missing"));
+
         var expiration = DateTime.UtcNow.AddMinutes(int.Parse(jwtSettings["ExpirationInMinutes"]
             ?? throw new InvalidOperationException("JwtSettings:ExpirationInMinutes is missing")));
+
         var issuer = jwtSettings["Issuer"]
             ?? throw new InvalidOperationException("JwtSettings:Issuer is missing");
+
         var audience = jwtSettings["Audience"]
             ?? throw new InvalidOperationException("JwtSettings:Audience is missing");
 
@@ -29,11 +33,12 @@ internal sealed class TokenService(IConfiguration configuration) : ITokenService
             {
                 new Claim(ClaimTypes.Email, user.Email),
                 new Claim(ClaimTypes.Role, Roles.User),
-                new Claim(CustomClaimTypes.UserId, user.Id
-                    ?? throw new InvalidOperationException("User id can't be null"))
+                new Claim(CustomClaimTypes.UserId, user.Id!)
             }),
+            SigningCredentials = new SigningCredentials(
+                new SymmetricSecurityKey(secret), SecurityAlgorithms.HmacSha256Signature
+            ),
             Expires = expiration,
-            SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(secret), SecurityAlgorithms.HmacSha256Signature),
             Issuer = issuer,
             Audience = audience
         };

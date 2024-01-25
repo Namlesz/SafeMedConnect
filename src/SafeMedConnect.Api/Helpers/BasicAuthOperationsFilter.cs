@@ -8,8 +8,8 @@ internal sealed class BasicAuthOperationsFilter : IOperationFilter
 {
     public void Apply(OpenApiOperation operation, OperationFilterContext context)
     {
-        var noAuthRequired = context.ApiDescription.CustomAttributes()
-            .Any(attr => attr.GetType() == typeof(AllowAnonymousAttribute));
+        var endpointMetadata = context.ApiDescription.ActionDescriptor.EndpointMetadata;
+        var noAuthRequired = endpointMetadata.Any(metadataItem => metadataItem is IAllowAnonymous);
 
         if (noAuthRequired)
         {
