@@ -28,4 +28,7 @@ internal sealed class UserRepository(MongoContext db, ILogger<UserRepository> lo
         logger.LogError("User not updated");
         return null;
     }
+
+    public async Task<UserEntity?> GetUserAsync(string id, CancellationToken cnl = default) =>
+        await Users.Find(x => x.Id == id).FirstOrDefaultAsync(cnl);
 }

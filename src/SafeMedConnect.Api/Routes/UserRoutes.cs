@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using SafeMedConnect.Api.Interfaces;
 using SafeMedConnect.Application.Commands.User;
+using SafeMedConnect.Application.Queries.User;
 using SafeMedConnect.Domain.Entities;
 
 namespace SafeMedConnect.Api.Routes;
@@ -32,10 +33,8 @@ internal sealed class UserRoutes : IRoutes
         CancellationToken cnl
     ) => await responseHandler.SendAndHandle(command, cnl);
 
-    private static Task<IResult> GetUserInformation(
-        // [FromBody] UpdateUserInformationCommand command,
-        // IResponseHandler responseHandler,
-        // CancellationToken cnl
-    // ) => await responseHandler.SendAndHandle(command, cnl);
-    ) => throw new NotImplementedException();
+    private static async Task<IResult> GetUserInformation(
+        IResponseHandler responseHandler,
+        CancellationToken cnl
+    ) => await responseHandler.SendAndHandle(new GetUserInformationQuery(), cnl);
 }
