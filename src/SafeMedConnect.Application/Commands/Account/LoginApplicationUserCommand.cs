@@ -1,3 +1,4 @@
+using FluentValidation;
 using MediatR;
 using SafeMedConnect.Application.Dto;
 using SafeMedConnect.Domain.Interfaces.Repositories;
@@ -28,5 +29,17 @@ internal sealed class LoginApplicationUserCommandHandler(IApplicationUserReposit
 
         var token = tokenService.GenerateJwtToken(user);
         return new ResponseWrapper<TokenResponseDto>(ResponseTypes.Success, data: new TokenResponseDto(token));
+    }
+}
+
+public sealed class LoginApplicationUserCommandValidator : AbstractValidator<LoginApplicationUserCommand>
+{
+    public LoginApplicationUserCommandValidator()
+    {
+        RuleFor(x => x.Login)
+            .NotEmpty();
+
+        RuleFor(x => x.Password)
+            .NotEmpty();
     }
 }

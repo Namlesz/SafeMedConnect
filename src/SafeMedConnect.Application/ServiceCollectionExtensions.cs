@@ -1,7 +1,6 @@
 using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 using SafeMedConnect.Application.Commands.Account;
-using SafeMedConnect.Application.Validators;
 
 namespace SafeMedConnect.Application;
 

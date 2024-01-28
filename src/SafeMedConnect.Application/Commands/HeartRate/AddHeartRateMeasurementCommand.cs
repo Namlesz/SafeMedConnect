@@ -1,4 +1,5 @@
 using AutoMapper;
+using FluentValidation;
 using MediatR;
 using SafeMedConnect.Domain.Entities;
 using SafeMedConnect.Domain.Interfaces.Repositories;
@@ -32,5 +33,14 @@ public class AddHeartRateMeasurementCommandHandler(IHeartRatesRepository reposit
                 ResponseTypes.Success,
                 data: result.Measurements
             );
+    }
+}
+
+public class AddHeartRateMeasurementCommandValidator : AbstractValidator<AddHeartRateMeasurementCommand>
+{
+    public AddHeartRateMeasurementCommandValidator()
+    {
+        RuleFor(x => x.Timestamp).NotEmpty();
+        RuleFor(x => x.Value).NotEmpty();
     }
 }

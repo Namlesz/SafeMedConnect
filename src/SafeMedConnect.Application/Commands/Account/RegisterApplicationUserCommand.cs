@@ -1,3 +1,4 @@
+using FluentValidation;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using SafeMedConnect.Domain.Entities;
@@ -49,5 +50,21 @@ internal sealed class RegisterApplicationUserCommandHandler(
         }
 
         return new ResponseWrapper(ResponseTypes.Success);
+    }
+}
+
+public sealed class RegisterApplicationUserCommandValidator : AbstractValidator<RegisterApplicationUserCommand>
+{
+    public RegisterApplicationUserCommandValidator()
+    {
+        RuleFor(x => x.Login)
+            .NotEmpty();
+
+        RuleFor(x => x.Password)
+            .NotEmpty();
+
+        RuleFor(x => x.Email)
+            .NotEmpty()
+            .EmailAddress();
     }
 }
