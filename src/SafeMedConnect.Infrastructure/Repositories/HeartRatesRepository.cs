@@ -34,4 +34,7 @@ internal sealed class HeartRatesRepository(MongoContext db, ILogger<HeartRatesRe
             return null;
         }
     }
+
+    public async Task<HeartRateEntity?> GetHeartRateMeasurementsAsync(string userId, CancellationToken cnl = default) =>
+        await Users.Find(x => x.UserId == userId).FirstOrDefaultAsync(cnl);
 }

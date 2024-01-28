@@ -9,4 +9,9 @@ public interface IHeartRatesRepository
         HeartRateMeasurementEntity measurement,
         CancellationToken cnl = default
     );
+
+    public Task<HeartRateEntity?> GetHeartRateMeasurementsAsync(
+        string userId,
+        CancellationToken cnl = default
+    );
 }
