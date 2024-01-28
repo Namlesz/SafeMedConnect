@@ -1,4 +1,3 @@
-using Microsoft.ApplicationInsights.Extensibility;
 using Serilog;
 using Serilog.Events;
 
@@ -18,10 +17,7 @@ internal static class RegisterSerilog
                 outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss} [{Level:u3}] {Message:lj}{NewLine}{Exception}",
                 restrictedToMinimumLevel: LogEventLevel.Warning
             )
-            .WriteTo.ApplicationInsights(
-                TelemetryConfiguration.CreateDefault(),
-                TelemetryConverter.Traces
-            )
+            .WriteTo.AzureApp()
             .CreateLogger();
 
         host.UseSerilog();
