@@ -13,6 +13,7 @@ public static class ServiceCollectionExtensions
     {
         services.AddSingleton<MongoContext>();
         services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<IHeartRatesRepository, HeartRatesRepository>();
         services.AddScoped<IApplicationUserRepository, ApplicationUserRepository>();
         services.AddScoped<ITokenService, TokenService>();
         services.AddScoped<ISessionService, SessionService>();
