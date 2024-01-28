@@ -10,14 +10,25 @@ internal sealed class SessionService(IHttpContextAccessor httpContextAccessor) :
 {
     public UserClaims GetUserClaims()
     {
-        var httpContext = httpContextAccessor.HttpContext ?? throw new NullReferenceException("HttpContext is null");
+        var httpContext = httpContextAccessor.HttpContext
+            ?? throw new NullReferenceException("HttpContext is null");
+
         var claims = httpContext.User.Claims.ToList();
+
+        var userIdClaim = claims.FirstOrDefault(c => c.Type == CustomClaimTypes.UserId)
+            ?? throw new NullReferenceException("UserId claim is null");
+
+        var emailClaim = claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)
+            ?? throw new NullReferenceException("Email claim is null");
+
+        var roleClaim = claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)
+            ?? throw new NullReferenceException("Role claim is null");
 
         return new UserClaims
         {
-            UserId = claims.FirstOrDefault(c => c.Type == CustomClaimTypes.UserId)?.Value,
-            Email = claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value,
-            Role = claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value
+            UserId = userIdClaim.Value,
+            Email = emailClaim.Value,
+            Role = roleClaim.Value
         };
     }
 }

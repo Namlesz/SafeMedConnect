@@ -14,10 +14,6 @@ public class GetUserInformationQueryHandler(IUserRepository repository, ISession
     public async Task<ResponseWrapper<UserEntity>> Handle(GetUserInformationQuery request, CancellationToken cancellationToken)
     {
         var userId = session.GetUserClaims().UserId;
-        if (userId is null)
-        {
-            return new ResponseWrapper<UserEntity>(ResponseTypes.Error, "Missing user id in token claims");
-        }
 
         var result = await repository.GetUserAsync(userId, cancellationToken);
         return result is null

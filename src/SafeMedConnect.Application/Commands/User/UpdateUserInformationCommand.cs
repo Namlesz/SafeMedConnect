@@ -30,10 +30,6 @@ public class UpdateUserInformationCommandHandler(IUserRepository repository, ISe
     {
         var user = mapper.Map<UserEntity>(request);
         var userId = session.GetUserClaims().UserId;
-        if (userId is null)
-        {
-            return new ResponseWrapper<UserEntity>(ResponseTypes.Error, "User not found");
-        }
 
         user.Id = userId;
 
