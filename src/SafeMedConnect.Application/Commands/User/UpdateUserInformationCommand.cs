@@ -18,6 +18,7 @@ public sealed class UpdateUserInformationCommand : IRequest<ResponseWrapper<User
     public List<string>? Allergies { get; init; }
     public List<string>? Medications { get; init; }
     public string? HealthInsuranceNumber { get; init; }
+    public List<string>? DiagnosedDiseases { get; init; }
 }
 
 public class UpdateUserInformationCommandHandler(IUserRepository repository, ISessionService session, IMapper mapper)

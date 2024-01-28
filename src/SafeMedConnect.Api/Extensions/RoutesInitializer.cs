@@ -1,4 +1,6 @@
+using SafeMedConnect.Api.Attributes;
 using SafeMedConnect.Api.Interfaces;
+using System.Reflection;
 
 namespace SafeMedConnect.Api.Extensions;
 
@@ -17,8 +19,14 @@ internal static class RoutesInitializer
 
         foreach (var classe in classes)
         {
+            var routePrefix = classe.GetCustomAttribute<ApiRouteAttribute>()?.Route ?? string.Empty;
+
             var instance = Activator.CreateInstance(classe) as IRoutes;
-            instance?.RegisterRoutes(root);
+            instance?.RegisterRoutes(
+                root.MapGroup(routePrefix)
+                    .WithOpenApi()
+                    .WithTags(routePrefix)
+            );
         }
     }
 }

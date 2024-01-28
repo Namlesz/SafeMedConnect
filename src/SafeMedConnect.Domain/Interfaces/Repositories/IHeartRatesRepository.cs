@@ -14,4 +14,8 @@ public interface IHeartRatesRepository
         string userId,
         CancellationToken cnl = default
     );
+
+    public Task<HeartRateEntity?> ReplaceHeartRateMeasurementsAsync(
+        HeartRateEntity heartRate,
+        CancellationToken cnl = default);
 }

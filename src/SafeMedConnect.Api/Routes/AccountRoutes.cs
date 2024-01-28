@@ -6,16 +6,11 @@ using SafeMedConnect.Application.Dto;
 
 namespace SafeMedConnect.Api.Routes;
 
+[ApiRoute("account")]
 internal class AccountRoutes : IRoutes
 {
-    private const string RouteName = "Account";
-
-    public void RegisterRoutes(RouteGroupBuilder root)
+    public void RegisterRoutes(RouteGroupBuilder group)
     {
-        var group = root.MapGroup(RouteName)
-            .WithOpenApi()
-            .WithTags(RouteName);
-
         group.MapPost("/register", RegisterApplicationUser)
             .AllowAnonymous()
             .WithSummary("Register a new user")

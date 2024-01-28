@@ -7,16 +7,11 @@ using SafeMedConnect.Domain.Entities;
 
 namespace SafeMedConnect.Api.Routes;
 
+[ApiRoute("heart-rate")]
 internal sealed class HeartRateRoutes : IRoutes
 {
-    private const string RouteName = "HeartRate";
-
-    public void RegisterRoutes(RouteGroupBuilder root)
+    public void RegisterRoutes(RouteGroupBuilder group)
     {
-        var group = root.MapGroup(RouteName)
-            .WithOpenApi()
-            .WithTags(RouteName);
-
         group.MapPost("/", AddHeartRateMeasurement)
             .WithSummary("Add a new heart rate measurement")
             .Produces<List<HeartRateMeasurementEntity>>();
@@ -24,7 +19,16 @@ internal sealed class HeartRateRoutes : IRoutes
         group.MapGet("/", GetHeartRateMeasurements)
             .WithSummary("Get all heart rate measurements")
             .Produces<List<HeartRateMeasurementEntity>>();
+
+        group.MapDelete("/", DeleteHeartRateMeasurement)
+            .WithSummary("Delete a heart rate measurement")
+            .Produces<List<HeartRateMeasurementEntity>>();
     }
+
+    private static async Task<IResult> GetHeartRateMeasurements(
+        IResponseHandler responseHandler,
+        CancellationToken cnl
+    ) => await responseHandler.SendAndHandle(new GetHeartRateMeasurementsQuery(), cnl);
 
     private static async Task<IResult> AddHeartRateMeasurement(
         [Validate][FromBody] AddHeartRateMeasurementCommand command,
@@ -32,8 +36,9 @@ internal sealed class HeartRateRoutes : IRoutes
         CancellationToken cnl
     ) => await responseHandler.SendAndHandle(command, cnl);
 
-    private static async Task<IResult> GetHeartRateMeasurements(
+    private static async Task<IResult> DeleteHeartRateMeasurement(
+        [Validate][FromBody] DeleteHeartRateMeasurementCommand command,
         IResponseHandler responseHandler,
         CancellationToken cnl
-    ) => await responseHandler.SendAndHandle(new GetHeartRateMeasurementsQuery(), cnl);
+    ) => await responseHandler.SendAndHandle(command, cnl);
 }

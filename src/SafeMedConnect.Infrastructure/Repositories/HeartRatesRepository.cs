@@ -37,4 +37,26 @@ internal sealed class HeartRatesRepository(MongoContext db, ILogger<HeartRatesRe
 
     public async Task<HeartRateEntity?> GetHeartRateMeasurementsAsync(string userId, CancellationToken cnl = default) =>
         await Users.Find(x => x.UserId == userId).FirstOrDefaultAsync(cnl);
+
+    public async Task<HeartRateEntity?> ReplaceHeartRateMeasurementsAsync(
+        HeartRateEntity heartRate,
+        CancellationToken cnl = default
+    )
+    {
+        var filter = Builders<HeartRateEntity>.Filter.Eq(x => x.UserId, heartRate.UserId);
+        var options = new FindOneAndReplaceOptions<HeartRateEntity>
+        {
+            ReturnDocument = ReturnDocument.After
+        };
+
+        try
+        {
+            return await Users.FindOneAndReplaceAsync(filter, heartRate, options, cancellationToken: cnl);
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "Error while replacing heart rate measurements");
+            return null;
+        }
+    }
 }
