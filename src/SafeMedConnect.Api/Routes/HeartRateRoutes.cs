@@ -12,17 +12,20 @@ internal sealed class HeartRateRoutes : IRoutes
 {
     public void RegisterRoutes(RouteGroupBuilder group)
     {
-        group.MapPost("/", AddHeartRateMeasurement)
-            .WithSummary("Add a new heart rate measurement")
-            .Produces<List<HeartRateMeasurementEntity>>();
-
         group.MapGet("/", GetHeartRateMeasurements)
             .WithSummary("Get all heart rate measurements")
-            .Produces<List<HeartRateMeasurementEntity>>();
+            .Produces<List<HeartRateMeasurementEntity>>()
+            .Produces(StatusCodes.Status404NotFound);
+
+        group.MapPost("/", AddHeartRateMeasurement)
+            .WithSummary("Add a new heart rate measurement")
+            .Produces<List<HeartRateMeasurementEntity>>()
+            .Produces(StatusCodes.Status500InternalServerError);
 
         group.MapDelete("/", DeleteHeartRateMeasurement)
             .WithSummary("Delete a heart rate measurement")
-            .Produces<List<HeartRateMeasurementEntity>>();
+            .Produces<List<HeartRateMeasurementEntity>>()
+            .Produces(StatusCodes.Status500InternalServerError);
     }
 
     private static async Task<IResult> GetHeartRateMeasurements(

@@ -15,12 +15,14 @@ internal sealed class UserRoutes : IRoutes
         group.MapPost("", UpdateUserInformation)
             .WithSummary("Update user information")
             .WithDescription("Replace all user information with the provided information (including null values)")
-            .Produces<UserEntity>();
+            .Produces<UserEntity>()
+            .Produces(StatusCodes.Status500InternalServerError);
 
         group.MapGet("", GetUserInformation)
             .WithSummary("Get user information")
             .WithDescription("Get all user information from the database")
-            .Produces<UserEntity>();
+            .Produces<UserEntity>()
+            .Produces(StatusCodes.Status404NotFound);
     }
 
     private static async Task<IResult> UpdateUserInformation(

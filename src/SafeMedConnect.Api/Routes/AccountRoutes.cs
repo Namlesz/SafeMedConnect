@@ -14,7 +14,8 @@ internal class AccountRoutes : IRoutes
         group.MapPost("/register", RegisterApplicationUser)
             .AllowAnonymous()
             .WithSummary("Register a new user")
-            .WithDescription("Create a new user account in the system");
+            .WithDescription("Create a new user account in the system")
+            .Produces(StatusCodes.Status204NoContent);
 
         group.MapPost("/login", LoginApplicationUser)
             .AllowAnonymous()
