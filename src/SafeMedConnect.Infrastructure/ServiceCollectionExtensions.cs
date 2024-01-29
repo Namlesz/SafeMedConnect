@@ -22,7 +22,9 @@ public static class ServiceCollectionExtensions
     private static void RegisterRepositories(this IServiceCollection services)
     {
         services.AddScoped<IUserRepository, UserRepository>();
-        services.AddScoped<IHeartRatesRepository, HeartRatesRepository>();
+
+        services.AddScoped<IMeasurementRepository<HeartRateEntity, HeartRateMeasurementEntity>,
+            MeasurementRepository<HeartRateEntity, HeartRateMeasurementEntity>>();
 
         services.AddScoped<IMeasurementRepository<BloodPressureEntity, BloodPressureMeasurementEntity>,
             MeasurementRepository<BloodPressureEntity, BloodPressureMeasurementEntity>>();

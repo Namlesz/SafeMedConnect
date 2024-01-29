@@ -1,6 +1,0 @@
-@SafeMedConnect.Api_HostAddress = http://localhost:5140
-
-GET {{SafeMedConnect.Api_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###

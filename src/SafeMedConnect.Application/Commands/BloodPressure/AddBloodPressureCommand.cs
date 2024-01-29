@@ -30,7 +30,7 @@ public class AddBloodPressureCommandHandler(
         var userId = session.GetUserClaims().UserId;
         var bloodPressureMeasurement = mapper.Map<BloodPressureMeasurementEntity>(request);
 
-        var result = await repository.AddOrUpdateAsync(userId, bloodPressureMeasurement, cnl: cancellationToken);
+        var result = await repository.AddOrUpdateAsync(userId, bloodPressureMeasurement, cancellationToken);
         return result?.Measurements is null
             ? new ResponseWrapper<List<BloodPressureMeasurementEntity>>(
                 ResponseTypes.Error,
@@ -50,5 +50,6 @@ public sealed class AddBloodPressureCommandValidator : AbstractValidator<AddBloo
         RuleFor(x => x.Systolic).NotEmpty();
         RuleFor(x => x.Diastolic).NotEmpty();
         RuleFor(x => x.HeartRate).NotEmpty();
+        RuleFor(x => x.Timestamp).NotEmpty();
     }
 }

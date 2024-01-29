@@ -14,8 +14,11 @@ public sealed class AddHeartRateMeasurementCommand : IRequest<ResponseWrapper<Li
     public int Value { get; init; }
 }
 
-public class AddHeartRateMeasurementCommandHandler(IHeartRatesRepository repository, ISessionService session, IMapper mapper)
-    : IRequestHandler<AddHeartRateMeasurementCommand, ResponseWrapper<List<HeartRateMeasurementEntity>>>
+public class AddHeartRateMeasurementCommandHandler(
+    IMeasurementRepository<HeartRateEntity, HeartRateMeasurementEntity> repository,
+    ISessionService session,
+    IMapper mapper
+) : IRequestHandler<AddHeartRateMeasurementCommand, ResponseWrapper<List<HeartRateMeasurementEntity>>>
 {
     public async Task<ResponseWrapper<List<HeartRateMeasurementEntity>>> Handle(
         AddHeartRateMeasurementCommand request, CancellationToken cancellationToken)
@@ -23,7 +26,7 @@ public class AddHeartRateMeasurementCommandHandler(IHeartRatesRepository reposit
         var userId = session.GetUserClaims().UserId;
         var heartRateMeasurement = mapper.Map<HeartRateMeasurementEntity>(request);
 
-        var result = await repository.AddHeartRateMeasurementAsync(userId, heartRateMeasurement, cnl: cancellationToken);
+        var result = await repository.AddOrUpdateAsync(userId, heartRateMeasurement, cancellationToken);
         return result?.Measurements is null
             ? new ResponseWrapper<List<HeartRateMeasurementEntity>>(
                 ResponseTypes.Error,

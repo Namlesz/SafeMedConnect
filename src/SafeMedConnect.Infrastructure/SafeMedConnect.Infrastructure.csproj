@@ -9,6 +9,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <ProjectReference Include="..\SafeMedConnect.Common\SafeMedConnect.Common.csproj" />
         <ProjectReference Include="..\SafeMedConnect.Domain\SafeMedConnect.Domain.csproj" />
     </ItemGroup>
 

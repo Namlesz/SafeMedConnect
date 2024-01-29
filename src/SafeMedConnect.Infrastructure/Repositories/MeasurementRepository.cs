@@ -3,21 +3,14 @@ using MongoDB.Driver;
 using SafeMedConnect.Domain.Entities;
 using SafeMedConnect.Domain.Interfaces.Repositories;
 using SafeMedConnect.Infrastructure.Data;
+using static SafeMedConnect.Common.Utilities.RepositoryHelper;
 
 namespace SafeMedConnect.Infrastructure.Repositories;
 
-internal sealed class MeasurementRepository<TA, TB>
+internal sealed class MeasurementRepository<TA, TB>(MongoContext db, ILogger<MeasurementRepository<TA, TB>> logger)
     : IMeasurementRepository<TA, TB> where TA : BaseMeasurementEntity<TB> where TB : class
 {
-    private readonly IMongoCollection<TA> _collection;
-    private readonly ILogger<MeasurementRepository<TA, TB>> _logger;
-
-    public MeasurementRepository(MongoContext db, ILogger<MeasurementRepository<TA, TB>> logger)
-    {
-        var repositoryName = typeof(TA).Name.Replace("Entity", "s");
-        _collection = db.GetCollection<TA>(repositoryName);
-        _logger = logger;
-    }
+    private readonly IMongoCollection<TA> _collection = db.GetCollection<TA>(GetCollectionName<TA>());
 
     public async Task<TA?> GetAsync(string userId, CancellationToken cnl = default) =>
         await _collection.Find(x => x.UserId == userId).FirstOrDefaultAsync(cnl);
@@ -39,7 +32,7 @@ internal sealed class MeasurementRepository<TA, TB>
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error while adding measurement");
+            logger.LogError(ex, "Error while adding measurement");
             return null;
         }
     }
@@ -54,11 +47,11 @@ internal sealed class MeasurementRepository<TA, TB>
 
         try
         {
-            return await _collection.FindOneAndReplaceAsync(filter, entity, options, cancellationToken: cnl);
+            return await _collection.FindOneAndReplaceAsync(filter, entity, options, cnl);
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error while replacing heart rate measurements");
+            logger.LogError(ex, "Error while replacing measurement");
             return null;
         }
     }

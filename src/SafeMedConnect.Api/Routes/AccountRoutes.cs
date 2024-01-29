@@ -12,20 +12,22 @@ internal sealed class AccountRoutes : IRoutes
     public void RegisterRoutes(RouteGroupBuilder group)
     {
         group.MapPost("/register", async (
-                [Validate][FromBody] RegisterApplicationUserCommand command,
-                CancellationToken cnl,
-                IResponseHandler responseHandler
-            ) => await responseHandler.SendAndHandle(command, cnl))
+                    [Validate][FromBody] RegisterApplicationUserCommand command,
+                    CancellationToken cnl,
+                    IResponseHandler responseHandler
+                ) => await responseHandler.SendAndHandle(command, cnl)
+            )
             .AllowAnonymous()
             .WithSummary("Register a new user")
             .WithDescription("Create a new user account in the system")
             .Produces(StatusCodes.Status204NoContent);
 
         group.MapPost("/login", async (
-                [Validate][FromBody] LoginApplicationUserCommand command,
-                CancellationToken cnl,
-                IResponseHandler responseHandler
-            ) => await responseHandler.SendAndHandle(command, cnl))
+                    [Validate][FromBody] LoginApplicationUserCommand command,
+                    CancellationToken cnl,
+                    IResponseHandler responseHandler
+                ) => await responseHandler.SendAndHandle(command, cnl)
+            )
             .AllowAnonymous()
             .WithSummary("Login user")
             .WithDescription("Login a user and return a JWT token")

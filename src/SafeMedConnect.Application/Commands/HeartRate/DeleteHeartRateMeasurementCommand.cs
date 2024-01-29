@@ -12,8 +12,10 @@ public sealed class DeleteHeartRateMeasurementCommand : IRequest<ResponseWrapper
     public string Id { get; init; } = null!;
 }
 
-public class DeleteHeartRateMeasurementCommandHandler(IHeartRatesRepository repository, ISessionService session)
-    : IRequestHandler<DeleteHeartRateMeasurementCommand, ResponseWrapper<List<HeartRateMeasurementEntity>>>
+public class DeleteHeartRateMeasurementCommandHandler(
+    IMeasurementRepository<HeartRateEntity, HeartRateMeasurementEntity> repository,
+    ISessionService session
+) : IRequestHandler<DeleteHeartRateMeasurementCommand, ResponseWrapper<List<HeartRateMeasurementEntity>>>
 {
     public async Task<ResponseWrapper<List<HeartRateMeasurementEntity>>> Handle(
         DeleteHeartRateMeasurementCommand request,
@@ -22,7 +24,7 @@ public class DeleteHeartRateMeasurementCommandHandler(IHeartRatesRepository repo
     {
         var userId = session.GetUserClaims().UserId;
 
-        var heartRate = await repository.GetHeartRateMeasurementsAsync(userId, cnl: cancellationToken);
+        var heartRate = await repository.GetAsync(userId, cancellationToken);
         if (heartRate?.Measurements is null)
         {
             return new ResponseWrapper<List<HeartRateMeasurementEntity>>(ResponseTypes.Error);
@@ -36,7 +38,7 @@ public class DeleteHeartRateMeasurementCommandHandler(IHeartRatesRepository repo
 
         heartRate.Measurements.Remove(measurement);
 
-        var result = await repository.ReplaceHeartRateMeasurementsAsync(heartRate, cnl: cancellationToken);
+        var result = await repository.ReplaceAsync(heartRate, cancellationToken);
         return result?.Measurements is null
             ? new ResponseWrapper<List<HeartRateMeasurementEntity>>(
                 ResponseTypes.Error,

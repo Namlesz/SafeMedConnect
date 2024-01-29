@@ -8,7 +8,7 @@ public sealed class HeartRateEntity : BaseMeasurementEntity<HeartRateMeasurement
 public sealed class HeartRateMeasurementEntity
 {
     [BsonRepresentation(BsonType.ObjectId)]
-    public string Id { get; set; } = ObjectId.GenerateNewId().ToString();
+    public string Id { get; init; } = ObjectId.GenerateNewId().ToString();
 
     [BsonElement("timestamp")]
     public DateTime Timestamp { get; init; }
