@@ -29,4 +29,10 @@ internal sealed class MongoContext
 
     public IMongoCollection<HeartRateEntity> HeartRates =>
         _database.GetCollection<HeartRateEntity>("HeartRates");
+
+    public IMongoCollection<BloodPressureEntity> BloodPressures =>
+        _database.GetCollection<BloodPressureEntity>("BloodPressures");
+
+    public IMongoCollection<T> GetCollection<T>(string name) where T : class =>
+        _database.GetCollection<T>(name);
 }

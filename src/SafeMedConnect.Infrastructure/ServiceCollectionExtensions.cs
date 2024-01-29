@@ -1,4 +1,5 @@
 using Microsoft.Extensions.DependencyInjection;
+using SafeMedConnect.Domain.Entities;
 using SafeMedConnect.Domain.Interfaces.Repositories;
 using SafeMedConnect.Domain.Interfaces.Services;
 using SafeMedConnect.Infrastructure.Data;
@@ -12,10 +13,18 @@ public static class ServiceCollectionExtensions
     public static void RegisterInfrastructureServices(this IServiceCollection services)
     {
         services.AddSingleton<MongoContext>();
-        services.AddScoped<IUserRepository, UserRepository>();
-        services.AddScoped<IHeartRatesRepository, HeartRatesRepository>();
+        services.RegisterRepositories();
         services.AddScoped<IApplicationUserRepository, ApplicationUserRepository>();
         services.AddScoped<ITokenService, TokenService>();
         services.AddScoped<ISessionService, SessionService>();
+    }
+
+    private static void RegisterRepositories(this IServiceCollection services)
+    {
+        services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<IHeartRatesRepository, HeartRatesRepository>();
+
+        services.AddScoped<IMeasurementRepository<BloodPressureEntity, BloodPressureMeasurementEntity>,
+            MeasurementRepository<BloodPressureEntity, BloodPressureMeasurementEntity>>();
     }
 }

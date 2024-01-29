@@ -3,18 +3,7 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace SafeMedConnect.Domain.Entities;
 
-public sealed class HeartRateEntity
-{
-    [BsonId]
-    [BsonRepresentation(BsonType.ObjectId)]
-    public string? Id { get; set; }
-
-    [BsonElement("user_id")]
-    public string UserId { get; init; } = null!;
-
-    [BsonElement("measurements")]
-    public List<HeartRateMeasurementEntity>? Measurements { get; init; }
-}
+public sealed class HeartRateEntity : BaseMeasurementEntity<HeartRateMeasurementEntity>;
 
 public sealed class HeartRateMeasurementEntity
 {

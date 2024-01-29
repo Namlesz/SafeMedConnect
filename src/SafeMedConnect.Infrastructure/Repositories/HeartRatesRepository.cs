@@ -6,6 +6,7 @@ using SafeMedConnect.Infrastructure.Data;
 
 namespace SafeMedConnect.Infrastructure.Repositories;
 
+//TODO: Remove, use generic class instead
 internal sealed class HeartRatesRepository(MongoContext db, ILogger<HeartRatesRepository> logger) : IHeartRatesRepository
 {
     private IMongoCollection<HeartRateEntity> Users => db.HeartRates;
