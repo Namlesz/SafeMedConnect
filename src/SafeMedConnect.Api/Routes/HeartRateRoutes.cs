@@ -12,36 +12,30 @@ internal sealed class HeartRateRoutes : IRoutes
 {
     public void RegisterRoutes(RouteGroupBuilder group)
     {
-        group.MapGet("/", GetHeartRateMeasurements)
+        group.MapGet("/", async (
+                CancellationToken cnl,
+                IResponseHandler responseHandler
+            ) => await responseHandler.SendAndHandle(new GetHeartRateMeasurementsQuery(), cnl))
             .WithSummary("Get all heart rate measurements")
             .Produces<List<HeartRateMeasurementEntity>>()
             .Produces(StatusCodes.Status404NotFound);
 
-        group.MapPost("/", AddHeartRateMeasurement)
+        group.MapPost("/", async (
+                [Validate][FromBody] AddHeartRateMeasurementCommand command,
+                CancellationToken cnl,
+                IResponseHandler responseHandler
+            ) => await responseHandler.SendAndHandle(command, cnl))
             .WithSummary("Add a new heart rate measurement")
             .Produces<List<HeartRateMeasurementEntity>>()
             .Produces(StatusCodes.Status500InternalServerError);
 
-        group.MapDelete("/", DeleteHeartRateMeasurement)
+        group.MapDelete("/", async (
+                [Validate][FromBody] DeleteHeartRateMeasurementCommand command,
+                CancellationToken cnl,
+                IResponseHandler responseHandler
+            ) => await responseHandler.SendAndHandle(command, cnl))
             .WithSummary("Delete a heart rate measurement")
             .Produces<List<HeartRateMeasurementEntity>>()
             .Produces(StatusCodes.Status500InternalServerError);
     }
-
-    private static async Task<IResult> GetHeartRateMeasurements(
-        IResponseHandler responseHandler,
-        CancellationToken cnl
-    ) => await responseHandler.SendAndHandle(new GetHeartRateMeasurementsQuery(), cnl);
-
-    private static async Task<IResult> AddHeartRateMeasurement(
-        [Validate][FromBody] AddHeartRateMeasurementCommand command,
-        IResponseHandler responseHandler,
-        CancellationToken cnl
-    ) => await responseHandler.SendAndHandle(command, cnl);
-
-    private static async Task<IResult> DeleteHeartRateMeasurement(
-        [Validate][FromBody] DeleteHeartRateMeasurementCommand command,
-        IResponseHandler responseHandler,
-        CancellationToken cnl
-    ) => await responseHandler.SendAndHandle(command, cnl);
 }

@@ -9,7 +9,7 @@ namespace SafeMedConnect.Application.Commands.Account;
 
 public sealed class LoginApplicationUserCommand : IRequest<ResponseWrapper<TokenResponseDto>>
 {
-    public string Login { get; set; } = null!;
+    public string Email { get; set; } = null!;
     public string Password { get; set; } = null!;
 }
 
@@ -21,7 +21,7 @@ internal sealed class LoginApplicationUserCommandHandler(IApplicationUserReposit
         CancellationToken cancellationToken
     )
     {
-        var user = await repository.GetUserAsync(request.Login, cancellationToken);
+        var user = await repository.GetUserAsync(request.Email, cancellationToken);
         if (user is null || !BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash))
         {
             return new ResponseWrapper<TokenResponseDto>(ResponseTypes.Forbidden, "Invalid login or password");
@@ -36,8 +36,9 @@ public sealed class LoginApplicationUserCommandValidator : AbstractValidator<Log
 {
     public LoginApplicationUserCommandValidator()
     {
-        RuleFor(x => x.Login)
-            .NotEmpty();
+        RuleFor(x => x.Email)
+            .NotEmpty()
+            .EmailAddress();
 
         RuleFor(x => x.Password)
             .NotEmpty();

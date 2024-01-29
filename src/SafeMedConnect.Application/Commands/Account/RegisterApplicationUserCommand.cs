@@ -9,7 +9,6 @@ namespace SafeMedConnect.Application.Commands.Account;
 
 public sealed class RegisterApplicationUserCommand : IRequest<ResponseWrapper>
 {
-    public string Login { get; set; } = null!;
     public string Password { get; set; } = null!;
     public string Email { get; set; } = null!;
 }
@@ -21,10 +20,10 @@ internal sealed class RegisterApplicationUserCommandHandler(
 {
     public async Task<ResponseWrapper> Handle(RegisterApplicationUserCommand request, CancellationToken cancellationToken)
     {
-        var userExists = await repository.GetUserAsync(request.Login, cancellationToken);
+        var userExists = await repository.GetUserAsync(request.Email, cancellationToken);
         if (userExists is not null)
         {
-            logger.LogError("User with login {Login} already exists", request.Login);
+            logger.LogError("User with login {Email} already exists", request.Email);
             return new ResponseWrapper(ResponseTypes.Conflict, "User already exists");
         }
 
@@ -37,7 +36,6 @@ internal sealed class RegisterApplicationUserCommandHandler(
 
         var user = new ApplicationUserEntity
         {
-            Login = request.Login,
             PasswordHash = hash,
             Email = request.Email
         };
@@ -57,9 +55,6 @@ public sealed class RegisterApplicationUserCommandValidator : AbstractValidator<
 {
     public RegisterApplicationUserCommandValidator()
     {
-        RuleFor(x => x.Login)
-            .NotEmpty();
-
         RuleFor(x => x.Password)
             .NotEmpty();
 

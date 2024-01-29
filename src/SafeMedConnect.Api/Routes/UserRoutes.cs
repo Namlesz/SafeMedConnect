@@ -12,27 +12,23 @@ internal sealed class UserRoutes : IRoutes
 {
     public void RegisterRoutes(RouteGroupBuilder group)
     {
-        group.MapPost("", UpdateUserInformation)
+        group.MapPost("", async (
+                [FromBody] UpdateUserInformationCommand command,
+                CancellationToken cnl,
+                IResponseHandler responseHandler
+            ) => await responseHandler.SendAndHandle(command, cnl))
             .WithSummary("Update user information")
             .WithDescription("Replace all user information with the provided information (including null values)")
             .Produces<UserEntity>()
             .Produces(StatusCodes.Status500InternalServerError);
 
-        group.MapGet("", GetUserInformation)
+        group.MapGet("", async (
+                CancellationToken cnl,
+                IResponseHandler responseHandler
+            ) => await responseHandler.SendAndHandle(new GetUserInformationQuery(), cnl))
             .WithSummary("Get user information")
             .WithDescription("Get all user information from the database")
             .Produces<UserEntity>()
             .Produces(StatusCodes.Status404NotFound);
     }
-
-    private static async Task<IResult> UpdateUserInformation(
-        [FromBody] UpdateUserInformationCommand command,
-        IResponseHandler responseHandler,
-        CancellationToken cnl
-    ) => await responseHandler.SendAndHandle(command, cnl);
-
-    private static async Task<IResult> GetUserInformation(
-        IResponseHandler responseHandler,
-        CancellationToken cnl
-    ) => await responseHandler.SendAndHandle(new GetUserInformationQuery(), cnl);
 }

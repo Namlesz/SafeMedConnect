@@ -32,7 +32,7 @@ internal sealed class ApplicationUserRepository(MongoContext db, ILogger<Applica
         }
     }
 
-    public async Task<ApplicationUserEntity?> GetUserAsync(string login, CancellationToken cnl = default) =>
+    public async Task<ApplicationUserEntity?> GetUserAsync(string email, CancellationToken cnl = default) =>
         await db.ApplicationUsers.AsQueryable()
-            .FirstOrDefaultAsync(x => x.Login.Equals(login, StringComparison.CurrentCultureIgnoreCase), cancellationToken: cnl);
+            .FirstOrDefaultAsync(x => x.Email.Equals(email, StringComparison.CurrentCultureIgnoreCase), cancellationToken: cnl);
 }
