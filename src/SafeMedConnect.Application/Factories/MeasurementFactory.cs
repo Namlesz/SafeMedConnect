@@ -11,7 +11,7 @@ internal sealed class MeasurementFactory<TA, TB>(
 ) where TA : BaseObservationEntity<TB> where TB : BaseMeasurementEntity
 {
     public async Task<ResponseWrapper<List<TB>>> GetMeasurementsAsync(
-        CancellationToken cancellationToken
+        CancellationToken cancellationToken = default
     )
     {
         var userId = session.GetUserClaims().UserId;
@@ -24,7 +24,7 @@ internal sealed class MeasurementFactory<TA, TB>(
 
     public async Task<ResponseWrapper<List<TB>>> AddMeasurementAsync(
         TB measurementEntity,
-        CancellationToken cancellationToken
+        CancellationToken cancellationToken = default
     )
     {
         var userId = session.GetUserClaims().UserId;
@@ -43,7 +43,7 @@ internal sealed class MeasurementFactory<TA, TB>(
 
     public async Task<ResponseWrapper<List<TB>>> DeleteMeasurementAsync(
         string id,
-        CancellationToken cancellationToken
+        CancellationToken cancellationToken = default
     )
     {
         var userId = session.GetUserClaims().UserId;

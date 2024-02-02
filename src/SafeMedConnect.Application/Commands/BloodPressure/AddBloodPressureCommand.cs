@@ -1,6 +1,7 @@
 using AutoMapper;
 using FluentValidation;
 using MediatR;
+using SafeMedConnect.Application.Factories;
 using SafeMedConnect.Domain.Entities;
 using SafeMedConnect.Domain.Interfaces.Repositories;
 using SafeMedConnect.Domain.Interfaces.Services;
@@ -27,19 +28,9 @@ public class AddBloodPressureCommandHandler(
         CancellationToken cancellationToken
     )
     {
-        var userId = session.GetUserClaims().UserId;
-        var measurementEntity = mapper.Map<BloodPressureMeasurementEntity>(request);
-
-        var result = await repository.AddAsync(userId, measurementEntity, cancellationToken);
-        return result?.Measurements is null
-            ? new ResponseWrapper<List<BloodPressureMeasurementEntity>>(
-                ResponseTypes.Error,
-                "Error while adding blood pressure measurement"
-            )
-            : new ResponseWrapper<List<BloodPressureMeasurementEntity>>(
-                ResponseTypes.Success,
-                data: result.Measurements
-            );
+        var factory = new MeasurementFactory<BloodPressureEntity, BloodPressureMeasurementEntity>(session, repository);
+        var entity = mapper.Map<BloodPressureMeasurementEntity>(request);
+        return await factory.AddMeasurementAsync(entity, cancellationToken);
     }
 }
 

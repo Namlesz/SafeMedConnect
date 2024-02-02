@@ -20,7 +20,8 @@ internal sealed class AccountRoutes : IRoutes
             .AllowAnonymous()
             .WithSummary("Register a new user")
             .WithDescription("Create a new user account in the system")
-            .Produces(StatusCodes.Status204NoContent);
+            .Produces(StatusCodes.Status204NoContent)
+            .Produces(StatusCodes.Status400BadRequest);
 
         group.MapPost("/login", async (
                     [FromBody] LoginApplicationUserCommand command,
@@ -31,6 +32,7 @@ internal sealed class AccountRoutes : IRoutes
             .AllowAnonymous()
             .WithSummary("Login user")
             .WithDescription("Login a user and return a JWT token")
-            .Produces<TokenResponseDto>();
+            .Produces<TokenResponseDto>()
+            .Produces(StatusCodes.Status400BadRequest);
     }
 }

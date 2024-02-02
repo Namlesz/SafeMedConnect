@@ -29,7 +29,8 @@ internal sealed class HeartRateRoutes : IRoutes
             )
             .WithSummary("Add a new heart rate measurement")
             .Produces<List<HeartRateMeasurementEntity>>()
-            .Produces(StatusCodes.Status500InternalServerError);
+            .Produces(StatusCodes.Status500InternalServerError)
+            .Produces(StatusCodes.Status400BadRequest);
 
         group.MapDelete("/", async (
                     [FromBody] DeleteHeartRateMeasurementCommand command,
@@ -39,6 +40,7 @@ internal sealed class HeartRateRoutes : IRoutes
             )
             .WithSummary("Delete a heart rate measurement")
             .Produces<List<HeartRateMeasurementEntity>>()
-            .Produces(StatusCodes.Status500InternalServerError);
+            .Produces(StatusCodes.Status500InternalServerError)
+            .Produces(StatusCodes.Status400BadRequest);
     }
 }
