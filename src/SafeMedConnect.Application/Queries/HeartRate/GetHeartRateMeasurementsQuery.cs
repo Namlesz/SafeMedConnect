@@ -19,10 +19,10 @@ public class GetHeartRateMeasurementsQueryHandler(
     )
     {
         var userId = session.GetUserClaims().UserId;
-        var result = await repository.GetAsync(userId, cnl: cancellationToken);
+        var entity = await repository.GetAsync(userId, cnl: cancellationToken);
 
-        return result?.Measurements is null
+        return entity?.Measurements is null
             ? new ResponseWrapper<List<HeartRateMeasurementEntity>>(ResponseTypes.NotFound)
-            : new ResponseWrapper<List<HeartRateMeasurementEntity>>(ResponseTypes.Success, data: result.Measurements);
+            : new ResponseWrapper<List<HeartRateMeasurementEntity>>(ResponseTypes.Success, data: entity.Measurements);
     }
 }

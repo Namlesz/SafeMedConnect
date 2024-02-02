@@ -24,21 +24,21 @@ public class DeleteHeartRateMeasurementCommandHandler(
     {
         var userId = session.GetUserClaims().UserId;
 
-        var heartRate = await repository.GetAsync(userId, cancellationToken);
-        if (heartRate?.Measurements is null)
+        var entity = await repository.GetAsync(userId, cancellationToken);
+        if (entity?.Measurements is null)
         {
             return new ResponseWrapper<List<HeartRateMeasurementEntity>>(ResponseTypes.Error);
         }
 
-        var measurement = heartRate.Measurements.FirstOrDefault(x => x.Id == request.Id);
-        if (measurement is null)
+        var measurementToDelete = entity.Measurements.FirstOrDefault(x => x.Id == request.Id);
+        if (measurementToDelete is null)
         {
             return new ResponseWrapper<List<HeartRateMeasurementEntity>>(ResponseTypes.NotFound);
         }
 
-        heartRate.Measurements.Remove(measurement);
+        entity.Measurements.Remove(measurementToDelete);
 
-        var result = await repository.ReplaceAsync(heartRate, cancellationToken);
+        var result = await repository.UpdateAsync(entity, cancellationToken);
         return result?.Measurements is null
             ? new ResponseWrapper<List<HeartRateMeasurementEntity>>(
                 ResponseTypes.Error,

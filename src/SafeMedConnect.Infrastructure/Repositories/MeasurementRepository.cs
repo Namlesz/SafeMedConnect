@@ -16,7 +16,7 @@ internal sealed class MeasurementRepository<TA, TB>(MongoContext db, ILogger<Mea
         await _collection.Find(x => x.UserId == userId).FirstOrDefaultAsync(cnl);
 
 
-    public async Task<TA?> AddOrUpdateAsync(string userId, TB measurement, CancellationToken cnl = default)
+    public async Task<TA?> AddAsync(string userId, TB measurement, CancellationToken cnl = default)
     {
         var filter = Builders<TA>.Filter.Eq(x => x.UserId, userId);
         var update = Builders<TA>.Update.Push<TB>(x => x.Measurements, measurement);
@@ -37,7 +37,7 @@ internal sealed class MeasurementRepository<TA, TB>(MongoContext db, ILogger<Mea
         }
     }
 
-    public async Task<TA?> ReplaceAsync(TA entity, CancellationToken cnl = default)
+    public async Task<TA?> UpdateAsync(TA entity, CancellationToken cnl = default)
     {
         var filter = Builders<TA>.Filter.Eq(x => x.UserId, entity.UserId);
         var options = new FindOneAndReplaceOptions<TA>

@@ -24,9 +24,9 @@ public class AddHeartRateMeasurementCommandHandler(
         AddHeartRateMeasurementCommand request, CancellationToken cancellationToken)
     {
         var userId = session.GetUserClaims().UserId;
-        var heartRateMeasurement = mapper.Map<HeartRateMeasurementEntity>(request);
+        var measurementEntity = mapper.Map<HeartRateMeasurementEntity>(request);
 
-        var result = await repository.AddOrUpdateAsync(userId, heartRateMeasurement, cancellationToken);
+        var result = await repository.AddAsync(userId, measurementEntity, cancellationToken);
         return result?.Measurements is null
             ? new ResponseWrapper<List<HeartRateMeasurementEntity>>(
                 ResponseTypes.Error,

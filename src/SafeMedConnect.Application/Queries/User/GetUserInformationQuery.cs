@@ -15,9 +15,9 @@ public class GetUserInformationQueryHandler(IUserRepository repository, ISession
     {
         var userId = session.GetUserClaims().UserId;
 
-        var result = await repository.GetUserAsync(userId, cancellationToken);
-        return result is null
+        var entity = await repository.GetUserAsync(userId, cancellationToken);
+        return entity is null
             ? new ResponseWrapper<UserEntity>(ResponseTypes.NotFound)
-            : new ResponseWrapper<UserEntity>(ResponseTypes.Success, data: result);
+            : new ResponseWrapper<UserEntity>(ResponseTypes.Success, data: entity);
     }
 }

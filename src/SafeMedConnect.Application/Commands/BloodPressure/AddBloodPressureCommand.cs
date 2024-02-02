@@ -28,9 +28,9 @@ public class AddBloodPressureCommandHandler(
     )
     {
         var userId = session.GetUserClaims().UserId;
-        var bloodPressureMeasurement = mapper.Map<BloodPressureMeasurementEntity>(request);
+        var measurementEntity = mapper.Map<BloodPressureMeasurementEntity>(request);
 
-        var result = await repository.AddOrUpdateAsync(userId, bloodPressureMeasurement, cancellationToken);
+        var result = await repository.AddAsync(userId, measurementEntity, cancellationToken);
         return result?.Measurements is null
             ? new ResponseWrapper<List<BloodPressureMeasurementEntity>>(
                 ResponseTypes.Error,
