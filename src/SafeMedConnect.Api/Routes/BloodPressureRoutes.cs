@@ -12,7 +12,7 @@ internal sealed class BloodPressureRoutes : IRoutes
     public void RegisterRoutes(RouteGroupBuilder group)
     {
         group.MapPost("/", async (
-                    [Validate][FromBody] AddBloodPressureCommand command,
+                    [FromBody] AddBloodPressureCommand command,
                     CancellationToken cnl,
                     IResponseHandler responseHandler
                 ) => await responseHandler.SendAndHandle(command, cnl)

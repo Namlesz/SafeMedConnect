@@ -22,7 +22,7 @@ internal sealed class HeartRateRoutes : IRoutes
             .Produces(StatusCodes.Status404NotFound);
 
         group.MapPost("/", async (
-                    [Validate][FromBody] AddHeartRateMeasurementCommand command,
+                    [FromBody] AddHeartRateMeasurementCommand command,
                     CancellationToken cnl,
                     IResponseHandler responseHandler
                 ) => await responseHandler.SendAndHandle(command, cnl)
@@ -32,7 +32,7 @@ internal sealed class HeartRateRoutes : IRoutes
             .Produces(StatusCodes.Status500InternalServerError);
 
         group.MapDelete("/", async (
-                    [Validate][FromBody] DeleteHeartRateMeasurementCommand command,
+                    [FromBody] DeleteHeartRateMeasurementCommand command,
                     CancellationToken cnl,
                     IResponseHandler responseHandler
                 ) => await responseHandler.SendAndHandle(command, cnl)

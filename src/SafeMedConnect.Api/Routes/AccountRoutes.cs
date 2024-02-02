@@ -12,7 +12,7 @@ internal sealed class AccountRoutes : IRoutes
     public void RegisterRoutes(RouteGroupBuilder group)
     {
         group.MapPost("/register", async (
-                    [Validate][FromBody] RegisterApplicationUserCommand command,
+                    [FromBody] RegisterApplicationUserCommand command,
                     CancellationToken cnl,
                     IResponseHandler responseHandler
                 ) => await responseHandler.SendAndHandle(command, cnl)
@@ -23,7 +23,7 @@ internal sealed class AccountRoutes : IRoutes
             .Produces(StatusCodes.Status204NoContent);
 
         group.MapPost("/login", async (
-                    [Validate][FromBody] LoginApplicationUserCommand command,
+                    [FromBody] LoginApplicationUserCommand command,
                     CancellationToken cnl,
                     IResponseHandler responseHandler
                 ) => await responseHandler.SendAndHandle(command, cnl)

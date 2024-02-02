@@ -1,5 +1,6 @@
 using SafeMedConnect.Api.Extensions;
 using SafeMedConnect.Api.Helpers;
+using SharpGrip.FluentValidation.AutoValidation.Endpoints.Extensions;
 
 namespace SafeMedConnect.Api.Startup;
 
@@ -22,7 +23,7 @@ internal static class RegisterStartupMiddlewares
         var root = app
             .MapGroup(string.Empty)
             .RequireAuthorization()
-            .AddEndpointFilterFactory(ValidationFilter.ValidationFilterFactory)
+            .AddFluentValidationAutoValidation()
             .MapGroup("api");
 
         root.MapRoutes();
