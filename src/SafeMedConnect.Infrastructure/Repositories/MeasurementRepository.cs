@@ -1,6 +1,6 @@
 using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
-using SafeMedConnect.Domain.Entities;
+using SafeMedConnect.Domain.Entities.Base;
 using SafeMedConnect.Domain.Interfaces.Repositories;
 using SafeMedConnect.Infrastructure.Data;
 using static SafeMedConnect.Common.Utilities.RepositoryHelper;
@@ -8,7 +8,7 @@ using static SafeMedConnect.Common.Utilities.RepositoryHelper;
 namespace SafeMedConnect.Infrastructure.Repositories;
 
 internal sealed class MeasurementRepository<TA, TB>(MongoContext db, ILogger<MeasurementRepository<TA, TB>> logger)
-    : IMeasurementRepository<TA, TB> where TA : BaseMeasurementEntity<TB> where TB : class
+    : IMeasurementRepository<TA, TB> where TA : BaseObservationEntity<TB> where TB : BaseMeasurementEntity
 {
     private readonly IMongoCollection<TA> _collection = db.GetCollection<TA>(GetCollectionName<TA>());
 

@@ -1,4 +1,5 @@
 using MediatR;
+using SafeMedConnect.Application.Factories;
 using SafeMedConnect.Domain.Entities;
 using SafeMedConnect.Domain.Interfaces.Repositories;
 using SafeMedConnect.Domain.Interfaces.Services;
@@ -13,16 +14,9 @@ public class GetHeartRateMeasurementsQueryHandler(
     ISessionService session
 ) : IRequestHandler<GetHeartRateMeasurementsQuery, ResponseWrapper<List<HeartRateMeasurementEntity>>>
 {
-    public async Task<ResponseWrapper<List<HeartRateMeasurementEntity>>> Handle(
+    public Task<ResponseWrapper<List<HeartRateMeasurementEntity>>> Handle(
         GetHeartRateMeasurementsQuery request,
         CancellationToken cancellationToken
-    )
-    {
-        var userId = session.GetUserClaims().UserId;
-        var entity = await repository.GetAsync(userId, cnl: cancellationToken);
-
-        return entity?.Measurements is null
-            ? new ResponseWrapper<List<HeartRateMeasurementEntity>>(ResponseTypes.NotFound)
-            : new ResponseWrapper<List<HeartRateMeasurementEntity>>(ResponseTypes.Success, data: entity.Measurements);
-    }
+    ) => new MeasurementFactory<HeartRateEntity, HeartRateMeasurementEntity>(session, repository)
+        .GetMeasurementsAsync(cancellationToken);
 }

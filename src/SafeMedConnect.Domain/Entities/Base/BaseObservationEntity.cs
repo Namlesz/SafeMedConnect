@@ -1,9 +1,9 @@
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
-namespace SafeMedConnect.Domain.Entities;
+namespace SafeMedConnect.Domain.Entities.Base;
 
-public class BaseMeasurementEntity<T> where T : class
+public class BaseObservationEntity<T> where T : BaseMeasurementEntity
 {
     [BsonId]
     [BsonRepresentation(BsonType.ObjectId)]

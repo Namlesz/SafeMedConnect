@@ -1,15 +1,12 @@
-using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
+using SafeMedConnect.Domain.Entities.Base;
 
 namespace SafeMedConnect.Domain.Entities;
 
-public sealed class HeartRateEntity : BaseMeasurementEntity<HeartRateMeasurementEntity>;
+public sealed class HeartRateEntity : BaseObservationEntity<HeartRateMeasurementEntity>;
 
-public sealed class HeartRateMeasurementEntity
+public sealed class HeartRateMeasurementEntity : BaseMeasurementEntity
 {
-    [BsonRepresentation(BsonType.ObjectId)]
-    public string Id { get; init; } = ObjectId.GenerateNewId().ToString();
-
     [BsonElement("timestamp")]
     public DateTime Timestamp { get; init; }
 

@@ -1,6 +1,7 @@
 using AutoMapper;
 using FluentValidation;
 using MediatR;
+using SafeMedConnect.Application.Factories;
 using SafeMedConnect.Domain.Entities;
 using SafeMedConnect.Domain.Interfaces.Repositories;
 using SafeMedConnect.Domain.Interfaces.Services;
@@ -23,19 +24,10 @@ public class AddHeartRateMeasurementCommandHandler(
     public async Task<ResponseWrapper<List<HeartRateMeasurementEntity>>> Handle(
         AddHeartRateMeasurementCommand request, CancellationToken cancellationToken)
     {
-        var userId = session.GetUserClaims().UserId;
+        var factory = new MeasurementFactory<HeartRateEntity, HeartRateMeasurementEntity>(session, repository);
         var measurementEntity = mapper.Map<HeartRateMeasurementEntity>(request);
 
-        var result = await repository.AddAsync(userId, measurementEntity, cancellationToken);
-        return result?.Measurements is null
-            ? new ResponseWrapper<List<HeartRateMeasurementEntity>>(
-                ResponseTypes.Error,
-                "Error while adding heart rate measurement"
-            )
-            : new ResponseWrapper<List<HeartRateMeasurementEntity>>(
-                ResponseTypes.Success,
-                data: result.Measurements
-            );
+        return await factory.AddMeasurementAsync(measurementEntity, cancellationToken);
     }
 }
 
