@@ -6,27 +6,23 @@ namespace SafeMedConnect.Api.Extensions;
 
 internal static class RoutesInitializer
 {
-    public static void MapRoutes(this RouteGroupBuilder root)
+    public static void MapRoutes(this RouteGroupBuilder routeGroupBuilder)
     {
-        var assemblies = AppDomain.CurrentDomain.GetAssemblies();
+        var assemblies = AppDomain.CurrentDomain.GetAssemblies().Distinct();
+        var routeImplementations = assemblies
+            .SelectMany(assembly => assembly.GetTypes())
+            .Where(type => typeof(IRoutes).IsAssignableFrom(type) && type is { IsInterface: false, IsAbstract: false });
 
-        var classes = assemblies
-            .Distinct()
-            .SelectMany(x => x.GetTypes())
-            .Where(x =>
-                typeof(IRoutes).IsAssignableFrom(x) && x is { IsInterface: false, IsAbstract: false }
-            );
-
-        foreach (var classe in classes)
+        foreach (var routeImplementation in routeImplementations)
         {
-            var routePrefix = classe.GetCustomAttribute<ApiRouteAttribute>()?.Route ?? string.Empty;
+            var routePrefix = routeImplementation.GetCustomAttribute<ApiRouteAttribute>()?.Route ?? string.Empty;
 
-            var instance = Activator.CreateInstance(classe) as IRoutes;
-            instance?.RegisterRoutes(
-                root.MapGroup(routePrefix)
-                    .WithOpenApi()
-                    .WithTags(routePrefix)
-            );
+            if (Activator.CreateInstance(routeImplementation) is IRoutes routesInstance)
+            {
+                routesInstance.RegisterRoutes(
+                    routeGroupBuilder.MapGroup(routePrefix).WithOpenApi().WithTags(routePrefix)
+                );
+            }
         }
     }
 }
