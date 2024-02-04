@@ -1,5 +1,4 @@
 using SafeMedConnect.Api.Extensions;
-using SafeMedConnect.Api.Helpers;
 using SharpGrip.FluentValidation.AutoValidation.Endpoints.Extensions;
 
 namespace SafeMedConnect.Api.Startup;

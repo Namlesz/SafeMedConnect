@@ -5,6 +5,7 @@ namespace SafeMedConnect.Domain.Entities;
 
 public sealed class UserEntity
 {
+    // TODO: don't share this with the client on GET user info
     [BsonId]
     [BsonRepresentation(BsonType.ObjectId)]
     public string? Id { get; set; }
@@ -29,14 +30,14 @@ public sealed class UserEntity
     public string? BloodType { get; init; }
 
     [BsonElement("allergies")]
-    public List<string>? Allergies { get; init; }
+    public IEnumerable<string>? Allergies { get; init; }
 
     [BsonElement("medications")]
-    public List<string>? Medications { get; init; }
+    public IEnumerable<string>? Medications { get; init; }
 
     [BsonElement("health_insurance_number")]
     public string? HealthInsuranceNumber { get; init; }
 
     [BsonElement("diagnosed_diseases")]
-    public List<string>? DiagnosedDiseases { get; init; }
+    public IEnumerable<string>? DiagnosedDiseases { get; init; }
 }

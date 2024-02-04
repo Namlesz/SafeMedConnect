@@ -1,4 +1,3 @@
-using SafeMedConnect.Domain.Entities;
 using SafeMedConnect.Domain.Entities.Base;
 
 namespace SafeMedConnect.Domain.Interfaces.Repositories;
