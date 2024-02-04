@@ -3,7 +3,7 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace SafeMedConnect.Domain.Entities.Base;
 
-public class BaseMeasurementEntity
+public abstract class BaseMeasurementEntity
 {
     [BsonRepresentation(BsonType.ObjectId)]
     public string Id { get; init; } = ObjectId.GenerateNewId().ToString();
