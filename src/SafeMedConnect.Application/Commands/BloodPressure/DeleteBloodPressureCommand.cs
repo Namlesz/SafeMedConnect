@@ -8,10 +8,8 @@ using SafeMedConnect.Domain.Responses;
 
 namespace SafeMedConnect.Application.Commands.BloodPressure;
 
-public sealed class DeleteBloodPressureCommand : IRequest<ResponseWrapper<List<BloodPressureMeasurementEntity>>>
-{
-    public string Id { get; init; } = null!;
-}
+public sealed record DeleteBloodPressureCommand(string Id)
+    : IRequest<ResponseWrapper<List<BloodPressureMeasurementEntity>>>;
 
 public class DeleteBloodPressureCommandHandler(
     IMeasurementRepository<BloodPressureEntity, BloodPressureMeasurementEntity> repository,

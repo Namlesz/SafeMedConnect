@@ -8,10 +8,8 @@ using SafeMedConnect.Domain.Responses;
 
 namespace SafeMedConnect.Application.Commands.HeartRate;
 
-public sealed class DeleteHeartRateMeasurementCommand : IRequest<ResponseWrapper<List<HeartRateMeasurementEntity>>>
-{
-    public string Id { get; init; } = null!;
-}
+public sealed record DeleteHeartRateMeasurementCommand(string Id)
+    : IRequest<ResponseWrapper<List<HeartRateMeasurementEntity>>>;
 
 public class DeleteHeartRateMeasurementCommandHandler(
     IMeasurementRepository<HeartRateEntity, HeartRateMeasurementEntity> repository,

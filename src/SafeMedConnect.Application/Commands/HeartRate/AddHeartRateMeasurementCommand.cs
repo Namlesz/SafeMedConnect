@@ -9,11 +9,8 @@ using SafeMedConnect.Domain.Responses;
 
 namespace SafeMedConnect.Application.Commands.HeartRate;
 
-public sealed class AddHeartRateMeasurementCommand : IRequest<ResponseWrapper<List<HeartRateMeasurementEntity>>>
-{
-    public DateTime Timestamp { get; init; }
-    public int Value { get; init; }
-}
+public sealed record AddHeartRateMeasurementCommand(DateTime Timestamp, int Value)
+    : IRequest<ResponseWrapper<List<HeartRateMeasurementEntity>>>;
 
 public class AddHeartRateMeasurementCommandHandler(
     IMeasurementRepository<HeartRateEntity, HeartRateMeasurementEntity> repository,

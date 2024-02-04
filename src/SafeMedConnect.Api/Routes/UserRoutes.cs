@@ -2,8 +2,8 @@ using Microsoft.AspNetCore.Mvc;
 using SafeMedConnect.Api.Attributes;
 using SafeMedConnect.Api.Interfaces;
 using SafeMedConnect.Application.Commands.User;
+using SafeMedConnect.Application.Dto;
 using SafeMedConnect.Application.Queries.User;
-using SafeMedConnect.Domain.Entities;
 
 namespace SafeMedConnect.Api.Routes;
 
@@ -20,7 +20,7 @@ internal sealed class UserRoutes : IRoutes
             )
             .WithSummary("Update user information")
             .WithDescription("Replace all user information with the provided information (including null values)")
-            .Produces<UserEntity>()
+            .Produces<UserDto>()
             .Produces(StatusCodes.Status500InternalServerError);
 
         group.MapGet("", async (
@@ -30,7 +30,7 @@ internal sealed class UserRoutes : IRoutes
             )
             .WithSummary("Get user information")
             .WithDescription("Get all user information from the database")
-            .Produces<UserEntity>()
+            .Produces<UserDto>()
             .Produces(StatusCodes.Status404NotFound);
     }
 }

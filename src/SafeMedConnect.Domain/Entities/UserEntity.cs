@@ -5,7 +5,6 @@ namespace SafeMedConnect.Domain.Entities;
 
 public sealed class UserEntity
 {
-    // TODO: don't share this with the client on GET user info
     [BsonId]
     [BsonRepresentation(BsonType.ObjectId)]
     public string? Id { get; set; }

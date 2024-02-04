@@ -3,9 +3,8 @@ using SafeMedConnect.Domain.Responses;
 
 namespace SafeMedConnect.Application.Commands.Share;
 
-public sealed class ShareDataCommand : IRequest<ResponseWrapper<object>>
-{
-}
+public sealed record ShareDataCommand()
+    : IRequest<ResponseWrapper<object>>;
 
 public class ShareDataCommandHandler : IRequestHandler<ShareDataCommand, ResponseWrapper<object>>
 {

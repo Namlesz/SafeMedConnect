@@ -7,7 +7,7 @@ using SafeMedConnect.Domain.Responses;
 
 namespace SafeMedConnect.Application.Queries.BloodPressure;
 
-public sealed class GetBloodPressureQuery : IRequest<ResponseWrapper<List<BloodPressureMeasurementEntity>>>;
+public sealed record GetBloodPressureQuery : IRequest<ResponseWrapper<List<BloodPressureMeasurementEntity>>>;
 
 public class GetBloodPressureQueryHandler(
     ISessionService session,

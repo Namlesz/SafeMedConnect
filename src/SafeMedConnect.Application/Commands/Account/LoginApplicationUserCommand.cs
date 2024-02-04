@@ -7,11 +7,8 @@ using SafeMedConnect.Domain.Responses;
 
 namespace SafeMedConnect.Application.Commands.Account;
 
-public sealed class LoginApplicationUserCommand : IRequest<ResponseWrapper<TokenResponseDto>>
-{
-    public string Email { get; set; } = null!;
-    public string Password { get; set; } = null!;
-}
+public sealed record LoginApplicationUserCommand(string Email, string Password)
+    : IRequest<ResponseWrapper<TokenResponseDto>>;
 
 internal sealed class LoginApplicationUserCommandHandler(IApplicationUserRepository repository, ITokenService tokenService)
     : IRequestHandler<LoginApplicationUserCommand, ResponseWrapper<TokenResponseDto>>

@@ -1,5 +1,6 @@
 using AutoMapper;
 using MediatR;
+using SafeMedConnect.Application.Dto;
 using SafeMedConnect.Domain.Entities;
 using SafeMedConnect.Domain.Interfaces.Repositories;
 using SafeMedConnect.Domain.Interfaces.Services;
@@ -7,24 +8,23 @@ using SafeMedConnect.Domain.Responses;
 
 namespace SafeMedConnect.Application.Commands.User;
 
-public sealed class UpdateUserInformationCommand : IRequest<ResponseWrapper<UserEntity>>
-{
-    public string? FirstName { get; init; }
-    public string? LastName { get; init; }
-    public DateTime? DateOfBirth { get; init; }
-    public double? Weight { get; init; }
-    public double? Height { get; init; }
-    public string? BloodType { get; init; }
-    public List<string>? Allergies { get; init; }
-    public List<string>? Medications { get; init; }
-    public string? HealthInsuranceNumber { get; init; }
-    public List<string>? DiagnosedDiseases { get; init; }
-}
+public sealed record UpdateUserInformationCommand(
+    string? FirstName,
+    string? LastName,
+    DateTime? DateOfBirth,
+    double? Weight,
+    double? Height,
+    string? BloodType,
+    List<string>? Allergies,
+    List<string>? Medications,
+    string? HealthInsuranceNumber,
+    List<string>? DiagnosedDiseases
+) : IRequest<ResponseWrapper<UserDto>>;
 
 public class UpdateUserInformationCommandHandler(IUserRepository repository, ISessionService session, IMapper mapper)
-    : IRequestHandler<UpdateUserInformationCommand, ResponseWrapper<UserEntity>>
+    : IRequestHandler<UpdateUserInformationCommand, ResponseWrapper<UserDto>>
 {
-    public async Task<ResponseWrapper<UserEntity>> Handle(
+    public async Task<ResponseWrapper<UserDto>> Handle(
         UpdateUserInformationCommand request,
         CancellationToken cancellationToken
     )
@@ -36,7 +36,7 @@ public class UpdateUserInformationCommandHandler(IUserRepository repository, ISe
 
         var updatedUser = await repository.UpdateUserAsync(user, cancellationToken);
         return updatedUser is null
-            ? new ResponseWrapper<UserEntity>(ResponseTypes.Error, "Error while updating user")
-            : new ResponseWrapper<UserEntity>(ResponseTypes.Success, data: updatedUser);
+            ? new ResponseWrapper<UserDto>(ResponseTypes.Error, "Error while updating user")
+            : new ResponseWrapper<UserDto>(ResponseTypes.Success, data: mapper.Map<UserDto>(updatedUser));
     }
 }

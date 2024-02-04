@@ -14,7 +14,7 @@ internal sealed class MongoContext
         var connectionString = configuration.GetConnectionString("HadesDb")
             ?? throw new InvalidOperationException("Missing connection string for HadesDb");
 
-        var databaseName = configuration["DefaultDatabase"]
+        var databaseName = configuration["DefaultDatabaseName"]
             ?? throw new InvalidOperationException("Missing database name");
 
         var client = new MongoClient(connectionString);

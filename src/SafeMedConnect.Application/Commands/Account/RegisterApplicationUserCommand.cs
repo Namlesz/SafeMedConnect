@@ -7,11 +7,8 @@ using SafeMedConnect.Domain.Responses;
 
 namespace SafeMedConnect.Application.Commands.Account;
 
-public sealed class RegisterApplicationUserCommand : IRequest<ResponseWrapper>
-{
-    public string Password { get; set; } = null!;
-    public string Email { get; set; } = null!;
-}
+public sealed record RegisterApplicationUserCommand(string Password, string Email)
+    : IRequest<ResponseWrapper>;
 
 internal sealed class RegisterApplicationUserCommandHandler(
     IApplicationUserRepository repository,
