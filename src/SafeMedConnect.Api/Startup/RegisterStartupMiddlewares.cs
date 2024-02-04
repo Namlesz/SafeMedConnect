@@ -26,12 +26,6 @@ internal static class RegisterStartupMiddlewares
             .MapGroup("api");
 
         root.MapRoutes();
-
-        // TODO: Temperature
-        // TODO: Mental health
-        // TODO: Sleep
-        // TODO: Blood sugar
-        // TODO: Medical visits
         return app;
     }
 }
