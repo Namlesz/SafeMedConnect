@@ -15,7 +15,6 @@ internal sealed class ShareRoutes : IRoutes
     {
         /* TODO: (POST) share/share-data
          - Select what data to share
-         - (Optional) Generate redirect URL with token
         */
         group.MapPost("share-data", async (
                     [FromBody] ShareDataCommand command,
