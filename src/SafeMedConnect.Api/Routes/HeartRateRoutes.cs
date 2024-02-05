@@ -12,6 +12,8 @@ internal sealed class HeartRateRoutes : IRoutes
 {
     public void RegisterRoutes(RouteGroupBuilder group)
     {
+        group.RequireAuthorization();
+
         group.MapGet("/", async (
                     CancellationToken cnl,
                     IResponseHandler responseHandler

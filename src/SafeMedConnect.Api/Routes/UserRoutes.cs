@@ -12,6 +12,8 @@ internal sealed class UserRoutes : IRoutes
 {
     public void RegisterRoutes(RouteGroupBuilder group)
     {
+        group.RequireAuthorization();
+
         group.MapPost("", async (
                     [FromBody] UpdateUserInformationCommand command,
                     CancellationToken cnl,

@@ -24,7 +24,7 @@ internal sealed class LoginApplicationUserCommandHandler(IApplicationUserReposit
             return new ResponseWrapper<TokenResponseDto>(ResponseTypes.Forbidden, "Invalid login or password");
         }
 
-        var token = tokenService.GenerateJwtToken(user);
+        var token = tokenService.GenerateJwtToken(user, cancellationToken);
         return new ResponseWrapper<TokenResponseDto>(ResponseTypes.Success, data: new TokenResponseDto(token));
     }
 }

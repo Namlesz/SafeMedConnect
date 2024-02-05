@@ -5,7 +5,6 @@ using SafeMedConnect.Api.Helpers;
 using SafeMedConnect.Api.Interfaces;
 using SafeMedConnect.Api.Swagger;
 using SafeMedConnect.Domain.Authorization;
-using System.Security.Claims;
 using System.Text;
 
 namespace SafeMedConnect.Api.Startup;
@@ -33,12 +32,12 @@ internal static class RegisterStartupServices
         {
             options.AddPolicy(PolicyNames.UserPolicy, policy =>
             {
-                policy.RequireClaim(ClaimTypes.Role, Roles.User);
+                policy.RequireRole(Roles.User);
             });
 
             options.AddPolicy(PolicyNames.GuestPolicy, policy =>
             {
-                policy.RequireClaim(ClaimTypes.Role, Roles.Guest);
+                policy.RequireRole(Roles.Guest);
             });
 
             options.DefaultPolicy = options.GetPolicy(PolicyNames.UserPolicy)

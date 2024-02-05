@@ -1,5 +1,6 @@
 using MediatR;
 using SafeMedConnect.Domain.Responses;
+using System.Diagnostics;
 
 namespace SafeMedConnect.Application.Queries.Share;
 
@@ -9,6 +10,7 @@ public class GetSharedDataQueryHandler : IRequestHandler<GetSharedDataQuery, Res
 {
     public Task<ResponseWrapper<object>> Handle(GetSharedDataQuery request, CancellationToken cancellationToken)
     {
+        Debug.WriteLine("GetSharedDataQueryHandler");
         throw new NotImplementedException();
     }
 }

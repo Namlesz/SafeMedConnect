@@ -9,24 +9,33 @@ using System.Text;
 
 namespace SafeMedConnect.Infrastructure.Services;
 
-internal sealed class TokenService(IConfiguration configuration) : ITokenService
+internal sealed class TokenService : ITokenService
 {
-    public string GenerateJwtToken(ApplicationUserEntity user)
+    private readonly byte[] _secret;
+    private readonly string _issuer;
+    private readonly string _audience;
+    private readonly DateTime _expiration;
+
+    public TokenService(IConfiguration configuration)
     {
         var jwtSettings = configuration.GetSection("JwtSettings");
 
-        var secret = Encoding.ASCII.GetBytes(jwtSettings["Key"]
+        _secret = Encoding.ASCII.GetBytes(jwtSettings["Key"]
             ?? throw new InvalidOperationException("JwtSettings:Key is missing"));
 
-        var expiration = DateTime.UtcNow.AddMinutes(int.Parse(jwtSettings["ExpirationInMinutes"]
+        _expiration = DateTime.UtcNow.AddMinutes(int.Parse(jwtSettings["ExpirationInMinutes"]
             ?? throw new InvalidOperationException("JwtSettings:ExpirationInMinutes is missing")));
 
-        var issuer = jwtSettings["Issuer"]
+        _issuer = jwtSettings["Issuer"]
             ?? throw new InvalidOperationException("JwtSettings:Issuer is missing");
 
-        var audience = jwtSettings["Audience"]
+        _audience = jwtSettings["Audience"]
             ?? throw new InvalidOperationException("JwtSettings:Audience is missing");
+    }
 
+    public string GenerateJwtToken(ApplicationUserEntity user, CancellationToken cancellationToken = default)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
         var tokenDescriptor = new SecurityTokenDescriptor
         {
             Subject = new ClaimsIdentity(new[]
@@ -36,11 +45,34 @@ internal sealed class TokenService(IConfiguration configuration) : ITokenService
                 new Claim(CustomClaimTypes.UserId, user.UserId)
             }),
             SigningCredentials = new SigningCredentials(
-                new SymmetricSecurityKey(secret), SecurityAlgorithms.HmacSha256Signature
+                new SymmetricSecurityKey(_secret), SecurityAlgorithms.HmacSha256Signature
             ),
-            Expires = expiration,
-            Issuer = issuer,
-            Audience = audience
+            Expires = _expiration,
+            Issuer = _issuer,
+            Audience = _audience
+        };
+
+        var tokenHandler = new JwtSecurityTokenHandler();
+        var token = tokenHandler.CreateToken(tokenDescriptor);
+        return tokenHandler.WriteToken(token);
+    }
+
+    public string GenerateDataShareToken(int minutesToExpire, string userId, CancellationToken cancellationToken = default)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+        var tokenDescriptor = new SecurityTokenDescriptor
+        {
+            Subject = new ClaimsIdentity(new[]
+            {
+                new Claim(ClaimTypes.Role, Roles.Guest),
+                new Claim(CustomClaimTypes.UserId, userId)
+            }),
+            SigningCredentials = new SigningCredentials(
+                new SymmetricSecurityKey(_secret), SecurityAlgorithms.HmacSha256Signature
+            ),
+            Expires = DateTime.UtcNow.AddMinutes(minutesToExpire),
+            Issuer = _issuer,
+            Audience = _audience
         };
 
         var tokenHandler = new JwtSecurityTokenHandler();
