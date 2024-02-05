@@ -10,8 +10,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SafeMedConnect.Application"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SafeMedConnect.Infrastructure", "src\SafeMedConnect.Infrastructure\SafeMedConnect.Infrastructure.csproj", "{05A2D578-C4E3-4308-AD20-0FA9188E9B5E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SafeMedConnect.Common", "src\SafeMedConnect.Common\SafeMedConnect.Common.csproj", "{DE1EB002-F2A9-425B-B001-00CC0377DE8C}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -22,7 +20,6 @@ Global
 		{A7C63A33-7084-4E01-BD0E-EE284824600F} = {014366AE-4F09-4CCF-91E1-1F8D102A40FE}
 		{9566A2AD-2E68-4D3D-B04C-657DAB16B93B} = {014366AE-4F09-4CCF-91E1-1F8D102A40FE}
 		{05A2D578-C4E3-4308-AD20-0FA9188E9B5E} = {014366AE-4F09-4CCF-91E1-1F8D102A40FE}
-		{DE1EB002-F2A9-425B-B001-00CC0377DE8C} = {014366AE-4F09-4CCF-91E1-1F8D102A40FE}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{BA33D780-0B29-4BE2-BB68-1905A13B4235}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -41,9 +38,5 @@ Global
 		{05A2D578-C4E3-4308-AD20-0FA9188E9B5E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{05A2D578-C4E3-4308-AD20-0FA9188E9B5E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{05A2D578-C4E3-4308-AD20-0FA9188E9B5E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{DE1EB002-F2A9-425B-B001-00CC0377DE8C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{DE1EB002-F2A9-425B-B001-00CC0377DE8C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{DE1EB002-F2A9-425B-B001-00CC0377DE8C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{DE1EB002-F2A9-425B-B001-00CC0377DE8C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
