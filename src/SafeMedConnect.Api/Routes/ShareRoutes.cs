@@ -28,13 +28,9 @@ internal sealed class ShareRoutes : IRoutes
             .RequireAuthorization();
 
         /* TODO: (GET) share/get-shared-data
-         - Get data shared from user via token
-         - Requires token
-         - Get user id from token
          - Get what data is shared from token
          - Returns shared data
          - Returns 404 if no data is shared
-         - Policy: GuestPolicy
         */
         group.MapGet("get-shared-data", async (
                     CancellationToken cnl,
@@ -42,6 +38,7 @@ internal sealed class ShareRoutes : IRoutes
                 ) => await responseHandler.SendAndHandle(new GetSharedDataQuery(), cnl)
             )
             .WithSummary("Get data shared from user via token")
+            .Produces(StatusCodes.Status401Unauthorized)
             .RequireAuthorization(PolicyNames.GuestPolicy);
     }
 }

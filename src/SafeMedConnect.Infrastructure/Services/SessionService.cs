@@ -31,4 +31,24 @@ internal sealed class SessionService(IHttpContextAccessor httpContextAccessor) :
             Role = roleClaim.Value
         };
     }
+
+    public UserClaims GetGuestClaims()
+    {
+        var httpContext = httpContextAccessor.HttpContext
+            ?? throw new NullReferenceException("HttpContext is null");
+
+        var claims = httpContext.User.Claims.ToList();
+
+        var userIdClaim = claims.FirstOrDefault(c => c.Type == CustomClaimTypes.UserId)
+            ?? throw new NullReferenceException("UserId claim is null");
+
+        var roleClaim = claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)
+            ?? throw new NullReferenceException("Role claim is null");
+
+        return new UserClaims
+        {
+            UserId = userIdClaim.Value,
+            Role = roleClaim.Value
+        };
+    }
 }
