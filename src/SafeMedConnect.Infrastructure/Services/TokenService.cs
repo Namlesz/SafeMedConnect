@@ -1,6 +1,7 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using SafeMedConnect.Domain.Authorization;
+using SafeMedConnect.Domain.ClaimTypes;
 using SafeMedConnect.Domain.Entities;
 using SafeMedConnect.Domain.Interfaces.Services;
 using System.IdentityModel.Tokens.Jwt;
@@ -42,7 +43,7 @@ internal sealed class TokenService : ITokenService
             {
                 new Claim(ClaimTypes.Email, user.Email),
                 new Claim(ClaimTypes.Role, Roles.User),
-                new Claim(CustomClaimTypes.UserId, user.UserId)
+                new Claim(UserClaimTypes.UserId, user.UserId)
             }),
             SigningCredentials = new SigningCredentials(
                 new SymmetricSecurityKey(_secret), SecurityAlgorithms.HmacSha256Signature
@@ -65,7 +66,7 @@ internal sealed class TokenService : ITokenService
             Subject = new ClaimsIdentity(new[]
             {
                 new Claim(ClaimTypes.Role, Roles.Guest),
-                new Claim(CustomClaimTypes.UserId, userId)
+                new Claim(UserClaimTypes.UserId, userId)
             }),
             SigningCredentials = new SigningCredentials(
                 new SymmetricSecurityKey(_secret), SecurityAlgorithms.HmacSha256Signature
