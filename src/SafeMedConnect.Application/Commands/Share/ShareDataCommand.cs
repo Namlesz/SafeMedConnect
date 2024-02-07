@@ -8,7 +8,12 @@ using System.Security.Claims;
 
 namespace SafeMedConnect.Application.Commands.Share;
 
-public sealed record ShareDataCommand(int MinutesToExpire) : IRequest<ResponseWrapper<TokenResponseDto>>;
+public sealed record ShareDataCommand(
+    int MinutesToExpire,
+    bool ShareSensitiveData = false,
+    bool ShareBloodPressureMeasurement = false,
+    bool ShareHeartRateMeasurement = false
+) : IRequest<ResponseWrapper<TokenResponseDto>>;
 
 public class ShareDataCommandHandler(ISessionService sessionService, ITokenService tokenService)
     : IRequestHandler<ShareDataCommand, ResponseWrapper<TokenResponseDto>>
@@ -16,16 +21,14 @@ public class ShareDataCommandHandler(ISessionService sessionService, ITokenServi
     public Task<ResponseWrapper<TokenResponseDto>> Handle(ShareDataCommand request, CancellationToken cancellationToken)
     {
         var userId = sessionService.GetUserClaims().UserId;
-        // TODO: Set claims for DataShareClaimTypes from the request
         var claims = new List<Claim>
         {
-            new(DataShareClaimTypes.ShareSensitiveData, "true"),
-            new(DataShareClaimTypes.ShareBloodPressureMeasurement, "true"),
-            new(DataShareClaimTypes.ShareHeartRateMeasurement, "true")
+            new(DataShareClaimTypes.ShareSensitiveData, request.ShareSensitiveData.ToString()),
+            new(DataShareClaimTypes.ShareBloodPressureMeasurement, request.ShareBloodPressureMeasurement.ToString()),
+            new(DataShareClaimTypes.ShareHeartRateMeasurement, request.ShareHeartRateMeasurement.ToString())
         };
 
-        // TODO: Generate token with the claims
-        var token = tokenService.GenerateDataShareToken(request.MinutesToExpire, userId, cancellationToken);
+        var token = tokenService.GenerateShareToken(request.MinutesToExpire, userId, claims, cancellationToken);
         return Task.FromResult(new ResponseWrapper<TokenResponseDto>(ResponseTypes.Success, new TokenResponseDto(token)));
     }
 }

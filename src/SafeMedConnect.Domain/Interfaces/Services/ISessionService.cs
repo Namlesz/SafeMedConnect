@@ -6,5 +6,5 @@ public interface ISessionService
 {
     public UserClaims GetUserClaims();
 
-    public UserClaims GetGuestClaims();
+    public GuestClaims GetGuestClaims();
 }

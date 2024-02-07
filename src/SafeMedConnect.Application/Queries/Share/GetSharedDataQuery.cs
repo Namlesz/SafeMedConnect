@@ -13,7 +13,13 @@ public class GetSharedDataQueryHandler(
 #pragma warning disable CS1998
     public async Task<ResponseWrapper<object>> Handle(GetSharedDataQuery request, CancellationToken cancellationToken)
     {
-        var userId = session.GetGuestClaims().UserId;
-        return new ResponseWrapper<object>(ResponseTypes.Success, new { userId });
+        var guestClaims = session.GetGuestClaims();
+        return new ResponseWrapper<object>(
+            ResponseTypes.Success,
+            new
+            {
+                userId = guestClaims
+            }
+        );
     }
 }

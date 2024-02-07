@@ -32,7 +32,7 @@ internal sealed class SessionService(IHttpContextAccessor httpContextAccessor) :
         };
     }
 
-    public UserClaims GetGuestClaims()
+    public GuestClaims GetGuestClaims()
     {
         var httpContext = httpContextAccessor.HttpContext
             ?? throw new NullReferenceException("HttpContext is null");
@@ -45,10 +45,25 @@ internal sealed class SessionService(IHttpContextAccessor httpContextAccessor) :
         var roleClaim = claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)
             ?? throw new NullReferenceException("Role claim is null");
 
-        return new UserClaims
+        var dataShareClaims = new Dictionary<string, bool>();
+
+        foreach (var shareClaimType in DataShareClaimTypes.All)
+        {
+            var shareClaim = claims.FirstOrDefault(c => c.Type == shareClaimType);
+            if (shareClaim is null)
+            {
+                continue;
+            }
+
+            bool.TryParse(shareClaim.Value, out var shareClaimValue);
+            dataShareClaims.Add(shareClaimType, shareClaimValue);
+        }
+
+        return new GuestClaims
         {
             UserId = userIdClaim.Value,
-            Role = roleClaim.Value
+            Role = roleClaim.Value,
+            DataShareClaims = dataShareClaims
         };
     }
 }
