@@ -5,7 +5,7 @@ using SafeMedConnect.Api.Helpers;
 using SafeMedConnect.Api.Interfaces;
 using SafeMedConnect.Api.Swagger;
 using SafeMedConnect.Domain.Authorization;
-using System.Security.Claims;
+using SafeMedConnect.Domain.Configuration;
 using System.Text;
 
 namespace SafeMedConnect.Api.Startup;
@@ -33,12 +33,12 @@ internal static class RegisterStartupServices
         {
             options.AddPolicy(PolicyNames.UserPolicy, policy =>
             {
-                policy.RequireClaim(ClaimTypes.Role, Roles.User);
+                policy.RequireRole(Roles.User);
             });
 
             options.AddPolicy(PolicyNames.GuestPolicy, policy =>
             {
-                policy.RequireClaim(ClaimTypes.Role, Roles.Guest);
+                policy.RequireRole(Roles.Guest);
             });
 
             options.DefaultPolicy = options.GetPolicy(PolicyNames.UserPolicy)
@@ -48,6 +48,12 @@ internal static class RegisterStartupServices
 
     private static void AddAuthenticationWithJwt(this IServiceCollection services, IConfiguration configuration)
     {
+        // Add IOptions pattern and validate, same fields are used below in bearer settings
+        services.AddOptionsWithValidateOnStart<JwtSettings>()
+            .Bind(configuration.GetSection("JwtSettings"))
+            .ValidateDataAnnotations()
+            .ValidateOnStart();
+
         services.AddAuthentication(x =>
             {
                 x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -58,12 +64,10 @@ internal static class RegisterStartupServices
         {
             x.TokenValidationParameters = new TokenValidationParameters
             {
-                ValidIssuer = configuration["JwtSettings:Issuer"],
-                ValidAudience = configuration["JwtSettings:Audience"],
-                IssuerSigningKey = new SymmetricSecurityKey(
-                    Encoding.UTF8.GetBytes(configuration["JwtSettings:Key"]
-                        ?? throw new InvalidOperationException("JwtSettings:Key is null"))
-                ),
+                // Fields are validated by IOptions pattern
+                ValidIssuer = configuration["JwtSettings:Issuer"]!,
+                ValidAudience = configuration["JwtSettings:Audience"]!,
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JwtSettings:Key"]!)),
                 ValidateIssuer = true,
                 ValidateAudience = true,
                 ValidateLifetime = true,

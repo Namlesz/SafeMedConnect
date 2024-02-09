@@ -7,7 +7,7 @@ var configuration = builder.Configuration;
 
 builder.Host.ConfigureAndUseSerilog();
 builder.Services.RegisterApiServices(configuration);
-builder.Services.RegisterInfrastructureServices();
+builder.Services.RegisterInfrastructureServices(configuration);
 builder.Services.RegisterApplicationServices();
 
 var app = builder

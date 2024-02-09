@@ -12,6 +12,8 @@ internal sealed class BloodPressureRoutes : IRoutes
 {
     public void RegisterRoutes(RouteGroupBuilder group)
     {
+        group.RequireAuthorization();
+
         group.MapGet("/", async (
                     CancellationToken cnl,
                     IResponseHandler responseHandler

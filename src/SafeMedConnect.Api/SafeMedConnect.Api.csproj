@@ -24,12 +24,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Content Include="..\..\.dockerignore">
-            <Link>.dockerignore</Link>
-        </Content>
-    </ItemGroup>
-
-    <ItemGroup>
         <Folder Include="Logs\" />
         <Folder Include="Middlewares\" />
         <Folder Include="Settings\" />
@@ -37,7 +31,6 @@
 
     <ItemGroup>
         <ProjectReference Include="..\SafeMedConnect.Application\SafeMedConnect.Application.csproj" />
-        <ProjectReference Include="..\SafeMedConnect.Common\SafeMedConnect.Common.csproj" />
         <ProjectReference Include="..\SafeMedConnect.Infrastructure\SafeMedConnect.Infrastructure.csproj" />
     </ItemGroup>
 

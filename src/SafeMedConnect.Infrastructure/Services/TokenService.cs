@@ -1,6 +1,8 @@
-using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using SafeMedConnect.Domain.Authorization;
+using SafeMedConnect.Domain.ClaimTypes;
+using SafeMedConnect.Domain.Configuration;
 using SafeMedConnect.Domain.Entities;
 using SafeMedConnect.Domain.Interfaces.Services;
 using System.IdentityModel.Tokens.Jwt;
@@ -9,38 +11,70 @@ using System.Text;
 
 namespace SafeMedConnect.Infrastructure.Services;
 
-internal sealed class TokenService(IConfiguration configuration) : ITokenService
+internal sealed class TokenService : ITokenService
 {
-    public string GenerateJwtToken(ApplicationUserEntity user)
+    private readonly byte[] _secret;
+    private readonly string _issuer;
+    private readonly string _audience;
+    private readonly DateTime _expiration;
+
+    public TokenService(IOptions<JwtSettings> jwtSettingsOptions)
     {
-        var jwtSettings = configuration.GetSection("JwtSettings");
+        var jwtSettings = jwtSettingsOptions.Value;
 
-        var secret = Encoding.ASCII.GetBytes(jwtSettings["Key"]
-            ?? throw new InvalidOperationException("JwtSettings:Key is missing"));
+        _secret = Encoding.ASCII.GetBytes(jwtSettings.Key);
+        _expiration = DateTime.UtcNow.AddMinutes(jwtSettings.ExpirationInMinutes);
+        _issuer = jwtSettings.Issuer;
+        _audience = jwtSettings.Audience;
+    }
 
-        var expiration = DateTime.UtcNow.AddMinutes(int.Parse(jwtSettings["ExpirationInMinutes"]
-            ?? throw new InvalidOperationException("JwtSettings:ExpirationInMinutes is missing")));
-
-        var issuer = jwtSettings["Issuer"]
-            ?? throw new InvalidOperationException("JwtSettings:Issuer is missing");
-
-        var audience = jwtSettings["Audience"]
-            ?? throw new InvalidOperationException("JwtSettings:Audience is missing");
-
+    public string GenerateJwtToken(ApplicationUserEntity user, CancellationToken cancellationToken = default)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
         var tokenDescriptor = new SecurityTokenDescriptor
         {
             Subject = new ClaimsIdentity(new[]
             {
                 new Claim(ClaimTypes.Email, user.Email),
                 new Claim(ClaimTypes.Role, Roles.User),
-                new Claim(CustomClaimTypes.UserId, user.UserId)
+                new Claim(UserClaimTypes.UserId, user.UserId)
             }),
             SigningCredentials = new SigningCredentials(
-                new SymmetricSecurityKey(secret), SecurityAlgorithms.HmacSha256Signature
+                new SymmetricSecurityKey(_secret), SecurityAlgorithms.HmacSha256Signature
             ),
-            Expires = expiration,
-            Issuer = issuer,
-            Audience = audience
+            Expires = _expiration,
+            Issuer = _issuer,
+            Audience = _audience
+        };
+
+        var tokenHandler = new JwtSecurityTokenHandler();
+        var token = tokenHandler.CreateToken(tokenDescriptor);
+        return tokenHandler.WriteToken(token);
+    }
+
+    public string GenerateShareToken(
+        int minutesToExpire,
+        string userId,
+        IEnumerable<Claim>? claims = default,
+        CancellationToken cancellationToken = default
+    )
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+        var allClaims = new List<Claim>
+        {
+            new(ClaimTypes.Role, Roles.Guest),
+            new(UserClaimTypes.UserId, userId)
+        }.Concat(claims ?? []);
+
+        var tokenDescriptor = new SecurityTokenDescriptor
+        {
+            Subject = new ClaimsIdentity(allClaims),
+            SigningCredentials = new SigningCredentials(
+                new SymmetricSecurityKey(_secret), SecurityAlgorithms.HmacSha256Signature
+            ),
+            Expires = DateTime.UtcNow.AddMinutes(minutesToExpire),
+            Issuer = _issuer,
+            Audience = _audience
         };
 
         var tokenHandler = new JwtSecurityTokenHandler();

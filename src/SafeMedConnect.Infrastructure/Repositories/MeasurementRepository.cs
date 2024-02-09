@@ -3,7 +3,7 @@ using MongoDB.Driver;
 using SafeMedConnect.Domain.Entities.Base;
 using SafeMedConnect.Domain.Interfaces.Repositories;
 using SafeMedConnect.Infrastructure.Data;
-using static SafeMedConnect.Common.Utilities.RepositoryHelper;
+using static SafeMedConnect.Infrastructure.Helpers.RepositoryHelper;
 
 namespace SafeMedConnect.Infrastructure.Repositories;
 
