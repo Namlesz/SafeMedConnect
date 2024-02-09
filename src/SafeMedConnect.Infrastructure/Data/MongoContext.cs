@@ -1,5 +1,6 @@
-using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using MongoDB.Driver;
+using SafeMedConnect.Domain.Configuration;
 using SafeMedConnect.Domain.Entities;
 using static SafeMedConnect.Infrastructure.Helpers.RepositoryHelper;
 
@@ -9,17 +10,12 @@ internal sealed class MongoContext
 {
     private readonly IMongoDatabase _database;
 
-    public MongoContext(IConfiguration configuration)
+    public MongoContext(IOptions<MongoSettings> mongoSettingsOptions)
     {
-        var connectionString = configuration.GetConnectionString("HadesDb")
-            ?? throw new InvalidOperationException("Missing connection string for HadesDb");
+        var mongoSettings = mongoSettingsOptions.Value;
 
-        var databaseName = configuration["DefaultDatabaseName"]
-            ?? throw new InvalidOperationException("Missing database name");
-
-        var client = new MongoClient(connectionString);
-
-        _database = client.GetDatabase(databaseName);
+        _database = new MongoClient(mongoSettings.ConnectionString)
+            .GetDatabase(mongoSettings.DefaultDatabase);
     }
 
     public IMongoCollection<ApplicationUserEntity> ApplicationUsers =>

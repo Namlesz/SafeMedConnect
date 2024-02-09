@@ -1,7 +1,8 @@
-using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using SafeMedConnect.Domain.Authorization;
 using SafeMedConnect.Domain.ClaimTypes;
+using SafeMedConnect.Domain.Configuration;
 using SafeMedConnect.Domain.Entities;
 using SafeMedConnect.Domain.Interfaces.Services;
 using System.IdentityModel.Tokens.Jwt;
@@ -17,21 +18,14 @@ internal sealed class TokenService : ITokenService
     private readonly string _audience;
     private readonly DateTime _expiration;
 
-    public TokenService(IConfiguration configuration)
+    public TokenService(IOptions<JwtSettings> jwtSettingsOptions)
     {
-        var jwtSettings = configuration.GetSection("JwtSettings");
+        var jwtSettings = jwtSettingsOptions.Value;
 
-        _secret = Encoding.ASCII.GetBytes(jwtSettings["Key"]
-            ?? throw new InvalidOperationException("JwtSettings:Key is missing"));
-
-        _expiration = DateTime.UtcNow.AddMinutes(int.Parse(jwtSettings["ExpirationInMinutes"]
-            ?? throw new InvalidOperationException("JwtSettings:ExpirationInMinutes is missing")));
-
-        _issuer = jwtSettings["Issuer"]
-            ?? throw new InvalidOperationException("JwtSettings:Issuer is missing");
-
-        _audience = jwtSettings["Audience"]
-            ?? throw new InvalidOperationException("JwtSettings:Audience is missing");
+        _secret = Encoding.ASCII.GetBytes(jwtSettings.Key);
+        _expiration = DateTime.UtcNow.AddMinutes(jwtSettings.ExpirationInMinutes);
+        _issuer = jwtSettings.Issuer;
+        _audience = jwtSettings.Audience;
     }
 
     public string GenerateJwtToken(ApplicationUserEntity user, CancellationToken cancellationToken = default)
