@@ -23,9 +23,15 @@ public class ShareDataCommandHandler(ISessionService sessionService, ITokenServi
         var userId = sessionService.GetUserClaims().UserId;
         var claims = new List<Claim>
         {
-            new(DataShareClaimTypes.ShareSensitiveData, request.ShareSensitiveData.ToString()),
-            new(DataShareClaimTypes.ShareBloodPressureMeasurement, request.ShareBloodPressureMeasurement.ToString()),
-            new(DataShareClaimTypes.ShareHeartRateMeasurement, request.ShareHeartRateMeasurement.ToString())
+            new(DataShareClaimTypes.ShareSensitiveData,
+                request.ShareSensitiveData.ToString(),
+                ClaimValueTypes.Boolean),
+            new(DataShareClaimTypes.ShareBloodPressureMeasurement,
+                request.ShareBloodPressureMeasurement.ToString(),
+                ClaimValueTypes.Boolean),
+            new(DataShareClaimTypes.ShareHeartRateMeasurement,
+                request.ShareHeartRateMeasurement.ToString(),
+                ClaimValueTypes.Boolean)
         };
 
         var token = tokenService.GenerateShareToken(request.MinutesToExpire, userId, claims, cancellationToken);

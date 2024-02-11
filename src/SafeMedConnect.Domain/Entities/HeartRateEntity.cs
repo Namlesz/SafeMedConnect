@@ -7,9 +7,6 @@ public sealed class HeartRateEntity : BaseObservationEntity<HeartRateMeasurement
 
 public sealed class HeartRateMeasurementEntity : BaseMeasurementEntity
 {
-    [BsonElement("timestamp")]
-    public DateTime Timestamp { get; init; }
-
     [BsonElement("value")]
     public int Value { get; init; }
 }

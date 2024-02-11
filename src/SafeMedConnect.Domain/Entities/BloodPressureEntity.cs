@@ -15,7 +15,4 @@ public sealed class BloodPressureMeasurementEntity : BaseMeasurementEntity
 
     [BsonElement("heart_rate")]
     public int HeartRate { get; init; }
-
-    [BsonElement("timestamp")]
-    public DateTime Timestamp { get; init; }
 }
