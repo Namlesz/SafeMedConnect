@@ -1,46 +1,58 @@
+using AutoMapper;
 using MediatR;
-using SafeMedConnect.Domain.ClaimTypes;
+using SafeMedConnect.Application.Dto;
+using SafeMedConnect.Domain.Entities;
+using SafeMedConnect.Domain.Interfaces.Repositories;
 using SafeMedConnect.Domain.Interfaces.Services;
 using SafeMedConnect.Domain.Responses;
+using static SafeMedConnect.Domain.ClaimTypes.DataShareClaimTypes;
 
 namespace SafeMedConnect.Application.Queries.Share;
 
-public sealed record GetSharedDataQuery : IRequest<ResponseWrapper<object>>;
+public sealed record GetSharedDataQuery : IRequest<ResponseWrapper<SharedDataDto>>;
 
 public class GetSharedDataQueryHandler(
-    ISessionService session
-) : IRequestHandler<GetSharedDataQuery, ResponseWrapper<object>>
+    ISessionService session,
+    IMapper mapper,
+    IUserRepository userRepository,
+    IMeasurementRepository<HeartRateEntity, HeartRateMeasurementEntity> heartRateRepository,
+    IMeasurementRepository<BloodPressureEntity, BloodPressureMeasurementEntity> bloodPressureRepository
+) : IRequestHandler<GetSharedDataQuery, ResponseWrapper<SharedDataDto>>
 {
-#pragma warning disable CS1998
-    public async Task<ResponseWrapper<object>> Handle(GetSharedDataQuery request, CancellationToken cancellationToken)
+    public async Task<ResponseWrapper<SharedDataDto>> Handle(GetSharedDataQuery request, CancellationToken cancellationToken)
     {
         var guestClaims = session.GetGuestClaims();
         if (guestClaims.DataShareClaims is null or { Count: 0 })
         {
-            return new ResponseWrapper<object>(ResponseTypes.InvalidRequest, message: "No data to share");
+            return new ResponseWrapper<SharedDataDto>(ResponseTypes.InvalidRequest, message: "No data to share");
         }
 
-        if (guestClaims.DataShareClaims[DataShareClaimTypes.ShareSensitiveData])
+        var dataToShare = new SharedDataDto();
+        var userId = guestClaims.UserId;
+
+        guestClaims.DataShareClaims.TryGetValue(ShareSensitiveData, out var shareSensitiveData);
+        if (shareSensitiveData)
         {
-            // Add sensitive data to result
+            var user = await userRepository.GetUserAsync(userId, cancellationToken);
+            dataToShare.UserInformation = mapper.Map<UserDto>(user);
         }
 
-        if (guestClaims.DataShareClaims[DataShareClaimTypes.ShareBloodPressureMeasurement])
+        guestClaims.DataShareClaims.TryGetValue(ShareBloodPressureMeasurement, out var shareBloodPressureMeasurement);
+        if (shareBloodPressureMeasurement)
         {
-            // Add blood data to result
+            var bloodPressureMeasurements = await bloodPressureRepository.GetAsync(userId, cancellationToken);
+            dataToShare.Measurements.BloodPressures =
+                mapper.Map<List<BloodPressureDto>?>(bloodPressureMeasurements?.Measurements);
         }
 
-        if (guestClaims.DataShareClaims[DataShareClaimTypes.ShareHeartRateMeasurement])
+        guestClaims.DataShareClaims.TryGetValue(ShareHeartRateMeasurement, out var shareHeartRateMeasurement);
+        if (shareHeartRateMeasurement)
         {
-            // Add heart rate to result
+            var heartRateMeasurements = await heartRateRepository.GetAsync(userId, cancellationToken);
+            dataToShare.Measurements.HeartRates =
+                mapper.Map<List<HeartRateDto>>(heartRateMeasurements?.Measurements);
         }
 
-        return new ResponseWrapper<object>(
-            ResponseTypes.Success,
-            new
-            {
-                guestClaims
-            }
-        );
+        return new ResponseWrapper<SharedDataDto>(ResponseTypes.Success, dataToShare);
     }
 }

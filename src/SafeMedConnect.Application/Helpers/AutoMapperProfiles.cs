@@ -21,5 +21,8 @@ internal sealed class AutoMapperProfiles : Profile
             .ForMember(dest => dest.Id, opt => opt.Ignore());
 
         CreateMap<UserEntity, UserDto>();
+
+        CreateMap<HeartRateMeasurementEntity, HeartRateDto>();
+        CreateMap<BloodPressureMeasurementEntity, BloodPressureDto>();
     }
 }
