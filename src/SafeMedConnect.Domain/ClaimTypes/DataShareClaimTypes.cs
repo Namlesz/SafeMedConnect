@@ -5,11 +5,13 @@ public static class DataShareClaimTypes
     public const string ShareSensitiveData = "share_sensitive_data";
     public const string ShareBloodPressureMeasurement = "share_blood_pressure_measurement";
     public const string ShareHeartRateMeasurement = "share_heart_rate_measurement";
+    public const string ShareTemperatureMeasurement = "share_temperature_measurement";
 
     public static IEnumerable<string> All =>
     [
         ShareSensitiveData,
         ShareBloodPressureMeasurement,
-        ShareHeartRateMeasurement
+        ShareHeartRateMeasurement,
+        ShareTemperatureMeasurement
     ];
 }

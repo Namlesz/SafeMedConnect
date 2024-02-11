@@ -1,9 +1,11 @@
 using AutoMapper;
 using MediatR;
 using SafeMedConnect.Application.Dto;
+using SafeMedConnect.Application.Dto.Measurements;
 using SafeMedConnect.Domain.Entities;
 using SafeMedConnect.Domain.Interfaces.Repositories;
 using SafeMedConnect.Domain.Interfaces.Services;
+using SafeMedConnect.Domain.Models;
 using SafeMedConnect.Domain.Responses;
 using static SafeMedConnect.Domain.ClaimTypes.DataShareClaimTypes;
 
@@ -16,7 +18,8 @@ public class GetSharedDataQueryHandler(
     IMapper mapper,
     IUserRepository userRepository,
     IMeasurementRepository<HeartRateEntity, HeartRateMeasurementEntity> heartRateRepository,
-    IMeasurementRepository<BloodPressureEntity, BloodPressureMeasurementEntity> bloodPressureRepository
+    IMeasurementRepository<BloodPressureEntity, BloodPressureMeasurementEntity> bloodPressureRepository,
+    IMeasurementRepository<TemperatureEntity, TemperatureMeasurementEntity> temperatureRepository
 ) : IRequestHandler<GetSharedDataQuery, ResponseWrapper<SharedDataDto>>
 {
     public async Task<ResponseWrapper<SharedDataDto>> Handle(GetSharedDataQuery request, CancellationToken cancellationToken)
@@ -27,8 +30,17 @@ public class GetSharedDataQueryHandler(
             return new ResponseWrapper<SharedDataDto>(ResponseTypes.InvalidRequest, message: "No data to share");
         }
 
-        var dataToShare = new SharedDataDto();
+        var result = await GetSharedDataAsync(guestClaims, cancellationToken);
+        return new ResponseWrapper<SharedDataDto>(ResponseTypes.Success, result);
+    }
+
+    private async Task<SharedDataDto> GetSharedDataAsync(
+        GuestClaims guestClaims,
+        CancellationToken cancellationToken
+    )
+    {
         var userId = guestClaims.UserId;
+        var dataToShare = new SharedDataDto();
 
         guestClaims.DataShareClaims.TryGetValue(ShareSensitiveData, out var shareSensitiveData);
         if (shareSensitiveData)
@@ -53,6 +65,14 @@ public class GetSharedDataQueryHandler(
                 mapper.Map<List<HeartRateDto>>(heartRateMeasurements?.Measurements);
         }
 
-        return new ResponseWrapper<SharedDataDto>(ResponseTypes.Success, dataToShare);
+        guestClaims.DataShareClaims.TryGetValue(ShareHeartRateMeasurement, out var shareTemperatureMeasurement);
+        if (shareTemperatureMeasurement)
+        {
+            var temperatureMeasurements = await temperatureRepository.GetAsync(userId, cancellationToken);
+            dataToShare.Measurements.Temperatures =
+                mapper.Map<List<TemperatureDto>>(temperatureMeasurements?.Measurements);
+        }
+
+        return dataToShare;
     }
 }

@@ -12,7 +12,8 @@ public sealed record ShareDataCommand(
     int MinutesToExpire,
     bool ShareSensitiveData = false,
     bool ShareBloodPressureMeasurement = false,
-    bool ShareHeartRateMeasurement = false
+    bool ShareHeartRateMeasurement = false,
+    bool ShareTemperatureMeasurement = false
 ) : IRequest<ResponseWrapper<TokenResponseDto>>;
 
 public class ShareDataCommandHandler(ISessionService sessionService, ITokenService tokenService)
@@ -31,6 +32,9 @@ public class ShareDataCommandHandler(ISessionService sessionService, ITokenServi
                 ClaimValueTypes.Boolean),
             new(DataShareClaimTypes.ShareHeartRateMeasurement,
                 request.ShareHeartRateMeasurement.ToString(),
+                ClaimValueTypes.Boolean),
+            new(DataShareClaimTypes.ShareTemperatureMeasurement,
+                request.ShareTemperatureMeasurement.ToString(),
                 ClaimValueTypes.Boolean)
         };
 

@@ -1,3 +1,4 @@
+using SafeMedConnect.Application.Dto.Measurements;
 using System.Text.Json.Serialization;
 
 namespace SafeMedConnect.Application.Dto;
@@ -17,4 +18,7 @@ public sealed class MeasurementsDto
 
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public List<BloodPressureDto>? BloodPressures { get; set; }
+
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public List<TemperatureDto>? Temperatures { get; set; }
 }

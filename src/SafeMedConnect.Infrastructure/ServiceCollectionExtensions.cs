@@ -41,5 +41,8 @@ public static class ServiceCollectionExtensions
 
         services.AddScoped<IMeasurementRepository<BloodPressureEntity, BloodPressureMeasurementEntity>,
             MeasurementRepository<BloodPressureEntity, BloodPressureMeasurementEntity>>();
+
+        services.AddScoped<IMeasurementRepository<TemperatureEntity, TemperatureMeasurementEntity>,
+            MeasurementRepository<TemperatureEntity, TemperatureMeasurementEntity>>();
     }
 }
