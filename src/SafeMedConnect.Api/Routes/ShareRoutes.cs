@@ -13,9 +13,6 @@ internal sealed class ShareRoutes : IRoutes
 {
     public void RegisterRoutes(RouteGroupBuilder group)
     {
-        /* TODO: (POST) share/share-data
-         - Select what data to share
-        */
         group.MapPost("share-data", async (
                     [FromBody] ShareDataCommand command,
                     CancellationToken cnl,
@@ -26,11 +23,6 @@ internal sealed class ShareRoutes : IRoutes
             .Produces<TokenResponseDto>()
             .RequireAuthorization();
 
-        /* TODO: (GET) share/get-shared-data
-         - Get what data is shared from token
-         - Returns shared data
-         - Returns 404 if no data is shared
-        */
         group.MapGet("get-shared-data", async (
                     CancellationToken cnl,
                     IResponseHandler responseHandler
