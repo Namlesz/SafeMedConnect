@@ -1,6 +1,7 @@
 using AutoMapper;
 using SafeMedConnect.Application.Commands.BloodPressure;
 using SafeMedConnect.Application.Commands.HeartRate;
+using SafeMedConnect.Application.Commands.Temperature;
 using SafeMedConnect.Application.Commands.User;
 using SafeMedConnect.Application.Dto;
 using SafeMedConnect.Domain.Entities;
@@ -18,6 +19,9 @@ internal sealed class AutoMapperProfiles : Profile
             .ForMember(dest => dest.Id, opt => opt.Ignore());
 
         CreateMap<AddBloodPressureCommand, BloodPressureMeasurementEntity>()
+            .ForMember(dest => dest.Id, opt => opt.Ignore());
+
+        CreateMap<AddTemperatureCommand, TemperatureMeasurementEntity>()
             .ForMember(dest => dest.Id, opt => opt.Ignore());
 
         CreateMap<UserEntity, UserDto>();
