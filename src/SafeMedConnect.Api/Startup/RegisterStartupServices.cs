@@ -72,6 +72,7 @@ internal static class RegisterStartupServices
                 ValidateAudience = true,
                 ValidateLifetime = true,
                 ValidateIssuerSigningKey = true,
+                ClockSkew = TimeSpan.Zero
             };
             x.Events = new JwtBearerEvents
             {
