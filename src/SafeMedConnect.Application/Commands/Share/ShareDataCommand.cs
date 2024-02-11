@@ -44,8 +44,5 @@ public sealed class ShareDataCommandValidator : AbstractValidator<ShareDataComma
     public ShareDataCommandValidator()
     {
         RuleFor(x => x.MinutesToExpire).GreaterThan(0);
-        RuleFor(x => x.ShareSensitiveData).NotEmpty();
-        RuleFor(x => x.ShareBloodPressureMeasurement).NotEmpty();
-        RuleFor(x => x.ShareHeartRateMeasurement).NotEmpty();
     }
 }
