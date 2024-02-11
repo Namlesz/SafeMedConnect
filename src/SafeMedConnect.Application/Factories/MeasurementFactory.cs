@@ -5,6 +5,7 @@ using SafeMedConnect.Domain.Responses;
 
 namespace SafeMedConnect.Application.Factories;
 
+// TODO: Maybe better to provide userId as a parameter to the factory methods
 internal sealed class MeasurementFactory<TA, TB>(
     ISessionService session,
     IMeasurementRepository<TA, TB> repository
