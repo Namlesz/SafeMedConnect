@@ -57,6 +57,14 @@ internal sealed class AccountRoutes : IRoutes
             .Produces(StatusCodes.Status500InternalServerError)
             .RequireAuthorization();
 
-        // TODO: Remove mfa endpoint
+        group.MapPost("/remove-mfa-authenticator", async (
+                    CancellationToken cnl,
+                    IResponseHandler responseHandler
+                ) => await responseHandler.SendAndHandle(new RemoveMfaAuthenticatorCommand(), cnl)
+            )
+            .WithSummary("Remove MFA from user")
+            .Produces(StatusCodes.Status204NoContent)
+            .Produces(StatusCodes.Status500InternalServerError)
+            .RequireAuthorization();
     }
 }

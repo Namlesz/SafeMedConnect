@@ -35,4 +35,18 @@ internal sealed class MfaRepository(MongoContext db) : IMfaRepository
 
         return updateResult.IsAcknowledged && updateResult.ModifiedCount is 1;
     }
+
+    public async Task<bool> DeactivateMfaAsync(string userId, CancellationToken cnl = default)
+    {
+        var updateResult = await db.ApplicationUsers
+            .UpdateOneAsync(
+                x => x.UserId == userId,
+                Builders<ApplicationUserEntity>.Update
+                    .Set(x => x.MfaSecret, null)
+                    .Set(x => x.MfaEnabled, false),
+                cancellationToken: cnl
+            );
+
+        return updateResult.IsAcknowledged && updateResult.ModifiedCount is 1;
+    }
 }
