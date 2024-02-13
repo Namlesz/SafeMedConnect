@@ -56,5 +56,7 @@ internal sealed class AccountRoutes : IRoutes
             .Produces(StatusCodes.Status400BadRequest)
             .Produces(StatusCodes.Status500InternalServerError)
             .RequireAuthorization();
+
+        // TODO: Remove mfa endpoint
     }
 }

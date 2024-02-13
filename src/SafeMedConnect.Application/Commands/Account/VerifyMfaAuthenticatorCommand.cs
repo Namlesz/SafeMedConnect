@@ -1,3 +1,4 @@
+using FluentValidation;
 using MediatR;
 using OtpNet;
 using SafeMedConnect.Domain.Interfaces.Repositories;
@@ -37,11 +38,21 @@ public class VerifyMfaAuthenticatorCommandHandler(
         return new ResponseWrapper(ResponseTypes.Success);
     }
 
+    // TODO: Move this to a service
     private static bool IsCodeValid(string code, string secret)
     {
         var secretKey = Base32Encoding.ToBytes(secret);
         var totp = new Totp(secretKey);
-        // return totp.VerifyTotp(code, out _, new VerificationWindow(2, 2));
         return totp.VerifyTotp(code, out _);
+    }
+}
+
+public sealed class VerifyMfaAuthenticatorCommandValidator : AbstractValidator<VerifyMfaAuthenticatorCommand>
+{
+    public VerifyMfaAuthenticatorCommandValidator()
+    {
+        RuleFor(x => x.Code)
+            .NotEmpty()
+            .Matches(@"^\d{6}$");
     }
 }

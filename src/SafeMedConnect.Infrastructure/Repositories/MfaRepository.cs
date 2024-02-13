@@ -7,11 +7,11 @@ namespace SafeMedConnect.Infrastructure.Repositories;
 
 internal sealed class MfaRepository(MongoContext db) : IMfaRepository
 {
-    public async Task<bool> AddMfaSecretAsync(string id, string secret, CancellationToken cnl = default)
+    public async Task<bool> AddMfaSecretAsync(string userId, string secret, CancellationToken cnl = default)
     {
         var updateResult = await db.ApplicationUsers
             .UpdateOneAsync(
-                x => x.Id == id,
+                x => x.UserId == userId,
                 Builders<ApplicationUserEntity>.Update.Set(x => x.MfaSecret, secret),
                 cancellationToken: cnl
             );
@@ -19,16 +19,16 @@ internal sealed class MfaRepository(MongoContext db) : IMfaRepository
         return updateResult.IsAcknowledged && updateResult.ModifiedCount is 1;
     }
 
-    public Task<string?> GetMfaSecretAsync(string id, CancellationToken cnl = default) =>
-        db.ApplicationUsers.Find(x => x.Id == id)
+    public Task<string?> GetMfaSecretAsync(string userId, CancellationToken cnl = default) =>
+        db.ApplicationUsers.Find(x => x.UserId == userId)
             .Project(x => x.MfaSecret)
             .FirstOrDefaultAsync(cnl);
 
-    public async Task<bool> ActivateMfaAsync(string id, CancellationToken cnl = default)
+    public async Task<bool> ActivateMfaAsync(string userId, CancellationToken cnl = default)
     {
         var updateResult = await db.ApplicationUsers
             .UpdateOneAsync(
-                x => x.Id == id,
+                x => x.UserId == userId,
                 Builders<ApplicationUserEntity>.Update.Set(x => x.MfaEnabled, true),
                 cancellationToken: cnl
             );
