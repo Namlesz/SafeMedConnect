@@ -11,8 +11,6 @@ internal sealed class AccountRoutes : IRoutes
 {
     public void RegisterRoutes(RouteGroupBuilder group)
     {
-        group.AllowAnonymous();
-
         group.MapPost("/register", async (
                     [FromBody] RegisterApplicationUserCommand command,
                     CancellationToken cnl,
@@ -22,7 +20,8 @@ internal sealed class AccountRoutes : IRoutes
             .WithSummary("Register a new user")
             .WithDescription("Create a new user account in the system")
             .Produces(StatusCodes.Status204NoContent)
-            .Produces(StatusCodes.Status400BadRequest);
+            .Produces(StatusCodes.Status400BadRequest)
+            .AllowAnonymous();
 
         group.MapPost("/login", async (
                     [FromBody] LoginApplicationUserCommand command,
@@ -33,6 +32,29 @@ internal sealed class AccountRoutes : IRoutes
             .WithSummary("Login user")
             .WithDescription("Login a user and return a JWT token")
             .Produces<TokenResponseDto>()
-            .Produces(StatusCodes.Status400BadRequest);
+            .Produces(StatusCodes.Status400BadRequest)
+            .AllowAnonymous();
+
+        group.MapPost("/add-mfa-authenticator", async (
+                    CancellationToken cnl,
+                    IResponseHandler responseHandler
+                ) => await responseHandler.SendAndHandle(new AddMfaAuthenticatorCommand(), cnl)
+            )
+            .WithSummary("Add MFA to user")
+            .Produces(StatusCodes.Status200OK)
+            .Produces(StatusCodes.Status400BadRequest)
+            .RequireAuthorization();
+
+        group.MapPost("/verify-mfa-authenticator", async (
+                    [FromBody] VerifyMfaAuthenticatorCommand command,
+                    CancellationToken cnl,
+                    IResponseHandler responseHandler
+                ) => await responseHandler.SendAndHandle(command, cnl)
+            )
+            .WithSummary("Verify MFA configuration")
+            .Produces(StatusCodes.Status204NoContent)
+            .Produces(StatusCodes.Status400BadRequest)
+            .Produces(StatusCodes.Status500InternalServerError)
+            .RequireAuthorization();
     }
 }

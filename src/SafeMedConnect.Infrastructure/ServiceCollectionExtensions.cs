@@ -36,6 +36,8 @@ public static class ServiceCollectionExtensions
 
         services.AddScoped<IUserRepository, UserRepository>();
 
+        services.AddScoped<IMfaRepository, MfaRepository>();
+
         services.AddScoped<IMeasurementRepository<HeartRateEntity, HeartRateMeasurementEntity>,
             MeasurementRepository<HeartRateEntity, HeartRateMeasurementEntity>>();
 
