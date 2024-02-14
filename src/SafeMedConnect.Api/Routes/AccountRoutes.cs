@@ -30,9 +30,16 @@ internal sealed class AccountRoutes : IRoutes
                 ) => await responseHandler.SendAndHandle(command, cnl)
             )
             .WithSummary("Login user")
-            .WithDescription("Login a user and return a JWT token")
+            .WithDescription(
+                "(400 - Bad request) "
+                + "(401 - Invalid login or password) "
+                + "(403 - Invalid MFA code) "
+                + "(500 - MFA not configured | Unknown error occurred)"
+            )
             .Produces<TokenResponseDto>()
             .Produces(StatusCodes.Status400BadRequest)
+            .Produces(StatusCodes.Status401Unauthorized)
+            .Produces(StatusCodes.Status403Forbidden)
             .AllowAnonymous();
 
         group.MapPost("/add-mfa-authenticator", async (

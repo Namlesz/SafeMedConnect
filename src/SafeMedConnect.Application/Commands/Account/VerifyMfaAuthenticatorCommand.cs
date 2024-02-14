@@ -1,7 +1,5 @@
 using FluentValidation;
 using MediatR;
-using OtpNet;
-using SafeMedConnect.Domain.Interfaces.Repositories;
 using SafeMedConnect.Domain.Interfaces.Services;
 using SafeMedConnect.Domain.Responses;
 
@@ -11,39 +9,31 @@ public sealed record VerifyMfaAuthenticatorCommand(string Code) : IRequest<Respo
 
 public class VerifyMfaAuthenticatorCommandHandler(
     ISessionService session,
-    IMfaRepository repository
+    IMfaService mfaService
 ) : IRequestHandler<VerifyMfaAuthenticatorCommand, ResponseWrapper>
 {
     public async Task<ResponseWrapper> Handle(VerifyMfaAuthenticatorCommand request, CancellationToken cancellationToken)
     {
         var userId = session.GetUserClaims().UserId;
 
-        var secret = await repository.GetMfaSecretAsync(userId, cancellationToken);
+        var secret = await mfaService.GetUserMfaSecretAsync(userId, cancellationToken);
         if (secret is null)
         {
             return new ResponseWrapper(ResponseTypes.InvalidRequest, "MFA not configured");
         }
 
-        if (!IsCodeValid(request.Code, secret))
+        if (!mfaService.IsCodeValid(request.Code, secret))
         {
             return new ResponseWrapper(ResponseTypes.InvalidRequest, "Invalid MFA code");
         }
 
-        var mfaActivated = await repository.ActivateMfaAsync(userId, cancellationToken);
+        var mfaActivated = await mfaService.ActivateUserMfaAsync(userId, cancellationToken);
         if (!mfaActivated)
         {
             return new ResponseWrapper(ResponseTypes.Error, "Error while activating MFA");
         }
 
         return new ResponseWrapper(ResponseTypes.Success);
-    }
-
-    // TODO: Move this to a service
-    private static bool IsCodeValid(string code, string secret)
-    {
-        var secretKey = Base32Encoding.ToBytes(secret);
-        var totp = new Totp(secretKey);
-        return totp.VerifyTotp(code, out _);
     }
 }
 

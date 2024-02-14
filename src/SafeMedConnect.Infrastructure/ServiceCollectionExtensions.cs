@@ -28,6 +28,7 @@ public static class ServiceCollectionExtensions
     {
         services.AddScoped<ITokenService, TokenService>();
         services.AddScoped<ISessionService, SessionService>();
+        services.AddScoped<IMfaService, MfaService>();
     }
 
     private static void RegisterRepositories(this IServiceCollection services)
