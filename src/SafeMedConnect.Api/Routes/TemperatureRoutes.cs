@@ -31,8 +31,8 @@ internal sealed class TemperatureRoutes : IRoutes
             )
             .WithSummary("Add a new temperature measurement")
             .Produces<List<TemperatureMeasurementEntity>>()
-            .Produces(StatusCodes.Status500InternalServerError)
-            .Produces(StatusCodes.Status400BadRequest);
+            .Produces(StatusCodes.Status400BadRequest)
+            .Produces(StatusCodes.Status500InternalServerError);
 
         group.MapDelete("/", async (
                     [FromBody] DeleteTemperatureCommand command,
@@ -42,7 +42,7 @@ internal sealed class TemperatureRoutes : IRoutes
             )
             .WithSummary("Delete a temperature measurement")
             .Produces<List<TemperatureMeasurementEntity>>()
-            .Produces(StatusCodes.Status500InternalServerError)
-            .Produces(StatusCodes.Status400BadRequest);
+            .Produces(StatusCodes.Status400BadRequest)
+            .Produces(StatusCodes.Status500InternalServerError);
     }
 }

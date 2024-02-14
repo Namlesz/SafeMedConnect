@@ -31,8 +31,8 @@ internal sealed class BloodPressureRoutes : IRoutes
             )
             .WithSummary("Add a new blood pressure measurement")
             .Produces<List<BloodPressureMeasurementEntity>>()
-            .Produces(StatusCodes.Status500InternalServerError)
-            .Produces(StatusCodes.Status400BadRequest);
+            .Produces(StatusCodes.Status400BadRequest)
+            .Produces(StatusCodes.Status500InternalServerError);
 
         group.MapDelete("/", async (
                     [FromBody] DeleteBloodPressureCommand command,
@@ -42,7 +42,7 @@ internal sealed class BloodPressureRoutes : IRoutes
             )
             .WithSummary("Delete a blood pressure measurement")
             .Produces<List<BloodPressureMeasurementEntity>>()
-            .Produces(StatusCodes.Status500InternalServerError)
-            .Produces(StatusCodes.Status400BadRequest);
+            .Produces(StatusCodes.Status400BadRequest)
+            .Produces(StatusCodes.Status500InternalServerError);
     }
 }

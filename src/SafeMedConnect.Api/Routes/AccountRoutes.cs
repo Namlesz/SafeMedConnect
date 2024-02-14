@@ -21,6 +21,8 @@ internal sealed class AccountRoutes : IRoutes
             .WithDescription("Create a new user account in the system")
             .Produces(StatusCodes.Status204NoContent)
             .Produces(StatusCodes.Status400BadRequest)
+            .Produces(StatusCodes.Status409Conflict)
+            .Produces(StatusCodes.Status500InternalServerError)
             .AllowAnonymous();
 
         group.MapPost("/login", async (
@@ -40,6 +42,7 @@ internal sealed class AccountRoutes : IRoutes
             .Produces(StatusCodes.Status400BadRequest)
             .Produces(StatusCodes.Status401Unauthorized)
             .Produces(StatusCodes.Status403Forbidden)
+            .Produces(StatusCodes.Status500InternalServerError)
             .AllowAnonymous();
 
         group.MapPost("/add-mfa-authenticator", async (
@@ -48,8 +51,9 @@ internal sealed class AccountRoutes : IRoutes
                 ) => await responseHandler.SendAndHandle(new AddMfaAuthenticatorCommand(), cnl)
             )
             .WithSummary("Add MFA to user")
-            .Produces(StatusCodes.Status200OK)
+            .Produces<QrCodeDto>()
             .Produces(StatusCodes.Status400BadRequest)
+            .Produces(StatusCodes.Status500InternalServerError)
             .RequireAuthorization();
 
         group.MapPost("/verify-mfa-authenticator", async (
