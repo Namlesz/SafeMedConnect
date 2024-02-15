@@ -29,6 +29,8 @@ internal sealed class ShareRoutes : IRoutes
                 ) => await responseHandler.SendAndHandle(new GetSharedDataQuery(), cnl)
             )
             .WithSummary("Get data shared from user via token")
+            .Produces<SharedDataDto>()
+            .Produces(StatusCodes.Status400BadRequest)
             .Produces(StatusCodes.Status401Unauthorized)
             .RequireAuthorization(PolicyNames.GuestPolicy);
     }

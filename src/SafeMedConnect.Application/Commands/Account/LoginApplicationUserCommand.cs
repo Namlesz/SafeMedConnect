@@ -7,10 +7,14 @@ using SafeMedConnect.Domain.Responses;
 
 namespace SafeMedConnect.Application.Commands.Account;
 
-public sealed record LoginApplicationUserCommand(string Email, string Password)
+public sealed record LoginApplicationUserCommand(string Email, string Password, string? MfaCode = null)
     : IRequest<ResponseWrapper<TokenResponseDto>>;
 
-internal sealed class LoginApplicationUserCommandHandler(IApplicationUserRepository repository, ITokenService tokenService)
+internal sealed class LoginApplicationUserCommandHandler(
+    IMfaService mfaService,
+    IApplicationUserRepository repository,
+    ITokenService tokenService
+)
     : IRequestHandler<LoginApplicationUserCommand, ResponseWrapper<TokenResponseDto>>
 {
     public async Task<ResponseWrapper<TokenResponseDto>> Handle(
@@ -21,7 +25,26 @@ internal sealed class LoginApplicationUserCommandHandler(IApplicationUserReposit
         var user = await repository.GetUserAsync(request.Email, cancellationToken);
         if (user is null || !BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash))
         {
-            return new ResponseWrapper<TokenResponseDto>(ResponseTypes.Forbidden, "Invalid login or password");
+            return new ResponseWrapper<TokenResponseDto>(ResponseTypes.Unauthorized, "Invalid login or password");
+        }
+
+        if (user.MfaEnabled)
+        {
+            if (request.MfaCode is null)
+            {
+                return new ResponseWrapper<TokenResponseDto>(ResponseTypes.InvalidRequest, "MFA code required");
+            }
+
+            var secret = user.MfaSecret;
+            if (secret is null)
+            {
+                return new ResponseWrapper<TokenResponseDto>(ResponseTypes.Error, "MFA not configured");
+            }
+
+            if (!mfaService.IsCodeValid(request.MfaCode, secret))
+            {
+                return new ResponseWrapper<TokenResponseDto>(ResponseTypes.Forbidden, "Invalid MFA code");
+            }
         }
 
         var token = tokenService.GenerateJwtToken(user, cancellationToken);

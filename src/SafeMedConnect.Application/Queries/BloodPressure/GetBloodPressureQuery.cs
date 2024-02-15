@@ -15,7 +15,8 @@ public class GetBloodPressureQueryHandler(
 ) : IRequestHandler<GetBloodPressureQuery, ResponseWrapper<List<BloodPressureMeasurementEntity>>>
 {
     public Task<ResponseWrapper<List<BloodPressureMeasurementEntity>>> Handle(
-        GetBloodPressureQuery request, CancellationToken cancellationToken
+        GetBloodPressureQuery request,
+        CancellationToken cancellationToken
     ) => new MeasurementFactory<BloodPressureEntity, BloodPressureMeasurementEntity>(session, repository)
         .GetMeasurementsAsync(cancellationToken);
 }

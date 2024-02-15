@@ -17,4 +17,10 @@ public sealed class ApplicationUserEntity
 
     [BsonElement("user_id")]
     public string UserId { get; set; } = null!;
+
+    [BsonElement("mfa_enabled")]
+    public bool MfaEnabled { get; set; } = false;
+
+    [BsonElement("mfa_secret")]
+    public string? MfaSecret { get; set; }
 }

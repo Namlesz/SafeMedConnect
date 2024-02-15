@@ -8,5 +8,6 @@ public enum ResponseTypes
     NotFound = 3,
     Conflict = 4,
     Forbidden = 5,
-    InvalidRequest = 6
+    InvalidRequest = 6,
+    Unauthorized = 7
 }

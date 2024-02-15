@@ -28,6 +28,7 @@ public static class ServiceCollectionExtensions
     {
         services.AddScoped<ITokenService, TokenService>();
         services.AddScoped<ISessionService, SessionService>();
+        services.AddScoped<IMfaService, MfaService>();
     }
 
     private static void RegisterRepositories(this IServiceCollection services)
@@ -35,6 +36,8 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IApplicationUserRepository, ApplicationUserRepository>();
 
         services.AddScoped<IUserRepository, UserRepository>();
+
+        services.AddScoped<IMfaRepository, MfaRepository>();
 
         services.AddScoped<IMeasurementRepository<HeartRateEntity, HeartRateMeasurementEntity>,
             MeasurementRepository<HeartRateEntity, HeartRateMeasurementEntity>>();
