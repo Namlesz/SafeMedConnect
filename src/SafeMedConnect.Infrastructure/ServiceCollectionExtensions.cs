@@ -47,5 +47,8 @@ public static class ServiceCollectionExtensions
 
         services.AddScoped<IMeasurementRepository<TemperatureEntity, TemperatureMeasurementEntity>,
             MeasurementRepository<TemperatureEntity, TemperatureMeasurementEntity>>();
+
+        services.AddScoped<IMeasurementRepository<BloodSugarEntity, BloodSugarMeasurementEntity>,
+            MeasurementRepository<BloodSugarEntity, BloodSugarMeasurementEntity>>();
     }
 }
