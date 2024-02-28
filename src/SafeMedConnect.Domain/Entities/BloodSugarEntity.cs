@@ -7,7 +7,7 @@ public sealed class BloodSugarEntity : BaseObservationEntity<BloodSugarMeasureme
 
 public sealed class BloodSugarMeasurementEntity : BaseMeasurementEntity
 {
-    public int Value { get; init; }
+    public decimal Value { get; init; }
     public GlucoseUnitType Unit { get; init; }
     public BloodSugarMeasurementMethodType MeasurementMethod { get; init; }
 }
