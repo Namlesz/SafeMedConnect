@@ -33,6 +33,9 @@ internal sealed class MongoContext
     public IMongoCollection<BloodPressureEntity> Temperatures =>
         _database.GetCollection<BloodPressureEntity>(GetCollectionName<TemperatureEntity>());
 
+    public IMongoCollection<BloodSugarEntity> BloodSugars =>
+        _database.GetCollection<BloodSugarEntity>(GetCollectionName<BloodSugarEntity>());
+
     public IMongoCollection<T> GetCollection<T>(string name) where T : class =>
         _database.GetCollection<T>(name);
 }
