@@ -19,7 +19,7 @@ internal sealed class BloodSugarRoutes : IRoutes
         //         ) => await responseHandler.SendAndHandle(new GetBloodPressureQuery(), cnl)
         //     )
         //     .WithSummary("Get all blood sugar measurements")
-        //     .Produces<List<BloodPressureMeasurementEntity>>()
+        //     .Produces<List<BloodSugarMeasurementEntity>>()
         //     .Produces(StatusCodes.Status404NotFound);
 
         group.MapPost("/", async (
@@ -33,15 +33,15 @@ internal sealed class BloodSugarRoutes : IRoutes
             .Produces(StatusCodes.Status400BadRequest)
             .Produces(StatusCodes.Status500InternalServerError);
 
-        // group.MapDelete("/", async (
-        //             [FromBody] DeleteBloodPressureCommand command,
-        //             CancellationToken cnl,
-        //             IResponseHandler responseHandler
-        //         ) => await responseHandler.SendAndHandle(command, cnl)
-        //     )
-        //     .WithSummary("Delete a blood sugar measurement")
-        //     .Produces<List<BloodPressureMeasurementEntity>>()
-        //     .Produces(StatusCodes.Status400BadRequest)
-        //     .Produces(StatusCodes.Status500InternalServerError);
+        group.MapDelete("/", async (
+                    [FromBody] DeleteBloodSugarCommand command,
+                    CancellationToken cnl,
+                    IResponseHandler responseHandler
+                ) => await responseHandler.SendAndHandle(command, cnl)
+            )
+            .WithSummary("Delete a blood sugar measurement")
+            .Produces<List<BloodSugarMeasurementEntity>>()
+            .Produces(StatusCodes.Status400BadRequest)
+            .Produces(StatusCodes.Status500InternalServerError);
     }
 }
