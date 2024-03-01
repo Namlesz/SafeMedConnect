@@ -46,7 +46,7 @@ public class GetSharedDataQueryHandler(
         if (shareSensitiveData)
         {
             var user = await userRepository.GetUserAsync(userId, cancellationToken);
-            dataToShare.UserInformation = mapper.Map<UserDto>(user);
+            dataToShare.UserInformation = mapper.Map<UserDto?>(user);
         }
 
         guestClaims.DataShareClaims.TryGetValue(ShareBloodPressureMeasurement, out var shareBloodPressureMeasurement);
@@ -62,7 +62,7 @@ public class GetSharedDataQueryHandler(
         {
             var heartRateMeasurements = await heartRateRepository.GetAsync(userId, cancellationToken);
             dataToShare.Measurements.HeartRates =
-                mapper.Map<List<HeartRateDto>>(heartRateMeasurements?.Measurements);
+                mapper.Map<List<HeartRateDto>?>(heartRateMeasurements?.Measurements);
         }
 
         guestClaims.DataShareClaims.TryGetValue(ShareHeartRateMeasurement, out var shareTemperatureMeasurement);
@@ -70,7 +70,7 @@ public class GetSharedDataQueryHandler(
         {
             var temperatureMeasurements = await temperatureRepository.GetAsync(userId, cancellationToken);
             dataToShare.Measurements.Temperatures =
-                mapper.Map<List<TemperatureDto>>(temperatureMeasurements?.Measurements);
+                mapper.Map<List<TemperatureDto>?>(temperatureMeasurements?.Measurements);
         }
 
         return dataToShare;

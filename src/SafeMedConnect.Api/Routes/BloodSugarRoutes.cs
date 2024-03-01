@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using SafeMedConnect.Api.Attributes;
 using SafeMedConnect.Api.Interfaces;
 using SafeMedConnect.Application.Commands.BloodSugar;
+using SafeMedConnect.Application.Queries.BloodSugar;
 using SafeMedConnect.Domain.Entities;
 
 namespace SafeMedConnect.Api.Routes;
@@ -13,14 +14,14 @@ internal sealed class BloodSugarRoutes : IRoutes
     {
         group.RequireAuthorization();
 
-        // group.MapGet("/", async (
-        //             CancellationToken cnl,
-        //             IResponseHandler responseHandler
-        //         ) => await responseHandler.SendAndHandle(new GetBloodPressureQuery(), cnl)
-        //     )
-        //     .WithSummary("Get all blood sugar measurements")
-        //     .Produces<List<BloodSugarMeasurementEntity>>()
-        //     .Produces(StatusCodes.Status404NotFound);
+        group.MapGet("/", async (
+                    CancellationToken cnl,
+                    IResponseHandler responseHandler
+                ) => await responseHandler.SendAndHandle(new GetBloodSugarQuery(), cnl)
+            )
+            .WithSummary("Get all blood sugar measurements")
+            .Produces<List<BloodSugarMeasurementDto>>()
+            .Produces(StatusCodes.Status404NotFound);
 
         group.MapPost("/", async (
                     [FromBody] AddBloodSugarCommand command,

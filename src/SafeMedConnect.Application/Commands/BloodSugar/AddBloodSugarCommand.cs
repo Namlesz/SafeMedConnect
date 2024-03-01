@@ -10,7 +10,12 @@ using SafeMedConnect.Domain.Responses;
 
 namespace SafeMedConnect.Application.Commands.BloodSugar;
 
-public sealed record AddBloodSugarCommand(decimal Value, GlucoseUnitType GlucoseUnit, BloodSugarMeasurementMethodType MeasurementMethod, DateTime Timestamp)
+public sealed record AddBloodSugarCommand(
+    decimal Value,
+    GlucoseUnitType GlucoseUnit,
+    BloodSugarMeasurementMethodType MeasurementMethod,
+    DateTime Timestamp
+)
     : IRequest<ResponseWrapper<List<BloodSugarMeasurementEntity>>>;
 
 public class AddBloodSugarCommandHandler(
@@ -26,6 +31,7 @@ public class AddBloodSugarCommandHandler(
     {
         var factory = new MeasurementFactory<BloodSugarEntity, BloodSugarMeasurementEntity>(session, repository);
         var entity = mapper.Map<BloodSugarMeasurementEntity>(request);
+        // TODO: Return mapped entity from factory
         return await factory.AddMeasurementAsync(entity, cancellationToken);
     }
 }
