@@ -12,15 +12,20 @@ public sealed record DeleteTemperatureCommand(string Id)
     : IRequest<ResponseWrapper<List<TemperatureMeasurementEntity>>>;
 
 public class DeleteTemperatureCommandHandler(
-    IMeasurementRepository<TemperatureEntity, TemperatureMeasurementEntity> repository,
+    IMeasurementRepositorySimplified<TemperatureMeasurementEntity> repository,
     ISessionService session
 ) : IRequestHandler<DeleteTemperatureCommand, ResponseWrapper<List<TemperatureMeasurementEntity>>>
 {
     public Task<ResponseWrapper<List<TemperatureMeasurementEntity>>> Handle(
         DeleteTemperatureCommand request,
         CancellationToken cancellationToken
-    ) => new MeasurementFactory<TemperatureEntity, TemperatureMeasurementEntity>(session, repository)
-        .DeleteMeasurementAsync(request.Id, cancellationToken);
+    )
+    {
+        var userId = session.GetUserClaims().UserId;
+
+        return new MeasurementFactorySimplified<TemperatureMeasurementEntity>(repository, userId)
+            .DeleteMeasurementAsync(request.Id, cancellationToken);
+    }
 }
 
 public sealed class DeleteTemperatureCommandValidator : AbstractValidator<DeleteTemperatureCommand>

@@ -10,13 +10,17 @@ namespace SafeMedConnect.Application.Queries.HeartRate;
 public record GetHeartRateMeasurementsQuery : IRequest<ResponseWrapper<List<HeartRateMeasurementEntity>>>;
 
 public class GetHeartRateMeasurementsQueryHandler(
-    IMeasurementRepository<HeartRateEntity, HeartRateMeasurementEntity> repository,
+    IMeasurementRepositorySimplified<HeartRateMeasurementEntity> repository,
     ISessionService session
 ) : IRequestHandler<GetHeartRateMeasurementsQuery, ResponseWrapper<List<HeartRateMeasurementEntity>>>
 {
     public Task<ResponseWrapper<List<HeartRateMeasurementEntity>>> Handle(
         GetHeartRateMeasurementsQuery request,
         CancellationToken cancellationToken
-    ) => new MeasurementFactory<HeartRateEntity, HeartRateMeasurementEntity>(session, repository)
-        .GetMeasurementsAsync(cancellationToken);
+    )
+    {
+        var userId = session.GetUserClaims().UserId;
+        return new MeasurementFactorySimplified<HeartRateMeasurementEntity>(repository, userId)
+            .GetMeasurementsAsync(cancellationToken);
+    }
 }

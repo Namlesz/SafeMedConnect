@@ -18,6 +18,7 @@ public sealed record AddBloodSugarCommand(
 )
     : IRequest<ResponseWrapper<List<BloodSugarMeasurementEntity>>>;
 
+// TODO: Change to simplified version
 public class AddBloodSugarCommandHandler(
     IMeasurementRepository<BloodSugarEntity, BloodSugarMeasurementEntity> repository,
     ISessionService session,

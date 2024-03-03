@@ -1,10 +1,12 @@
 using MongoDB.Bson.Serialization.Attributes;
+using SafeMedConnect.Domain.Attributes;
 using SafeMedConnect.Domain.Entities.Base;
 
 namespace SafeMedConnect.Domain.Entities;
 
 public sealed class BloodPressureEntity : BaseObservationEntity<BloodPressureMeasurementEntity>;
 
+[RepositoryName("BloodPressures")]
 public sealed class BloodPressureMeasurementEntity : BaseMeasurementEntity
 {
     [BsonElement("systolic")]

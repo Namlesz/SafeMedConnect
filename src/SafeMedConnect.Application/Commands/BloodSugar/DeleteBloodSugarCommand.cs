@@ -11,6 +11,7 @@ namespace SafeMedConnect.Application.Commands.BloodSugar;
 public sealed record DeleteBloodSugarCommand(string Id)
     : IRequest<ResponseWrapper<List<BloodSugarMeasurementEntity>>>;
 
+// TODO: Change to simplified version
 public class DeleteBloodSugarCommandHandler(
     IMeasurementRepository<BloodSugarEntity, BloodSugarMeasurementEntity> repository,
     ISessionService session

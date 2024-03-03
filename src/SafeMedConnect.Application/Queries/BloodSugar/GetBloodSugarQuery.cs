@@ -9,6 +9,7 @@ namespace SafeMedConnect.Application.Queries.BloodSugar;
 
 public sealed record GetBloodSugarQuery : IRequest<ResponseWrapper<List<BloodSugarMeasurementDto>>>;
 
+// TODO: Change to simplified version
 public class GetBloodSugarQueryHandler(
     ISessionService session,
     IMeasurementRepository<BloodSugarEntity, BloodSugarMeasurementEntity> repository,

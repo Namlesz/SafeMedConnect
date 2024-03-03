@@ -11,12 +11,17 @@ public sealed record GetBloodPressureQuery : IRequest<ResponseWrapper<List<Blood
 
 public class GetBloodPressureQueryHandler(
     ISessionService session,
-    IMeasurementRepository<BloodPressureEntity, BloodPressureMeasurementEntity> repository
+    IMeasurementRepositorySimplified<BloodPressureMeasurementEntity> repository
 ) : IRequestHandler<GetBloodPressureQuery, ResponseWrapper<List<BloodPressureMeasurementEntity>>>
 {
     public Task<ResponseWrapper<List<BloodPressureMeasurementEntity>>> Handle(
         GetBloodPressureQuery request,
         CancellationToken cancellationToken
-    ) => new MeasurementFactory<BloodPressureEntity, BloodPressureMeasurementEntity>(session, repository)
-        .GetMeasurementsAsync(cancellationToken);
+    )
+    {
+        var userId = session.GetUserClaims().UserId;
+
+        return new MeasurementFactorySimplified<BloodPressureMeasurementEntity>(repository, userId)
+            .GetMeasurementsAsync(cancellationToken);
+    }
 }

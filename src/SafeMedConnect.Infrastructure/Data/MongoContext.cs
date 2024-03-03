@@ -19,22 +19,10 @@ internal sealed class MongoContext
     }
 
     public IMongoCollection<ApplicationUserEntity> ApplicationUsers =>
-        _database.GetCollection<ApplicationUserEntity>("AppUsers");
+        _database.GetCollection<ApplicationUserEntity>(GetCollectionName<ApplicationUserEntity>());
 
     public IMongoCollection<UserEntity> Users =>
         _database.GetCollection<UserEntity>(GetCollectionName<UserEntity>());
-
-    public IMongoCollection<HeartRateEntity> HeartRates =>
-        _database.GetCollection<HeartRateEntity>(GetCollectionName<HeartRateEntity>());
-
-    public IMongoCollection<BloodPressureEntity> BloodPressures =>
-        _database.GetCollection<BloodPressureEntity>(GetCollectionName<BloodPressureEntity>());
-
-    public IMongoCollection<BloodPressureEntity> Temperatures =>
-        _database.GetCollection<BloodPressureEntity>(GetCollectionName<TemperatureEntity>());
-
-    public IMongoCollection<BloodSugarEntity> BloodSugars =>
-        _database.GetCollection<BloodSugarEntity>(GetCollectionName<BloodSugarEntity>());
 
     public IMongoCollection<T> GetCollection<T>(string name) where T : class =>
         _database.GetCollection<T>(name);
