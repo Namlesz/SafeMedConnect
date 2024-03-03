@@ -17,9 +17,9 @@ public class GetSharedDataQueryHandler(
     ISessionService session,
     IMapper mapper,
     IUserRepository userRepository,
-    IMeasurementRepository<HeartRateEntity, HeartRateMeasurementEntity> heartRateRepository,
-    IMeasurementRepository<BloodPressureEntity, BloodPressureMeasurementEntity> bloodPressureRepository,
-    IMeasurementRepository<TemperatureEntity, TemperatureMeasurementEntity> temperatureRepository
+    IMeasurementRepository<HeartRateMeasurementEntity> heartRateRepository,
+    IMeasurementRepository<BloodPressureMeasurementEntity> bloodPressureRepository,
+    IMeasurementRepository<TemperatureMeasurementEntity> temperatureRepository
 ) : IRequestHandler<GetSharedDataQuery, ResponseWrapper<SharedDataDto>>
 {
     public async Task<ResponseWrapper<SharedDataDto>> Handle(GetSharedDataQuery request, CancellationToken cancellationToken)

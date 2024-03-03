@@ -13,7 +13,7 @@ public sealed record AddTemperatureCommand(double Value, DateTime Timestamp)
     : IRequest<ResponseWrapper<List<TemperatureMeasurementEntity>>>;
 
 public class AddTemperatureCommandHandler(
-    IMeasurementRepositorySimplified<TemperatureMeasurementEntity> repository,
+    IMeasurementRepository<TemperatureMeasurementEntity> repository,
     ISessionService session,
     IMapper mapper
 ) : IRequestHandler<AddTemperatureCommand, ResponseWrapper<List<TemperatureMeasurementEntity>>>
@@ -24,7 +24,7 @@ public class AddTemperatureCommandHandler(
     )
     {
         var userId = session.GetUserClaims().UserId;
-        var factory = new MeasurementFactorySimplified<TemperatureMeasurementEntity>(repository, userId);
+        var factory = new MeasurementFactory<TemperatureMeasurementEntity>(repository, userId);
         var entity = mapper.Map<TemperatureMeasurementEntity>(request);
 
         return await factory.AddMeasurementAsync(entity, cancellationToken);

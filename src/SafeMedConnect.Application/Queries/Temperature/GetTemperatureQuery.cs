@@ -11,7 +11,7 @@ public sealed record GetTemperatureQuery : IRequest<ResponseWrapper<List<Tempera
 
 public class GetTemperatureQueryHandler(
     ISessionService session,
-    IMeasurementRepositorySimplified<TemperatureMeasurementEntity> repository
+    IMeasurementRepository<TemperatureMeasurementEntity> repository
 ) : IRequestHandler<GetTemperatureQuery, ResponseWrapper<List<TemperatureMeasurementEntity>>>
 {
     public Task<ResponseWrapper<List<TemperatureMeasurementEntity>>> Handle(
@@ -21,7 +21,7 @@ public class GetTemperatureQueryHandler(
     {
         var userId = session.GetUserClaims().UserId;
 
-        return new MeasurementFactorySimplified<TemperatureMeasurementEntity>(repository, userId)
+        return new MeasurementFactory<TemperatureMeasurementEntity>(repository, userId)
             .GetMeasurementsAsync(cancellationToken);
     }
 }

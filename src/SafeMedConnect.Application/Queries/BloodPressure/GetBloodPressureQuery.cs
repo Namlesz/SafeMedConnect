@@ -11,7 +11,7 @@ public sealed record GetBloodPressureQuery : IRequest<ResponseWrapper<List<Blood
 
 public class GetBloodPressureQueryHandler(
     ISessionService session,
-    IMeasurementRepositorySimplified<BloodPressureMeasurementEntity> repository
+    IMeasurementRepository<BloodPressureMeasurementEntity> repository
 ) : IRequestHandler<GetBloodPressureQuery, ResponseWrapper<List<BloodPressureMeasurementEntity>>>
 {
     public Task<ResponseWrapper<List<BloodPressureMeasurementEntity>>> Handle(
@@ -21,7 +21,7 @@ public class GetBloodPressureQueryHandler(
     {
         var userId = session.GetUserClaims().UserId;
 
-        return new MeasurementFactorySimplified<BloodPressureMeasurementEntity>(repository, userId)
+        return new MeasurementFactory<BloodPressureMeasurementEntity>(repository, userId)
             .GetMeasurementsAsync(cancellationToken);
     }
 }

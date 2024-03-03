@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using SafeMedConnect.Api.Attributes;
 using SafeMedConnect.Api.Interfaces;
 using SafeMedConnect.Application.Commands.BloodSugar;
+using SafeMedConnect.Application.Dto;
 using SafeMedConnect.Application.Queries.BloodSugar;
 using SafeMedConnect.Domain.Entities;
 

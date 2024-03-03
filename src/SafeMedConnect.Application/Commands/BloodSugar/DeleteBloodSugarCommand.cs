@@ -1,5 +1,7 @@
+using AutoMapper;
 using FluentValidation;
 using MediatR;
+using SafeMedConnect.Application.Dto;
 using SafeMedConnect.Application.Factories;
 using SafeMedConnect.Domain.Entities;
 using SafeMedConnect.Domain.Interfaces.Repositories;
@@ -9,19 +11,24 @@ using SafeMedConnect.Domain.Responses;
 namespace SafeMedConnect.Application.Commands.BloodSugar;
 
 public sealed record DeleteBloodSugarCommand(string Id)
-    : IRequest<ResponseWrapper<List<BloodSugarMeasurementEntity>>>;
+    : IRequest<ResponseWrapper<List<BloodSugarMeasurementDto>>>;
 
-// TODO: Change to simplified version
 public class DeleteBloodSugarCommandHandler(
-    IMeasurementRepository<BloodSugarEntity, BloodSugarMeasurementEntity> repository,
-    ISessionService session
-) : IRequestHandler<DeleteBloodSugarCommand, ResponseWrapper<List<BloodSugarMeasurementEntity>>>
+    IMeasurementRepository<BloodSugarMeasurementEntity> repository,
+    ISessionService session,
+    IMapper mapper
+) : IRequestHandler<DeleteBloodSugarCommand, ResponseWrapper<List<BloodSugarMeasurementDto>>>
 {
-    public Task<ResponseWrapper<List<BloodSugarMeasurementEntity>>> Handle(
+    public Task<ResponseWrapper<List<BloodSugarMeasurementDto>>> Handle(
         DeleteBloodSugarCommand request,
         CancellationToken cancellationToken
-    ) => new MeasurementFactory<BloodSugarEntity, BloodSugarMeasurementEntity>(session, repository)
-        .DeleteMeasurementAsync(request.Id, cancellationToken);
+    )
+    {
+        var userId = session.GetUserClaims().UserId;
+
+        return new MeasurementFactoryWithMapper<BloodSugarMeasurementEntity>(repository, userId, mapper)
+            .DeleteMeasurementAsync<BloodSugarMeasurementDto>(request.Id, cancellationToken);
+    }
 }
 
 public sealed class DeleteBloodSugarCommandValidator : AbstractValidator<DeleteBloodSugarCommand>

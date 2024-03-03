@@ -1,5 +1,7 @@
 using AutoMapper;
 using MediatR;
+using SafeMedConnect.Application.Dto;
+using SafeMedConnect.Application.Factories;
 using SafeMedConnect.Domain.Entities;
 using SafeMedConnect.Domain.Interfaces.Repositories;
 using SafeMedConnect.Domain.Interfaces.Services;
@@ -9,36 +11,20 @@ namespace SafeMedConnect.Application.Queries.BloodSugar;
 
 public sealed record GetBloodSugarQuery : IRequest<ResponseWrapper<List<BloodSugarMeasurementDto>>>;
 
-// TODO: Change to simplified version
 public class GetBloodSugarQueryHandler(
     ISessionService session,
-    IMeasurementRepository<BloodSugarEntity, BloodSugarMeasurementEntity> repository,
+    IMeasurementRepository<BloodSugarMeasurementEntity> repository,
     IMapper mapper
 ) : IRequestHandler<GetBloodSugarQuery, ResponseWrapper<List<BloodSugarMeasurementDto>>>
 {
-    public async Task<ResponseWrapper<List<BloodSugarMeasurementDto>>> Handle(
+    public Task<ResponseWrapper<List<BloodSugarMeasurementDto>>> Handle(
         GetBloodSugarQuery request,
         CancellationToken cancellationToken
     )
     {
-        var entity = await repository.GetAsync(session.GetUserClaims().UserId, cancellationToken);
+        var userId = session.GetUserClaims().UserId;
 
-        if (entity?.Measurements is null)
-        {
-            return new ResponseWrapper<List<BloodSugarMeasurementDto>>(ResponseTypes.NotFound);
-        }
-
-        return new ResponseWrapper<List<BloodSugarMeasurementDto>>(
-            ResponseTypes.Success,
-            mapper.Map<List<BloodSugarMeasurementDto>>(entity.Measurements)
-        );
+        return new MeasurementFactoryWithMapper<BloodSugarMeasurementEntity>(repository, userId, mapper)
+            .GetMeasurementsAsync<BloodSugarMeasurementDto>(cancellationToken);
     }
 }
-
-public sealed record BloodSugarMeasurementDto(
-    string Id,
-    decimal Value,
-    DateTime Timestamp,
-    string Unit,
-    string MeasurementMethod
-);

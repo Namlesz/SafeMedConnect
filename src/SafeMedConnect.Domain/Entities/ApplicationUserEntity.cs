@@ -4,7 +4,7 @@ using SafeMedConnect.Domain.Attributes;
 
 namespace SafeMedConnect.Domain.Entities;
 
-[RepositoryName("AppUsers(")]
+[RepositoryName("AppUsers")]
 public sealed class ApplicationUserEntity
 {
     [BsonId]

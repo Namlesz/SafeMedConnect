@@ -16,6 +16,7 @@ public sealed record ShareDataCommand(
     bool ShareTemperatureMeasurement = false
 ) : IRequest<ResponseWrapper<TokenResponseDto>>;
 
+// TODO: Share blood sugar data
 public class ShareDataCommandHandler(ISessionService sessionService, ITokenService tokenService)
     : IRequestHandler<ShareDataCommand, ResponseWrapper<TokenResponseDto>>
 {

@@ -12,7 +12,7 @@ public sealed record DeleteTemperatureCommand(string Id)
     : IRequest<ResponseWrapper<List<TemperatureMeasurementEntity>>>;
 
 public class DeleteTemperatureCommandHandler(
-    IMeasurementRepositorySimplified<TemperatureMeasurementEntity> repository,
+    IMeasurementRepository<TemperatureMeasurementEntity> repository,
     ISessionService session
 ) : IRequestHandler<DeleteTemperatureCommand, ResponseWrapper<List<TemperatureMeasurementEntity>>>
 {
@@ -23,7 +23,7 @@ public class DeleteTemperatureCommandHandler(
     {
         var userId = session.GetUserClaims().UserId;
 
-        return new MeasurementFactorySimplified<TemperatureMeasurementEntity>(repository, userId)
+        return new MeasurementFactory<TemperatureMeasurementEntity>(repository, userId)
             .DeleteMeasurementAsync(request.Id, cancellationToken);
     }
 }

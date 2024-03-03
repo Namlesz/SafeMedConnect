@@ -13,7 +13,7 @@ public sealed record AddHeartRateMeasurementCommand(DateTime Timestamp, int Valu
     : IRequest<ResponseWrapper<List<HeartRateMeasurementEntity>>>;
 
 public class AddHeartRateMeasurementCommandHandler(
-    IMeasurementRepositorySimplified<HeartRateMeasurementEntity> repository,
+    IMeasurementRepository<HeartRateMeasurementEntity> repository,
     ISessionService session,
     IMapper mapper
 ) : IRequestHandler<AddHeartRateMeasurementCommand, ResponseWrapper<List<HeartRateMeasurementEntity>>>
@@ -24,7 +24,7 @@ public class AddHeartRateMeasurementCommandHandler(
     )
     {
         var userId = session.GetUserClaims().UserId;
-        var factory = new MeasurementFactorySimplified<HeartRateMeasurementEntity>(repository, userId);
+        var factory = new MeasurementFactory<HeartRateMeasurementEntity>(repository, userId);
         var measurementEntity = mapper.Map<HeartRateMeasurementEntity>(request);
 
         return await factory.AddMeasurementAsync(measurementEntity, cancellationToken);

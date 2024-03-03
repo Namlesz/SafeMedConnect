@@ -12,7 +12,7 @@ public sealed record DeleteBloodPressureCommand(string Id)
     : IRequest<ResponseWrapper<List<BloodPressureMeasurementEntity>>>;
 
 public class DeleteBloodPressureCommandHandler(
-    IMeasurementRepositorySimplified<BloodPressureMeasurementEntity> repository,
+    IMeasurementRepository<BloodPressureMeasurementEntity> repository,
     ISessionService session
 ) : IRequestHandler<DeleteBloodPressureCommand, ResponseWrapper<List<BloodPressureMeasurementEntity>>>
 {
@@ -23,7 +23,7 @@ public class DeleteBloodPressureCommandHandler(
     {
         var userId = session.GetUserClaims().UserId;
 
-        return new MeasurementFactorySimplified<BloodPressureMeasurementEntity>(repository, userId)
+        return new MeasurementFactory<BloodPressureMeasurementEntity>(repository, userId)
             .DeleteMeasurementAsync(request.Id, cancellationToken);
     }
 }

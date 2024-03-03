@@ -1,6 +1,7 @@
 using AutoMapper;
 using FluentValidation;
 using MediatR;
+using SafeMedConnect.Application.Dto;
 using SafeMedConnect.Application.Factories;
 using SafeMedConnect.Domain.Entities;
 using SafeMedConnect.Domain.Enums;
@@ -15,25 +16,25 @@ public sealed record AddBloodSugarCommand(
     GlucoseUnitType GlucoseUnit,
     BloodSugarMeasurementMethodType MeasurementMethod,
     DateTime Timestamp
-)
-    : IRequest<ResponseWrapper<List<BloodSugarMeasurementEntity>>>;
+) : IRequest<ResponseWrapper<List<BloodSugarMeasurementDto>>>;
 
-// TODO: Change to simplified version
 public class AddBloodSugarCommandHandler(
-    IMeasurementRepository<BloodSugarEntity, BloodSugarMeasurementEntity> repository,
+    IMeasurementRepository<BloodSugarMeasurementEntity> repository,
     ISessionService session,
     IMapper mapper
-) : IRequestHandler<AddBloodSugarCommand, ResponseWrapper<List<BloodSugarMeasurementEntity>>>
+) : IRequestHandler<AddBloodSugarCommand, ResponseWrapper<List<BloodSugarMeasurementDto>>>
 {
-    public async Task<ResponseWrapper<List<BloodSugarMeasurementEntity>>> Handle(
+    public async Task<ResponseWrapper<List<BloodSugarMeasurementDto>>> Handle(
         AddBloodSugarCommand request,
         CancellationToken cancellationToken
     )
     {
-        var factory = new MeasurementFactory<BloodSugarEntity, BloodSugarMeasurementEntity>(session, repository);
+        var userId = session.GetUserClaims().UserId;
+
+        var factory = new MeasurementFactoryWithMapper<BloodSugarMeasurementEntity>(repository, userId, mapper);
         var entity = mapper.Map<BloodSugarMeasurementEntity>(request);
-        // TODO: Return mapped entity from factory
-        return await factory.AddMeasurementAsync(entity, cancellationToken);
+
+        return await factory.AddMeasurementAsync<BloodSugarMeasurementDto>(entity, cancellationToken);
     }
 }
 
