@@ -39,15 +39,6 @@ public static class ServiceCollectionExtensions
 
         services.AddScoped<IMfaRepository, MfaRepository>();
 
-        services.AddScoped<IMeasurementRepository<HeartRateEntity, HeartRateMeasurementEntity>,
-            MeasurementRepository<HeartRateEntity, HeartRateMeasurementEntity>>();
-
-        services.AddScoped<IMeasurementRepository<BloodPressureEntity, BloodPressureMeasurementEntity>,
-            MeasurementRepository<BloodPressureEntity, BloodPressureMeasurementEntity>>();
-
-        services.AddScoped<IMeasurementRepository<TemperatureEntity, TemperatureMeasurementEntity>,
-            MeasurementRepository<TemperatureEntity, TemperatureMeasurementEntity>>();
-
         services.AddScoped<IMeasurementRepository<BloodSugarEntity, BloodSugarMeasurementEntity>,
             MeasurementRepository<BloodSugarEntity, BloodSugarMeasurementEntity>>();
 
@@ -61,7 +52,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IMeasurementRepositorySimplified<TemperatureMeasurementEntity>,
             MeasurementRepositorySimplified<TemperatureMeasurementEntity>>();
 
-        services.AddScoped<IMeasurementRepositorySimplified<BloodSugarMeasurementEntity>,
-            MeasurementRepositorySimplified<BloodSugarMeasurementEntity>>();
+        // services.AddScoped<IMeasurementRepositorySimplified<BloodSugarMeasurementEntity>,
+        //     MeasurementRepositorySimplified<BloodSugarMeasurementEntity>>();
     }
 }
