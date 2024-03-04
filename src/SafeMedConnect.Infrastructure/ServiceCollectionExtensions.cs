@@ -39,13 +39,16 @@ public static class ServiceCollectionExtensions
 
         services.AddScoped<IMfaRepository, MfaRepository>();
 
-        services.AddScoped<IMeasurementRepository<HeartRateEntity, HeartRateMeasurementEntity>,
-            MeasurementRepository<HeartRateEntity, HeartRateMeasurementEntity>>();
+        services.AddScoped<IMeasurementRepository<HeartRateMeasurementEntity>,
+            MeasurementRepository<HeartRateMeasurementEntity>>();
 
-        services.AddScoped<IMeasurementRepository<BloodPressureEntity, BloodPressureMeasurementEntity>,
-            MeasurementRepository<BloodPressureEntity, BloodPressureMeasurementEntity>>();
+        services.AddScoped<IMeasurementRepository<BloodPressureMeasurementEntity>,
+            MeasurementRepository<BloodPressureMeasurementEntity>>();
 
-        services.AddScoped<IMeasurementRepository<TemperatureEntity, TemperatureMeasurementEntity>,
-            MeasurementRepository<TemperatureEntity, TemperatureMeasurementEntity>>();
+        services.AddScoped<IMeasurementRepository<TemperatureMeasurementEntity>,
+            MeasurementRepository<TemperatureMeasurementEntity>>();
+
+        services.AddScoped<IMeasurementRepository<BloodSugarMeasurementEntity>,
+            MeasurementRepository<BloodSugarMeasurementEntity>>();
     }
 }

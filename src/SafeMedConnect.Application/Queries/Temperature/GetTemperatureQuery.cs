@@ -11,11 +11,17 @@ public sealed record GetTemperatureQuery : IRequest<ResponseWrapper<List<Tempera
 
 public class GetTemperatureQueryHandler(
     ISessionService session,
-    IMeasurementRepository<TemperatureEntity, TemperatureMeasurementEntity> repository
+    IMeasurementRepository<TemperatureMeasurementEntity> repository
 ) : IRequestHandler<GetTemperatureQuery, ResponseWrapper<List<TemperatureMeasurementEntity>>>
 {
     public Task<ResponseWrapper<List<TemperatureMeasurementEntity>>> Handle(
-        GetTemperatureQuery request, CancellationToken cancellationToken
-    ) => new MeasurementFactory<TemperatureEntity, TemperatureMeasurementEntity>(session, repository)
-        .GetMeasurementsAsync(cancellationToken);
+        GetTemperatureQuery request,
+        CancellationToken cancellationToken
+    )
+    {
+        var userId = session.GetUserClaims().UserId;
+
+        return new MeasurementFactory<TemperatureMeasurementEntity>(repository, userId)
+            .GetMeasurementsAsync(cancellationToken);
+    }
 }

@@ -13,7 +13,7 @@ public sealed record AddBloodPressureCommand(int Systolic, int Diastolic, int He
     : IRequest<ResponseWrapper<List<BloodPressureMeasurementEntity>>>;
 
 public class AddBloodPressureCommandHandler(
-    IMeasurementRepository<BloodPressureEntity, BloodPressureMeasurementEntity> repository,
+    IMeasurementRepository<BloodPressureMeasurementEntity> repository,
     ISessionService session,
     IMapper mapper
 ) : IRequestHandler<AddBloodPressureCommand, ResponseWrapper<List<BloodPressureMeasurementEntity>>>
@@ -23,7 +23,9 @@ public class AddBloodPressureCommandHandler(
         CancellationToken cancellationToken
     )
     {
-        var factory = new MeasurementFactory<BloodPressureEntity, BloodPressureMeasurementEntity>(session, repository);
+        var userId = session.GetUserClaims().UserId;
+
+        var factory = new MeasurementFactory<BloodPressureMeasurementEntity>(repository, userId);
         var entity = mapper.Map<BloodPressureMeasurementEntity>(request);
         return await factory.AddMeasurementAsync(entity, cancellationToken);
     }

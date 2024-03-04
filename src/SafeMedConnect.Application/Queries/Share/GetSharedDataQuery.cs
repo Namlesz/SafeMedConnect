@@ -17,9 +17,10 @@ public class GetSharedDataQueryHandler(
     ISessionService session,
     IMapper mapper,
     IUserRepository userRepository,
-    IMeasurementRepository<HeartRateEntity, HeartRateMeasurementEntity> heartRateRepository,
-    IMeasurementRepository<BloodPressureEntity, BloodPressureMeasurementEntity> bloodPressureRepository,
-    IMeasurementRepository<TemperatureEntity, TemperatureMeasurementEntity> temperatureRepository
+    IMeasurementRepository<HeartRateMeasurementEntity> heartRateRepository,
+    IMeasurementRepository<BloodPressureMeasurementEntity> bloodPressureRepository,
+    IMeasurementRepository<TemperatureMeasurementEntity> temperatureRepository,
+    IMeasurementRepository<BloodSugarMeasurementEntity> bloodSugarRepository
 ) : IRequestHandler<GetSharedDataQuery, ResponseWrapper<SharedDataDto>>
 {
     public async Task<ResponseWrapper<SharedDataDto>> Handle(GetSharedDataQuery request, CancellationToken cancellationToken)
@@ -46,7 +47,7 @@ public class GetSharedDataQueryHandler(
         if (shareSensitiveData)
         {
             var user = await userRepository.GetUserAsync(userId, cancellationToken);
-            dataToShare.UserInformation = mapper.Map<UserDto>(user);
+            dataToShare.UserInformation = mapper.Map<UserDto?>(user);
         }
 
         guestClaims.DataShareClaims.TryGetValue(ShareBloodPressureMeasurement, out var shareBloodPressureMeasurement);
@@ -62,7 +63,7 @@ public class GetSharedDataQueryHandler(
         {
             var heartRateMeasurements = await heartRateRepository.GetAsync(userId, cancellationToken);
             dataToShare.Measurements.HeartRates =
-                mapper.Map<List<HeartRateDto>>(heartRateMeasurements?.Measurements);
+                mapper.Map<List<HeartRateDto>?>(heartRateMeasurements?.Measurements);
         }
 
         guestClaims.DataShareClaims.TryGetValue(ShareHeartRateMeasurement, out var shareTemperatureMeasurement);
@@ -70,7 +71,15 @@ public class GetSharedDataQueryHandler(
         {
             var temperatureMeasurements = await temperatureRepository.GetAsync(userId, cancellationToken);
             dataToShare.Measurements.Temperatures =
-                mapper.Map<List<TemperatureDto>>(temperatureMeasurements?.Measurements);
+                mapper.Map<List<TemperatureDto>?>(temperatureMeasurements?.Measurements);
+        }
+
+        guestClaims.DataShareClaims.TryGetValue(ShareBloodSugarMeasurement, out var shareBloodSugarMeasurement);
+        if (shareBloodSugarMeasurement)
+        {
+            var bloodSugarMeasurements = await bloodSugarRepository.GetAsync(userId, cancellationToken);
+            dataToShare.Measurements.BloodSugars =
+                mapper.Map<List<BloodSugarDto>?>(bloodSugarMeasurements?.Measurements);
         }
 
         return dataToShare;

@@ -1,8 +1,10 @@
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
+using SafeMedConnect.Domain.Attributes;
 
 namespace SafeMedConnect.Domain.Entities;
 
+[RepositoryName("AppUsers")]
 public sealed class ApplicationUserEntity
 {
     [BsonId]

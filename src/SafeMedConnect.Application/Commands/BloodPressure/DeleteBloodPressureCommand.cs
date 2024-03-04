@@ -12,15 +12,20 @@ public sealed record DeleteBloodPressureCommand(string Id)
     : IRequest<ResponseWrapper<List<BloodPressureMeasurementEntity>>>;
 
 public class DeleteBloodPressureCommandHandler(
-    IMeasurementRepository<BloodPressureEntity, BloodPressureMeasurementEntity> repository,
+    IMeasurementRepository<BloodPressureMeasurementEntity> repository,
     ISessionService session
 ) : IRequestHandler<DeleteBloodPressureCommand, ResponseWrapper<List<BloodPressureMeasurementEntity>>>
 {
     public Task<ResponseWrapper<List<BloodPressureMeasurementEntity>>> Handle(
         DeleteBloodPressureCommand request,
         CancellationToken cancellationToken
-    ) => new MeasurementFactory<BloodPressureEntity, BloodPressureMeasurementEntity>(session, repository)
-        .DeleteMeasurementAsync(request.Id, cancellationToken);
+    )
+    {
+        var userId = session.GetUserClaims().UserId;
+
+        return new MeasurementFactory<BloodPressureMeasurementEntity>(repository, userId)
+            .DeleteMeasurementAsync(request.Id, cancellationToken);
+    }
 }
 
 public sealed class DeleteBloodPressureCommandValidator : AbstractValidator<DeleteBloodPressureCommand>

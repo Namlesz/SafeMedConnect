@@ -56,6 +56,9 @@ internal sealed class ResponseHandler(ISender mediator) : IResponseHandler
             { ResponseType: Error } res
                 => Results.Problem(statusCode: Status500InternalServerError, detail: res.Message),
 
+            { ResponseType: Unauthorized } res
+                => Results.Problem(statusCode: Status401Unauthorized, detail: res.Message),
+
             _ => Results.Problem(statusCode: Status500InternalServerError, detail: "Unknown error occurred")
         };
     }

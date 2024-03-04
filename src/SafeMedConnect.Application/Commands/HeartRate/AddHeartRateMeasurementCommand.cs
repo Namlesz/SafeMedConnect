@@ -13,15 +13,18 @@ public sealed record AddHeartRateMeasurementCommand(DateTime Timestamp, int Valu
     : IRequest<ResponseWrapper<List<HeartRateMeasurementEntity>>>;
 
 public class AddHeartRateMeasurementCommandHandler(
-    IMeasurementRepository<HeartRateEntity, HeartRateMeasurementEntity> repository,
+    IMeasurementRepository<HeartRateMeasurementEntity> repository,
     ISessionService session,
     IMapper mapper
 ) : IRequestHandler<AddHeartRateMeasurementCommand, ResponseWrapper<List<HeartRateMeasurementEntity>>>
 {
     public async Task<ResponseWrapper<List<HeartRateMeasurementEntity>>> Handle(
-        AddHeartRateMeasurementCommand request, CancellationToken cancellationToken)
+        AddHeartRateMeasurementCommand request,
+        CancellationToken cancellationToken
+    )
     {
-        var factory = new MeasurementFactory<HeartRateEntity, HeartRateMeasurementEntity>(session, repository);
+        var userId = session.GetUserClaims().UserId;
+        var factory = new MeasurementFactory<HeartRateMeasurementEntity>(repository, userId);
         var measurementEntity = mapper.Map<HeartRateMeasurementEntity>(request);
 
         return await factory.AddMeasurementAsync(measurementEntity, cancellationToken);

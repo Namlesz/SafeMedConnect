@@ -7,20 +7,22 @@ using static SafeMedConnect.Infrastructure.Helpers.RepositoryHelper;
 
 namespace SafeMedConnect.Infrastructure.Repositories;
 
-internal sealed class MeasurementRepository<TA, TB>(MongoContext db, ILogger<MeasurementRepository<TA, TB>> logger)
-    : IMeasurementRepository<TA, TB> where TA : BaseObservationEntity<TB> where TB : BaseMeasurementEntity
+internal sealed class MeasurementRepository<T>(
+    MongoContext db,
+    ILogger<MeasurementRepository<T>> logger
+) : IMeasurementRepository<T> where T : BaseMeasurementEntity
 {
-    private readonly IMongoCollection<TA> _collection = db.GetCollection<TA>(GetCollectionName<TA>());
+    private readonly IMongoCollection<BaseObservationEntity<T>> _collection =
+        db.GetCollection<BaseObservationEntity<T>>(GetCollectionName<T>());
 
-    public async Task<TA?> GetAsync(string userId, CancellationToken cnl = default) =>
+    public async Task<BaseObservationEntity<T>?> GetAsync(string userId, CancellationToken cnl = default) =>
         await _collection.Find(x => x.UserId == userId).FirstOrDefaultAsync(cnl);
 
-
-    public async Task<TA?> AddAsync(string userId, TB measurement, CancellationToken cnl = default)
+    public async Task<BaseObservationEntity<T>?> AddAsync(string userId, T measurement, CancellationToken cnl = default)
     {
-        var filter = Builders<TA>.Filter.Eq(x => x.UserId, userId);
-        var update = Builders<TA>.Update.Push<TB>(x => x.Measurements, measurement);
-        var options = new FindOneAndUpdateOptions<TA>
+        var filter = Builders<BaseObservationEntity<T>>.Filter.Eq(x => x.UserId, userId);
+        var update = Builders<BaseObservationEntity<T>>.Update.Push<T>(x => x.Measurements, measurement);
+        var options = new FindOneAndUpdateOptions<BaseObservationEntity<T>>
         {
             IsUpsert = true,
             ReturnDocument = ReturnDocument.After
@@ -37,10 +39,10 @@ internal sealed class MeasurementRepository<TA, TB>(MongoContext db, ILogger<Mea
         }
     }
 
-    public async Task<TA?> UpdateAsync(TA entity, CancellationToken cnl = default)
+    public async Task<BaseObservationEntity<T>?> UpdateAsync(BaseObservationEntity<T> entity, CancellationToken cnl = default)
     {
-        var filter = Builders<TA>.Filter.Eq(x => x.UserId, entity.UserId);
-        var options = new FindOneAndReplaceOptions<TA>
+        var filter = Builders<BaseObservationEntity<T>>.Filter.Eq(x => x.UserId, entity.UserId);
+        var options = new FindOneAndReplaceOptions<BaseObservationEntity<T>>
         {
             ReturnDocument = ReturnDocument.After
         };

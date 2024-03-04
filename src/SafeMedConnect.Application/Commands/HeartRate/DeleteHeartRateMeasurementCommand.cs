@@ -12,15 +12,20 @@ public sealed record DeleteHeartRateMeasurementCommand(string Id)
     : IRequest<ResponseWrapper<List<HeartRateMeasurementEntity>>>;
 
 public class DeleteHeartRateMeasurementCommandHandler(
-    IMeasurementRepository<HeartRateEntity, HeartRateMeasurementEntity> repository,
+    IMeasurementRepository<HeartRateMeasurementEntity> repository,
     ISessionService session
 ) : IRequestHandler<DeleteHeartRateMeasurementCommand, ResponseWrapper<List<HeartRateMeasurementEntity>>>
 {
     public Task<ResponseWrapper<List<HeartRateMeasurementEntity>>> Handle(
         DeleteHeartRateMeasurementCommand request,
         CancellationToken cancellationToken
-    ) => new MeasurementFactory<HeartRateEntity, HeartRateMeasurementEntity>(session, repository)
-        .DeleteMeasurementAsync(request.Id, cancellationToken);
+    )
+    {
+        var userId = session.GetUserClaims().UserId;
+
+        return new MeasurementFactory<HeartRateMeasurementEntity>(repository, userId)
+            .DeleteMeasurementAsync(request.Id, cancellationToken);
+    }
 }
 
 public class DeleteHeartRateMeasurementCommandValidator : AbstractValidator<DeleteHeartRateMeasurementCommand>
