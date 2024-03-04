@@ -6,7 +6,6 @@ using SafeMedConnect.Application.Commands.Temperature;
 using SafeMedConnect.Application.Commands.User;
 using SafeMedConnect.Application.Dto;
 using SafeMedConnect.Application.Dto.Measurements;
-using SafeMedConnect.Application.Queries.BloodSugar;
 using SafeMedConnect.Domain.Entities;
 using SafeMedConnect.Domain.Enums;
 
@@ -36,6 +35,9 @@ internal sealed class AutoMapperProfiles : Profile
         CreateMap<HeartRateMeasurementEntity, HeartRateDto>();
         CreateMap<BloodPressureMeasurementEntity, BloodPressureDto>();
         CreateMap<TemperatureMeasurementEntity, TemperatureDto>();
+        CreateMap<BloodSugarMeasurementEntity, BloodSugarDto>()
+            .ForMember(dest => dest.Unit, opt => opt.MapFrom(src => src.Unit.GetDisplayName()))
+            .ForMember(dest => dest.MeasurementMethod, opt => opt.MapFrom(src => src.MeasurementMethod.GetDisplayName()));
 
         CreateMap<BloodSugarMeasurementEntity, BloodSugarMeasurementDto>()
             .ForMember(dest => dest.Unit, opt => opt.MapFrom(src => src.Unit.GetDisplayName()))

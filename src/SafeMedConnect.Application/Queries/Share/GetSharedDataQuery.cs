@@ -19,7 +19,8 @@ public class GetSharedDataQueryHandler(
     IUserRepository userRepository,
     IMeasurementRepository<HeartRateMeasurementEntity> heartRateRepository,
     IMeasurementRepository<BloodPressureMeasurementEntity> bloodPressureRepository,
-    IMeasurementRepository<TemperatureMeasurementEntity> temperatureRepository
+    IMeasurementRepository<TemperatureMeasurementEntity> temperatureRepository,
+    IMeasurementRepository<BloodSugarMeasurementEntity> bloodSugarRepository
 ) : IRequestHandler<GetSharedDataQuery, ResponseWrapper<SharedDataDto>>
 {
     public async Task<ResponseWrapper<SharedDataDto>> Handle(GetSharedDataQuery request, CancellationToken cancellationToken)
@@ -71,6 +72,14 @@ public class GetSharedDataQueryHandler(
             var temperatureMeasurements = await temperatureRepository.GetAsync(userId, cancellationToken);
             dataToShare.Measurements.Temperatures =
                 mapper.Map<List<TemperatureDto>?>(temperatureMeasurements?.Measurements);
+        }
+
+        guestClaims.DataShareClaims.TryGetValue(ShareBloodSugarMeasurement, out var shareBloodSugarMeasurement);
+        if (shareBloodSugarMeasurement)
+        {
+            var bloodSugarMeasurements = await bloodSugarRepository.GetAsync(userId, cancellationToken);
+            dataToShare.Measurements.BloodSugars =
+                mapper.Map<List<BloodSugarDto>?>(bloodSugarMeasurements?.Measurements);
         }
 
         return dataToShare;

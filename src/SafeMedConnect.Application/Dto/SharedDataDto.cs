@@ -21,4 +21,7 @@ public sealed class MeasurementsDto
 
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public List<TemperatureDto>? Temperatures { get; set; }
+
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public List<BloodSugarDto>? BloodSugars { get; set; }
 }
