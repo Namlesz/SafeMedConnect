@@ -23,7 +23,6 @@ public class AddMfaAuthenticatorCommandHandler(
         var email = userClaims.Email;
         var id = userClaims.UserId;
 
-        // TODO: Hash the secret key before saving it to the database
         var secretKey = mfaService.GenerateSecretKey();
 
         var secretKeySaved = await mfaService.AddMfaSecretToUserAsync(id, secretKey, cancellationToken);

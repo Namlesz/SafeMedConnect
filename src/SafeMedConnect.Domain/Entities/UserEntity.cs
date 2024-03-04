@@ -26,7 +26,6 @@ public sealed class UserEntity
     [BsonElement("height")]
     public double? Height { get; init; }
 
-    // TODO: Change to enum?
     [BsonElement("blood_type")]
     public string? BloodType { get; init; }
 
