@@ -81,5 +81,17 @@ internal sealed class ShareRoutes : IRoutes
             .Produces(StatusCodes.Status403Forbidden)
             .Produces(StatusCodes.Status404NotFound)
             .RequireAuthorization(PolicyNames.GuestPolicy);
+
+        group.MapGet("blood-sugar", async (
+                    CancellationToken cnl,
+                    IResponseHandler responseHandler
+                ) => await responseHandler.SendAndHandle(new GetSharedBloodSugarQuery(), cnl)
+            )
+            .WithSummary("Get blood sugar measurements")
+            .Produces<List<BloodSugarDto>>()
+            .Produces(StatusCodes.Status400BadRequest)
+            .Produces(StatusCodes.Status403Forbidden)
+            .Produces(StatusCodes.Status404NotFound)
+            .RequireAuthorization(PolicyNames.GuestPolicy);
     }
 }
