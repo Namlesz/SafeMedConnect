@@ -66,7 +66,7 @@ public class GetSharedDataQueryHandler(
                 mapper.Map<List<HeartRateDto>?>(heartRateMeasurements?.Measurements);
         }
 
-        guestClaims.DataShareClaims.TryGetValue(ShareHeartRateMeasurement, out var shareTemperatureMeasurement);
+        guestClaims.DataShareClaims.TryGetValue(ShareTemperatureMeasurement, out var shareTemperatureMeasurement);
         if (shareTemperatureMeasurement)
         {
             var temperatureMeasurements = await temperatureRepository.GetAsync(userId, cancellationToken);

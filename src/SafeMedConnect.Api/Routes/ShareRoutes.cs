@@ -69,5 +69,17 @@ internal sealed class ShareRoutes : IRoutes
             .Produces(StatusCodes.Status403Forbidden)
             .Produces(StatusCodes.Status404NotFound)
             .RequireAuthorization(PolicyNames.GuestPolicy);
+
+        group.MapGet("temperature", async (
+                    CancellationToken cnl,
+                    IResponseHandler responseHandler
+                ) => await responseHandler.SendAndHandle(new GetSharedTemperatureQuery(), cnl)
+            )
+            .WithSummary("Get temperature measurements")
+            .Produces<List<TemperatureDto>>()
+            .Produces(StatusCodes.Status400BadRequest)
+            .Produces(StatusCodes.Status403Forbidden)
+            .Produces(StatusCodes.Status404NotFound)
+            .RequireAuthorization(PolicyNames.GuestPolicy);
     }
 }

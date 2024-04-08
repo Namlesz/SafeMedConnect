@@ -28,7 +28,7 @@ public class GetSharedHeartRateQueryHandler(
             return new ResponseWrapper<List<HeartRateDto>>(ResponseTypes.InvalidRequest, message: "No data to share");
         }
 
-        guestClaims.DataShareClaims.TryGetValue(ShareBloodPressureMeasurement, out var shareBloodPressureMeasurement);
+        guestClaims.DataShareClaims.TryGetValue(ShareHeartRateMeasurement, out var shareBloodPressureMeasurement);
         if (!shareBloodPressureMeasurement)
         {
             return new ResponseWrapper<List<HeartRateDto>>(ResponseTypes.Forbidden);

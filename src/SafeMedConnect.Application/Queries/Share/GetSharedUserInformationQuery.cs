@@ -24,7 +24,7 @@ public class GetSharedUserInformationQueryHandler(
             return new ResponseWrapper<UserDto>(ResponseTypes.InvalidRequest, message: "No data to share");
         }
 
-        guestClaims.DataShareClaims.TryGetValue(ShareBloodPressureMeasurement, out var shareBloodPressureMeasurement);
+        guestClaims.DataShareClaims.TryGetValue(ShareSensitiveData, out var shareBloodPressureMeasurement);
         if (!shareBloodPressureMeasurement)
         {
             return new ResponseWrapper<UserDto>(ResponseTypes.Forbidden);
