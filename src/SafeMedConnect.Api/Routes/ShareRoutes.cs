@@ -57,5 +57,17 @@ internal sealed class ShareRoutes : IRoutes
             .Produces(StatusCodes.Status403Forbidden)
             .Produces(StatusCodes.Status404NotFound)
             .RequireAuthorization(PolicyNames.GuestPolicy);
+
+        group.MapGet("heart-rate", async (
+                    CancellationToken cnl,
+                    IResponseHandler responseHandler
+                ) => await responseHandler.SendAndHandle(new GetSharedHeartRateQuery(), cnl)
+            )
+            .WithSummary("Get heart rate measurements")
+            .Produces<List<HeartRateDto>>()
+            .Produces(StatusCodes.Status400BadRequest)
+            .Produces(StatusCodes.Status403Forbidden)
+            .Produces(StatusCodes.Status404NotFound)
+            .RequireAuthorization(PolicyNames.GuestPolicy);
     }
 }
