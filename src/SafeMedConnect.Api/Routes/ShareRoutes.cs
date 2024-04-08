@@ -3,6 +3,7 @@ using SafeMedConnect.Api.Attributes;
 using SafeMedConnect.Api.Interfaces;
 using SafeMedConnect.Application.Commands.Share;
 using SafeMedConnect.Application.Dto;
+using SafeMedConnect.Application.Dto.Measurements;
 using SafeMedConnect.Application.Queries.Share;
 using SafeMedConnect.Domain.Authorization;
 
@@ -32,6 +33,29 @@ internal sealed class ShareRoutes : IRoutes
             .Produces<SharedDataDto>()
             .Produces(StatusCodes.Status400BadRequest)
             .Produces(StatusCodes.Status401Unauthorized)
+            .RequireAuthorization(PolicyNames.GuestPolicy);
+
+        group.MapGet("user-information", async (
+                    CancellationToken cnl,
+                    IResponseHandler responseHandler
+                ) => await responseHandler.SendAndHandle(new GetSharedUserInformationQuery(), cnl)
+            )
+            .WithSummary("Get user information shared from user via token")
+            .Produces<UserDto>()
+            .Produces(StatusCodes.Status400BadRequest)
+            .Produces(StatusCodes.Status401Unauthorized)
+            .RequireAuthorization(PolicyNames.GuestPolicy);
+
+        group.MapGet("blood-pressure", async (
+                    CancellationToken cnl,
+                    IResponseHandler responseHandler
+                ) => await responseHandler.SendAndHandle(new GetSharedBloodPressureQuery(), cnl)
+            )
+            .WithSummary("Get blood pressure measurements")
+            .Produces<List<BloodPressureDto>>()
+            .Produces(StatusCodes.Status400BadRequest)
+            .Produces(StatusCodes.Status403Forbidden)
+            .Produces(StatusCodes.Status404NotFound)
             .RequireAuthorization(PolicyNames.GuestPolicy);
     }
 }
