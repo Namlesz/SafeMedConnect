@@ -11,6 +11,11 @@ internal static class RegisterStartupMiddlewares
         {
             app.UseSwagger();
             app.UseSwaggerUI();
+            app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+        }
+        else
+        {
+            app.UseCors(x => x.WithOrigins().AllowAnyHeader().AllowAnyMethod());
         }
 
         app.UseHttpsRedirection();

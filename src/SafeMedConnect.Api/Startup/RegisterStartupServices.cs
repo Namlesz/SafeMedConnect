@@ -1,3 +1,4 @@
+using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -6,7 +7,6 @@ using SafeMedConnect.Api.Interfaces;
 using SafeMedConnect.Api.Swagger;
 using SafeMedConnect.Domain.Authorization;
 using SafeMedConnect.Domain.Configuration;
-using System.Text;
 
 namespace SafeMedConnect.Api.Startup;
 
@@ -14,7 +14,8 @@ internal static class RegisterStartupServices
 {
     public static void RegisterApiServices(
         this IServiceCollection services,
-        IConfiguration configuration)
+        IConfiguration configuration
+    )
     {
         services.AddAuthenticationWithJwt(configuration);
         services.AddAuthorizationWithPolicy();
@@ -25,6 +26,8 @@ internal static class RegisterStartupServices
         services.AddProblemDetails();
         services.AddScoped<IResponseHandler, ResponseHandler>();
         services.AddHttpContextAccessor();
+
+        services.AddCors();
     }
 
     private static void AddAuthorizationWithPolicy(this IServiceCollection services)
