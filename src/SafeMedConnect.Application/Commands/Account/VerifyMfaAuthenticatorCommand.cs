@@ -1,39 +1,40 @@
 using FluentValidation;
 using MediatR;
-using SafeMedConnect.Domain.Interfaces.Services;
-using SafeMedConnect.Domain.Responses;
+using SafeMedConnect.Domain.Abstract.Services;
+using SafeMedConnect.Domain.Enums;
+using SafeMedConnect.Domain.Models;
 
 namespace SafeMedConnect.Application.Commands.Account;
 
-public sealed record VerifyMfaAuthenticatorCommand(string Code) : IRequest<ResponseWrapper>;
+public sealed record VerifyMfaAuthenticatorCommand(string Code) : IRequest<ApiResponse>;
 
 public class VerifyMfaAuthenticatorCommandHandler(
     ISessionService session,
     IMfaService mfaService
-) : IRequestHandler<VerifyMfaAuthenticatorCommand, ResponseWrapper>
+) : IRequestHandler<VerifyMfaAuthenticatorCommand, ApiResponse>
 {
-    public async Task<ResponseWrapper> Handle(VerifyMfaAuthenticatorCommand request, CancellationToken cancellationToken)
+    public async Task<ApiResponse> Handle(VerifyMfaAuthenticatorCommand request, CancellationToken cancellationToken)
     {
         var userId = session.GetUserClaims().UserId;
 
         var secret = await mfaService.GetUserMfaSecretAsync(userId, cancellationToken);
         if (secret is null)
         {
-            return new ResponseWrapper(ResponseTypes.InvalidRequest, "MFA not configured");
+            return new ApiResponse(ApiResponseTypes.InvalidRequest, "MFA not configured");
         }
 
         if (!mfaService.IsCodeValid(request.Code, secret))
         {
-            return new ResponseWrapper(ResponseTypes.InvalidRequest, "Invalid MFA code");
+            return new ApiResponse(ApiResponseTypes.InvalidRequest, "Invalid MFA code");
         }
 
         var mfaActivated = await mfaService.ActivateUserMfaAsync(userId, cancellationToken);
         if (!mfaActivated)
         {
-            return new ResponseWrapper(ResponseTypes.Error, "Error while activating MFA");
+            return new ApiResponse(ApiResponseTypes.Error, "Error while activating MFA");
         }
 
-        return new ResponseWrapper(ResponseTypes.Success);
+        return new ApiResponse(ApiResponseTypes.Success);
     }
 }
 

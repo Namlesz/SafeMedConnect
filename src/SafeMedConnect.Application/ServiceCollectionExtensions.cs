@@ -21,8 +21,9 @@ public static class ServiceCollectionExtensions
     private static void RegisterMediatR(this IServiceCollection services)
     {
         services.AddMediatR(cfg =>
-        {
-            cfg.RegisterServicesFromAssembly(typeof(RegisterApplicationUserCommand).Assembly);
-        });
+            {
+                cfg.RegisterServicesFromAssembly(typeof(RegisterApplicationUserCommand).Assembly);
+            }
+        );
     }
 }

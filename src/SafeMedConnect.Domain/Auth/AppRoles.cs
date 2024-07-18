@@ -1,6 +1,6 @@
-namespace SafeMedConnect.Domain.Authorization;
+namespace SafeMedConnect.Domain.Auth;
 
-public static class Roles
+public static class AppRoles
 {
     public const string User = "user";
     public const string Guest = "guest";

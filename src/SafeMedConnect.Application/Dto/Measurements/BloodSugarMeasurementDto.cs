@@ -1,4 +1,4 @@
-namespace SafeMedConnect.Application.Dto;
+namespace SafeMedConnect.Application.Dto.Measurements;
 
 public sealed record BloodSugarMeasurementDto(
     string Id,

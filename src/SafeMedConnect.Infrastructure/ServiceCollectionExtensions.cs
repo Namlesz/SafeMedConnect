@@ -1,9 +1,9 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using SafeMedConnect.Domain.Configuration;
+using SafeMedConnect.Domain.Abstract.Repositories;
+using SafeMedConnect.Domain.Abstract.Services;
 using SafeMedConnect.Domain.Entities;
-using SafeMedConnect.Domain.Interfaces.Repositories;
-using SafeMedConnect.Domain.Interfaces.Services;
+using SafeMedConnect.Infrastructure.Configuration;
 using SafeMedConnect.Infrastructure.Data;
 using SafeMedConnect.Infrastructure.Repositories;
 using SafeMedConnect.Infrastructure.Services;

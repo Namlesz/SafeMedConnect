@@ -1,23 +1,23 @@
 using AutoMapper;
 using MediatR;
-using SafeMedConnect.Application.Dto;
+using SafeMedConnect.Application.Dto.Measurements;
 using SafeMedConnect.Application.Factories;
+using SafeMedConnect.Domain.Abstract.Repositories;
+using SafeMedConnect.Domain.Abstract.Services;
 using SafeMedConnect.Domain.Entities;
-using SafeMedConnect.Domain.Interfaces.Repositories;
-using SafeMedConnect.Domain.Interfaces.Services;
-using SafeMedConnect.Domain.Responses;
+using SafeMedConnect.Domain.Models;
 
 namespace SafeMedConnect.Application.Queries.BloodSugar;
 
-public sealed record GetBloodSugarQuery : IRequest<ResponseWrapper<List<BloodSugarMeasurementDto>>>;
+public sealed record GetBloodSugarQuery : IRequest<ApiResponse<List<BloodSugarMeasurementDto>>>;
 
 public class GetBloodSugarQueryHandler(
     ISessionService session,
     IMeasurementRepository<BloodSugarMeasurementEntity> repository,
     IMapper mapper
-) : IRequestHandler<GetBloodSugarQuery, ResponseWrapper<List<BloodSugarMeasurementDto>>>
+) : IRequestHandler<GetBloodSugarQuery, ApiResponse<List<BloodSugarMeasurementDto>>>
 {
-    public Task<ResponseWrapper<List<BloodSugarMeasurementDto>>> Handle(
+    public Task<ApiResponse<List<BloodSugarMeasurementDto>>> Handle(
         GetBloodSugarQuery request,
         CancellationToken cancellationToken
     )

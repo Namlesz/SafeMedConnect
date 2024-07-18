@@ -1,10 +1,11 @@
+using System.Security.Claims;
 using FluentValidation;
 using MediatR;
 using SafeMedConnect.Application.Dto;
+using SafeMedConnect.Domain.Abstract.Services;
 using SafeMedConnect.Domain.ClaimTypes;
-using SafeMedConnect.Domain.Interfaces.Services;
-using SafeMedConnect.Domain.Responses;
-using System.Security.Claims;
+using SafeMedConnect.Domain.Enums;
+using SafeMedConnect.Domain.Models;
 
 namespace SafeMedConnect.Application.Commands.Share;
 
@@ -15,35 +16,35 @@ public sealed record ShareDataCommand(
     bool ShareHeartRateMeasurement = false,
     bool ShareTemperatureMeasurement = false,
     bool ShareBloodSugarMeasurement = false
-) : IRequest<ResponseWrapper<TokenResponseDto>>;
+) : IRequest<ApiResponse<TokenResponseDto>>;
 
 public class ShareDataCommandHandler(ISessionService sessionService, ITokenService tokenService)
-    : IRequestHandler<ShareDataCommand, ResponseWrapper<TokenResponseDto>>
+    : IRequestHandler<ShareDataCommand, ApiResponse<TokenResponseDto>>
 {
-    public Task<ResponseWrapper<TokenResponseDto>> Handle(ShareDataCommand request, CancellationToken cancellationToken)
+    public Task<ApiResponse<TokenResponseDto>> Handle(ShareDataCommand request, CancellationToken cancellationToken)
     {
         var userId = sessionService.GetUserClaims().UserId;
         var claims = new List<Claim>
         {
-            new(DataShareClaimTypes.ShareSensitiveData,
+            new(SharedDataClaimTypes.ShareSensitiveData,
                 request.ShareSensitiveData.ToString(),
                 ClaimValueTypes.Boolean),
-            new(DataShareClaimTypes.ShareBloodPressureMeasurement,
+            new(SharedDataClaimTypes.ShareBloodPressureMeasurement,
                 request.ShareBloodPressureMeasurement.ToString(),
                 ClaimValueTypes.Boolean),
-            new(DataShareClaimTypes.ShareHeartRateMeasurement,
+            new(SharedDataClaimTypes.ShareHeartRateMeasurement,
                 request.ShareHeartRateMeasurement.ToString(),
                 ClaimValueTypes.Boolean),
-            new(DataShareClaimTypes.ShareTemperatureMeasurement,
+            new(SharedDataClaimTypes.ShareTemperatureMeasurement,
                 request.ShareTemperatureMeasurement.ToString(),
                 ClaimValueTypes.Boolean),
-            new(DataShareClaimTypes.ShareBloodSugarMeasurement,
+            new(SharedDataClaimTypes.ShareBloodSugarMeasurement,
                 request.ShareBloodSugarMeasurement.ToString(),
                 ClaimValueTypes.Boolean)
         };
 
         var token = tokenService.GenerateShareToken(request.MinutesToExpire, userId, claims, cancellationToken);
-        return Task.FromResult(new ResponseWrapper<TokenResponseDto>(ResponseTypes.Success, new TokenResponseDto(token)));
+        return Task.FromResult(new ApiResponse<TokenResponseDto>(ApiResponseTypes.Success, new TokenResponseDto(token)));
     }
 }
 

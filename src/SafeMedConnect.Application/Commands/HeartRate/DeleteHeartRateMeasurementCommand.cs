@@ -1,22 +1,22 @@
 using FluentValidation;
 using MediatR;
 using SafeMedConnect.Application.Factories;
+using SafeMedConnect.Domain.Abstract.Repositories;
+using SafeMedConnect.Domain.Abstract.Services;
 using SafeMedConnect.Domain.Entities;
-using SafeMedConnect.Domain.Interfaces.Repositories;
-using SafeMedConnect.Domain.Interfaces.Services;
-using SafeMedConnect.Domain.Responses;
+using SafeMedConnect.Domain.Models;
 
 namespace SafeMedConnect.Application.Commands.HeartRate;
 
 public sealed record DeleteHeartRateMeasurementCommand(string Id)
-    : IRequest<ResponseWrapper<List<HeartRateMeasurementEntity>>>;
+    : IRequest<ApiResponse<List<HeartRateMeasurementEntity>>>;
 
 public class DeleteHeartRateMeasurementCommandHandler(
     IMeasurementRepository<HeartRateMeasurementEntity> repository,
     ISessionService session
-) : IRequestHandler<DeleteHeartRateMeasurementCommand, ResponseWrapper<List<HeartRateMeasurementEntity>>>
+) : IRequestHandler<DeleteHeartRateMeasurementCommand, ApiResponse<List<HeartRateMeasurementEntity>>>
 {
-    public Task<ResponseWrapper<List<HeartRateMeasurementEntity>>> Handle(
+    public Task<ApiResponse<List<HeartRateMeasurementEntity>>> Handle(
         DeleteHeartRateMeasurementCommand request,
         CancellationToken cancellationToken
     )

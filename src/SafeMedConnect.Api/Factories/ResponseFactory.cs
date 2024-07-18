@@ -1,62 +1,62 @@
 using MediatR;
-using SafeMedConnect.Api.Interfaces;
-using SafeMedConnect.Domain.Responses;
+using SafeMedConnect.Api.Abstract;
+using SafeMedConnect.Domain.Models;
 using static Microsoft.AspNetCore.Http.StatusCodes;
-using static SafeMedConnect.Domain.Responses.ResponseTypes;
+using static SafeMedConnect.Domain.Enums.ApiResponseTypes;
 
-namespace SafeMedConnect.Api.Helpers;
+namespace SafeMedConnect.Api.Factories;
 
-internal sealed class ResponseHandler(ISender mediator) : IResponseHandler
+internal sealed class ResponseFactory(ISender mediator) : IResponseFactory
 {
-    public async Task<IResult> SendAndHandle(IRequest<ResponseWrapper> request, CancellationToken cnl = default)
+    public async Task<IResult> SendAndHandle(IRequest<ApiResponse> request, CancellationToken cnl = default)
     {
         return await mediator.Send(request, cnl) switch
         {
-            { ResponseType: Success }
+            { ApiResponseType: Success }
                 => Results.NoContent(),
 
-            { ResponseType: NotFound } res
+            { ApiResponseType: NotFound } res
                 => Results.Problem(statusCode: Status404NotFound, detail: res.Message),
 
-            { ResponseType: Conflict } res
+            { ApiResponseType: Conflict } res
                 => Results.Problem(statusCode: Status409Conflict, detail: res.Message),
 
-            { ResponseType: Forbidden } res =>
+            { ApiResponseType: Forbidden } res =>
                 Results.Problem(statusCode: Status403Forbidden, detail: res.Message),
 
-            { ResponseType: InvalidRequest } res
+            { ApiResponseType: InvalidRequest } res
                 => Results.Problem(statusCode: Status400BadRequest, detail: res.Message),
 
-            { ResponseType: Error } res
+            { ApiResponseType: Error } res
                 => Results.Problem(statusCode: Status500InternalServerError, detail: res.Message),
 
             _ => Results.Problem(statusCode: Status500InternalServerError, detail: "Unknown error occurred")
         };
     }
 
-    public async Task<IResult> SendAndHandle<T>(IRequest<ResponseWrapper<T>> request, CancellationToken cnl) where T : class
+    public async Task<IResult> SendAndHandle<T>(IRequest<ApiResponse<T>> request, CancellationToken cnl) where T : class
     {
         return await mediator.Send(request, cnl) switch
         {
-            { ResponseType: Success } res
+            { ApiResponseType: Success } res
                 => Results.Ok(res.Data),
 
-            { ResponseType: NotFound } res
+            { ApiResponseType: NotFound } res
                 => Results.Problem(statusCode: Status404NotFound, detail: res.Message),
 
-            { ResponseType: Conflict } res
+            { ApiResponseType: Conflict } res
                 => Results.Problem(statusCode: Status409Conflict, detail: res.Message),
 
-            { ResponseType: Forbidden } res =>
+            { ApiResponseType: Forbidden } res =>
                 Results.Problem(statusCode: Status403Forbidden, detail: res.Message),
 
-            { ResponseType: InvalidRequest } res
+            { ApiResponseType: InvalidRequest } res
                 => Results.Problem(statusCode: Status400BadRequest, detail: res.Message),
 
-            { ResponseType: Error } res
+            { ApiResponseType: Error } res
                 => Results.Problem(statusCode: Status500InternalServerError, detail: res.Message),
 
-            { ResponseType: Unauthorized } res
+            { ApiResponseType: Unauthorized } res
                 => Results.Problem(statusCode: Status401Unauthorized, detail: res.Message),
 
             _ => Results.Problem(statusCode: Status500InternalServerError, detail: "Unknown error occurred")

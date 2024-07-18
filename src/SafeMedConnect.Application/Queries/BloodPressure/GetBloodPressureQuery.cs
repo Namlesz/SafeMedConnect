@@ -1,20 +1,20 @@
 using MediatR;
 using SafeMedConnect.Application.Factories;
+using SafeMedConnect.Domain.Abstract.Repositories;
+using SafeMedConnect.Domain.Abstract.Services;
 using SafeMedConnect.Domain.Entities;
-using SafeMedConnect.Domain.Interfaces.Repositories;
-using SafeMedConnect.Domain.Interfaces.Services;
-using SafeMedConnect.Domain.Responses;
+using SafeMedConnect.Domain.Models;
 
 namespace SafeMedConnect.Application.Queries.BloodPressure;
 
-public sealed record GetBloodPressureQuery : IRequest<ResponseWrapper<List<BloodPressureMeasurementEntity>>>;
+public sealed record GetBloodPressureQuery : IRequest<ApiResponse<List<BloodPressureMeasurementEntity>>>;
 
 public class GetBloodPressureQueryHandler(
     ISessionService session,
     IMeasurementRepository<BloodPressureMeasurementEntity> repository
-) : IRequestHandler<GetBloodPressureQuery, ResponseWrapper<List<BloodPressureMeasurementEntity>>>
+) : IRequestHandler<GetBloodPressureQuery, ApiResponse<List<BloodPressureMeasurementEntity>>>
 {
-    public Task<ResponseWrapper<List<BloodPressureMeasurementEntity>>> Handle(
+    public Task<ApiResponse<List<BloodPressureMeasurementEntity>>> Handle(
         GetBloodPressureQuery request,
         CancellationToken cancellationToken
     )

@@ -1,4 +1,4 @@
-namespace SafeMedConnect.Domain.Interfaces.Services;
+namespace SafeMedConnect.Domain.Abstract.Services;
 
 public interface IMfaService
 {

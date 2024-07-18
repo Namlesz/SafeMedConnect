@@ -1,6 +1,6 @@
 using MongoDB.Driver;
+using SafeMedConnect.Domain.Abstract.Repositories;
 using SafeMedConnect.Domain.Entities;
-using SafeMedConnect.Domain.Interfaces.Repositories;
 using SafeMedConnect.Infrastructure.Data;
 
 namespace SafeMedConnect.Infrastructure.Repositories;

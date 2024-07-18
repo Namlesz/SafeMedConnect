@@ -1,6 +1,6 @@
 using OtpNet;
-using SafeMedConnect.Domain.Interfaces.Repositories;
-using SafeMedConnect.Domain.Interfaces.Services;
+using SafeMedConnect.Domain.Abstract.Repositories;
+using SafeMedConnect.Domain.Abstract.Services;
 
 namespace SafeMedConnect.Infrastructure.Services;
 

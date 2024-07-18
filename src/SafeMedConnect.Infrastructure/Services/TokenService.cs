@@ -1,22 +1,22 @@
-using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
-using SafeMedConnect.Domain.Authorization;
-using SafeMedConnect.Domain.ClaimTypes;
-using SafeMedConnect.Domain.Configuration;
-using SafeMedConnect.Domain.Entities;
-using SafeMedConnect.Domain.Interfaces.Services;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
+using SafeMedConnect.Domain.Abstract.Services;
+using SafeMedConnect.Domain.Auth;
+using SafeMedConnect.Domain.ClaimTypes;
+using SafeMedConnect.Domain.Entities;
+using SafeMedConnect.Infrastructure.Configuration;
 
 namespace SafeMedConnect.Infrastructure.Services;
 
 internal sealed class TokenService : ITokenService
 {
-    private readonly byte[] _secret;
-    private readonly string _issuer;
     private readonly string _audience;
     private readonly DateTime _expiration;
+    private readonly string _issuer;
+    private readonly byte[] _secret;
 
     public TokenService(IOptions<JwtSettings> jwtSettingsOptions)
     {
@@ -36,7 +36,7 @@ internal sealed class TokenService : ITokenService
             Subject = new ClaimsIdentity(new[]
             {
                 new Claim(ClaimTypes.Email, user.Email),
-                new Claim(ClaimTypes.Role, Roles.User),
+                new Claim(ClaimTypes.Role, AppRoles.User),
                 new Claim(UserClaimTypes.UserId, user.UserId)
             }),
             SigningCredentials = new SigningCredentials(
@@ -62,7 +62,7 @@ internal sealed class TokenService : ITokenService
         cancellationToken.ThrowIfCancellationRequested();
         var allClaims = new List<Claim>
         {
-            new(ClaimTypes.Role, Roles.Guest),
+            new(ClaimTypes.Role, AppRoles.Guest),
             new(UserClaimTypes.UserId, userId)
         }.Concat(claims ?? []);
 

@@ -1,8 +1,8 @@
-using Microsoft.AspNetCore.Http;
-using SafeMedConnect.Domain.ClaimTypes;
-using SafeMedConnect.Domain.Interfaces.Services;
-using SafeMedConnect.Domain.Models;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Http;
+using SafeMedConnect.Domain.Abstract.Services;
+using SafeMedConnect.Domain.ClaimTypes;
+using SafeMedConnect.Domain.Models;
 
 namespace SafeMedConnect.Infrastructure.Services;
 
@@ -47,7 +47,7 @@ internal sealed class SessionService(IHttpContextAccessor httpContextAccessor) :
 
         var dataShareClaims = new Dictionary<string, bool>();
 
-        foreach (var shareClaimType in DataShareClaimTypes.All)
+        foreach (var shareClaimType in SharedDataClaimTypes.All)
         {
             var shareClaim = claims.FirstOrDefault(c => c.Type == shareClaimType);
             if (shareClaim is null)

@@ -1,20 +1,20 @@
 using MediatR;
 using SafeMedConnect.Application.Factories;
+using SafeMedConnect.Domain.Abstract.Repositories;
+using SafeMedConnect.Domain.Abstract.Services;
 using SafeMedConnect.Domain.Entities;
-using SafeMedConnect.Domain.Interfaces.Repositories;
-using SafeMedConnect.Domain.Interfaces.Services;
-using SafeMedConnect.Domain.Responses;
+using SafeMedConnect.Domain.Models;
 
 namespace SafeMedConnect.Application.Queries.Temperature;
 
-public sealed record GetTemperatureQuery : IRequest<ResponseWrapper<List<TemperatureMeasurementEntity>>>;
+public sealed record GetTemperatureQuery : IRequest<ApiResponse<List<TemperatureMeasurementEntity>>>;
 
 public class GetTemperatureQueryHandler(
     ISessionService session,
     IMeasurementRepository<TemperatureMeasurementEntity> repository
-) : IRequestHandler<GetTemperatureQuery, ResponseWrapper<List<TemperatureMeasurementEntity>>>
+) : IRequestHandler<GetTemperatureQuery, ApiResponse<List<TemperatureMeasurementEntity>>>
 {
-    public Task<ResponseWrapper<List<TemperatureMeasurementEntity>>> Handle(
+    public Task<ApiResponse<List<TemperatureMeasurementEntity>>> Handle(
         GetTemperatureQuery request,
         CancellationToken cancellationToken
     )

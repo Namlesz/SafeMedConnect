@@ -1,10 +1,10 @@
-using SafeMedConnect.Api.Attributes;
-using SafeMedConnect.Api.Interfaces;
 using System.Reflection;
+using SafeMedConnect.Api.Abstract;
+using SafeMedConnect.Api.Attributes;
 
 namespace SafeMedConnect.Api.Extensions;
 
-internal static class RoutesInitializer
+internal static class RoutesExtensions
 {
     public static void MapRoutes(this RouteGroupBuilder routeGroupBuilder)
     {

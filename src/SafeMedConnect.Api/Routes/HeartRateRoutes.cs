@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
+using SafeMedConnect.Api.Abstract;
 using SafeMedConnect.Api.Attributes;
-using SafeMedConnect.Api.Interfaces;
 using SafeMedConnect.Application.Commands.HeartRate;
 using SafeMedConnect.Application.Queries.HeartRate;
 using SafeMedConnect.Domain.Entities;
@@ -16,7 +16,7 @@ internal sealed class HeartRateRoutes : IRoutes
 
         group.MapGet("/", async (
                     CancellationToken cnl,
-                    IResponseHandler responseHandler
+                    IResponseFactory responseHandler
                 ) => await responseHandler.SendAndHandle(new GetHeartRateMeasurementsQuery(), cnl)
             )
             .WithSummary("Get all heart rate measurements")
@@ -26,7 +26,7 @@ internal sealed class HeartRateRoutes : IRoutes
         group.MapPost("/", async (
                     [FromBody] AddHeartRateMeasurementCommand command,
                     CancellationToken cnl,
-                    IResponseHandler responseHandler
+                    IResponseFactory responseHandler
                 ) => await responseHandler.SendAndHandle(command, cnl)
             )
             .WithSummary("Add a new heart rate measurement")
@@ -37,7 +37,7 @@ internal sealed class HeartRateRoutes : IRoutes
         group.MapDelete("/", async (
                     [FromBody] DeleteHeartRateMeasurementCommand command,
                     CancellationToken cnl,
-                    IResponseHandler responseHandler
+                    IResponseFactory responseHandler
                 ) => await responseHandler.SendAndHandle(command, cnl)
             )
             .WithSummary("Delete a heart rate measurement")

@@ -4,7 +4,7 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace SafeMedConnect.Api.Swagger;
 
-internal sealed class ConfigureSwaggerOptions : IConfigureOptions<SwaggerGenOptions>
+internal sealed class SwaggerGenOptionsConfig : IConfigureOptions<SwaggerGenOptions>
 {
     public void Configure(SwaggerGenOptions options)
     {

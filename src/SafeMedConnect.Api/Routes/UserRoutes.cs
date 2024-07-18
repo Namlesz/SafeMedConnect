@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
+using SafeMedConnect.Api.Abstract;
 using SafeMedConnect.Api.Attributes;
-using SafeMedConnect.Api.Interfaces;
 using SafeMedConnect.Application.Commands.User;
 using SafeMedConnect.Application.Dto;
 using SafeMedConnect.Application.Queries.User;
@@ -17,7 +17,7 @@ internal sealed class UserRoutes : IRoutes
         group.MapPost("", async (
                     [FromBody] UpdateUserInformationCommand command,
                     CancellationToken cnl,
-                    IResponseHandler responseHandler
+                    IResponseFactory responseHandler
                 ) => await responseHandler.SendAndHandle(command, cnl)
             )
             .WithSummary("Update user information")
@@ -27,7 +27,7 @@ internal sealed class UserRoutes : IRoutes
 
         group.MapGet("", async (
                     CancellationToken cnl,
-                    IResponseHandler responseHandler
+                    IResponseFactory responseHandler
                 ) => await responseHandler.SendAndHandle(new GetUserInformationQuery(), cnl)
             )
             .WithSummary("Get user information")

@@ -1,9 +1,10 @@
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
-using SafeMedConnect.Api.Helpers;
+using SafeMedConnect.Api.Swagger;
+using SafeMedConnect.Api.Swagger.Filters;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace SafeMedConnect.Api.Swagger;
+namespace SafeMedConnect.Api.Startup;
 
 internal static class RegisterSwaggerServices
 {
@@ -19,6 +20,6 @@ internal static class RegisterSwaggerServices
             });
             config.OperationFilter<BasicAuthOperationsFilter>();
         });
-        services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
+        services.AddTransient<IConfigureOptions<SwaggerGenOptions>, SwaggerGenOptionsConfig>();
     }
 }

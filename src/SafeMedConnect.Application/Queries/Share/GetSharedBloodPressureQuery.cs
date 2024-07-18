@@ -1,23 +1,24 @@
 using AutoMapper;
 using MediatR;
 using SafeMedConnect.Application.Dto.Measurements;
+using SafeMedConnect.Domain.Abstract.Repositories;
+using SafeMedConnect.Domain.Abstract.Services;
 using SafeMedConnect.Domain.Entities;
-using SafeMedConnect.Domain.Interfaces.Repositories;
-using SafeMedConnect.Domain.Interfaces.Services;
-using SafeMedConnect.Domain.Responses;
-using static SafeMedConnect.Domain.ClaimTypes.DataShareClaimTypes;
+using SafeMedConnect.Domain.Enums;
+using SafeMedConnect.Domain.Models;
+using static SafeMedConnect.Domain.ClaimTypes.SharedDataClaimTypes;
 
 namespace SafeMedConnect.Application.Queries.Share;
 
-public sealed record GetSharedBloodPressureQuery : IRequest<ResponseWrapper<List<BloodPressureDto>>>;
+public sealed record GetSharedBloodPressureQuery : IRequest<ApiResponse<List<BloodPressureDto>>>;
 
 public class GetSharedBloodPressureQueryHandler(
     ISessionService session,
     IMapper mapper,
     IMeasurementRepository<BloodPressureMeasurementEntity> bloodPressureRepository
-) : IRequestHandler<GetSharedBloodPressureQuery, ResponseWrapper<List<BloodPressureDto>>>
+) : IRequestHandler<GetSharedBloodPressureQuery, ApiResponse<List<BloodPressureDto>>>
 {
-    public async Task<ResponseWrapper<List<BloodPressureDto>>> Handle(
+    public async Task<ApiResponse<List<BloodPressureDto>>> Handle(
         GetSharedBloodPressureQuery request,
         CancellationToken cancellationToken
     )
@@ -25,22 +26,22 @@ public class GetSharedBloodPressureQueryHandler(
         var guestClaims = session.GetGuestClaims();
         if (guestClaims.DataShareClaims is null or { Count: 0 })
         {
-            return new ResponseWrapper<List<BloodPressureDto>>(ResponseTypes.InvalidRequest, message: "No data to share");
+            return new ApiResponse<List<BloodPressureDto>>(ApiResponseTypes.InvalidRequest, "No data to share");
         }
 
         guestClaims.DataShareClaims.TryGetValue(ShareBloodPressureMeasurement, out var shareBloodPressureMeasurement);
         if (!shareBloodPressureMeasurement)
         {
-            return new ResponseWrapper<List<BloodPressureDto>>(ResponseTypes.Forbidden);
+            return new ApiResponse<List<BloodPressureDto>>(ApiResponseTypes.Forbidden);
         }
 
         var bloodPressureMeasurements = await bloodPressureRepository.GetAsync(guestClaims.UserId, cancellationToken);
         if (bloodPressureMeasurements is null)
         {
-            return new ResponseWrapper<List<BloodPressureDto>>(ResponseTypes.NotFound);
+            return new ApiResponse<List<BloodPressureDto>>(ApiResponseTypes.NotFound);
         }
 
         var result = mapper.Map<List<BloodPressureDto>>(bloodPressureMeasurements.Measurements);
-        return new ResponseWrapper<List<BloodPressureDto>>(ResponseTypes.Success, result);
+        return new ApiResponse<List<BloodPressureDto>>(ApiResponseTypes.Success, result);
     }
 }

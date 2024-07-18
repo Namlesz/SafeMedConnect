@@ -1,22 +1,22 @@
 using FluentValidation;
 using MediatR;
 using SafeMedConnect.Application.Factories;
+using SafeMedConnect.Domain.Abstract.Repositories;
+using SafeMedConnect.Domain.Abstract.Services;
 using SafeMedConnect.Domain.Entities;
-using SafeMedConnect.Domain.Interfaces.Repositories;
-using SafeMedConnect.Domain.Interfaces.Services;
-using SafeMedConnect.Domain.Responses;
+using SafeMedConnect.Domain.Models;
 
 namespace SafeMedConnect.Application.Commands.Temperature;
 
 public sealed record DeleteTemperatureCommand(string Id)
-    : IRequest<ResponseWrapper<List<TemperatureMeasurementEntity>>>;
+    : IRequest<ApiResponse<List<TemperatureMeasurementEntity>>>;
 
 public class DeleteTemperatureCommandHandler(
     IMeasurementRepository<TemperatureMeasurementEntity> repository,
     ISessionService session
-) : IRequestHandler<DeleteTemperatureCommand, ResponseWrapper<List<TemperatureMeasurementEntity>>>
+) : IRequestHandler<DeleteTemperatureCommand, ApiResponse<List<TemperatureMeasurementEntity>>>
 {
-    public Task<ResponseWrapper<List<TemperatureMeasurementEntity>>> Handle(
+    public Task<ApiResponse<List<TemperatureMeasurementEntity>>> Handle(
         DeleteTemperatureCommand request,
         CancellationToken cancellationToken
     )

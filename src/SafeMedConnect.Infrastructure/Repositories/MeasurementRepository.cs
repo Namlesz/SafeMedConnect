@@ -1,7 +1,7 @@
 using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
+using SafeMedConnect.Domain.Abstract.Repositories;
 using SafeMedConnect.Domain.Entities.Base;
-using SafeMedConnect.Domain.Interfaces.Repositories;
 using SafeMedConnect.Infrastructure.Data;
 using static SafeMedConnect.Infrastructure.Helpers.RepositoryHelper;
 

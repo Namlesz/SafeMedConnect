@@ -1,4 +1,4 @@
-namespace SafeMedConnect.Api.Interfaces;
+namespace SafeMedConnect.Api.Abstract;
 
 internal interface IRoutes
 {

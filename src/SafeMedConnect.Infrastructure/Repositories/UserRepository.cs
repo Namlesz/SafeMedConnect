@@ -1,7 +1,7 @@
 using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
+using SafeMedConnect.Domain.Abstract.Repositories;
 using SafeMedConnect.Domain.Entities;
-using SafeMedConnect.Domain.Interfaces.Repositories;
 using SafeMedConnect.Infrastructure.Data;
 
 namespace SafeMedConnect.Infrastructure.Repositories;
@@ -20,7 +20,7 @@ internal sealed class UserRepository(MongoContext db, ILogger<UserRepository> lo
 
         try
         {
-            return await Users.FindOneAndReplaceAsync(filter, user, options, cancellationToken: cnl);
+            return await Users.FindOneAndReplaceAsync(filter, user, options, cnl);
         }
         catch (Exception ex)
         {

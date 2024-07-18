@@ -1,7 +1,7 @@
-using SafeMedConnect.Domain.Entities;
 using System.Security.Claims;
+using SafeMedConnect.Domain.Entities;
 
-namespace SafeMedConnect.Domain.Interfaces.Services;
+namespace SafeMedConnect.Domain.Abstract.Services;
 
 public interface ITokenService
 {

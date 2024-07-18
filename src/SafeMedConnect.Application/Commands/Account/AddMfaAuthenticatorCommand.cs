@@ -1,22 +1,23 @@
 using MediatR;
 using QRCoder;
 using SafeMedConnect.Application.Dto;
-using SafeMedConnect.Domain.Interfaces.Services;
-using SafeMedConnect.Domain.Responses;
+using SafeMedConnect.Domain.Abstract.Services;
+using SafeMedConnect.Domain.Enums;
+using SafeMedConnect.Domain.Models;
 using SixLabors.ImageSharp.Formats.Png;
 
 namespace SafeMedConnect.Application.Commands.Account;
 
-public record AddMfaAuthenticatorCommand : IRequest<ResponseWrapper<QrCodeDto>>;
+public record AddMfaAuthenticatorCommand : IRequest<ApiResponse<QrCodeDto>>;
 
 public class AddMfaAuthenticatorCommandHandler(
     ISessionService session,
     IMfaService mfaService
-) : IRequestHandler<AddMfaAuthenticatorCommand, ResponseWrapper<QrCodeDto>>
+) : IRequestHandler<AddMfaAuthenticatorCommand, ApiResponse<QrCodeDto>>
 {
     private const string Issuer = "SafeMedApp";
 
-    public async Task<ResponseWrapper<QrCodeDto>> Handle(AddMfaAuthenticatorCommand request, CancellationToken cancellationToken)
+    public async Task<ApiResponse<QrCodeDto>> Handle(AddMfaAuthenticatorCommand request, CancellationToken cancellationToken)
     {
         var userClaims = session.GetUserClaims();
 
@@ -28,14 +29,14 @@ public class AddMfaAuthenticatorCommandHandler(
         var secretKeySaved = await mfaService.AddMfaSecretToUserAsync(id, secretKey, cancellationToken);
         if (!secretKeySaved)
         {
-            return new ResponseWrapper<QrCodeDto>(ResponseTypes.Error, "Error while saving secret key");
+            return new ApiResponse<QrCodeDto>(ApiResponseTypes.Error, "Error while saving secret key");
         }
 
         var provisionUri = $"otpauth://totp/{Issuer}:{email}?secret={secretKey}&issuer={Issuer}";
         var base64QrCode = GenerateQrCode(provisionUri);
 
-        return new ResponseWrapper<QrCodeDto>(
-            ResponseTypes.Success,
+        return new ApiResponse<QrCodeDto>(
+            ApiResponseTypes.Success,
             new QrCodeDto(base64QrCode)
         );
     }

@@ -2,23 +2,23 @@ using AutoMapper;
 using FluentValidation;
 using MediatR;
 using SafeMedConnect.Application.Factories;
+using SafeMedConnect.Domain.Abstract.Repositories;
+using SafeMedConnect.Domain.Abstract.Services;
 using SafeMedConnect.Domain.Entities;
-using SafeMedConnect.Domain.Interfaces.Repositories;
-using SafeMedConnect.Domain.Interfaces.Services;
-using SafeMedConnect.Domain.Responses;
+using SafeMedConnect.Domain.Models;
 
 namespace SafeMedConnect.Application.Commands.BloodPressure;
 
 public sealed record AddBloodPressureCommand(int Systolic, int Diastolic, int HeartRate, DateTime Timestamp)
-    : IRequest<ResponseWrapper<List<BloodPressureMeasurementEntity>>>;
+    : IRequest<ApiResponse<List<BloodPressureMeasurementEntity>>>;
 
 public class AddBloodPressureCommandHandler(
     IMeasurementRepository<BloodPressureMeasurementEntity> repository,
     ISessionService session,
     IMapper mapper
-) : IRequestHandler<AddBloodPressureCommand, ResponseWrapper<List<BloodPressureMeasurementEntity>>>
+) : IRequestHandler<AddBloodPressureCommand, ApiResponse<List<BloodPressureMeasurementEntity>>>
 {
-    public async Task<ResponseWrapper<List<BloodPressureMeasurementEntity>>> Handle(
+    public async Task<ApiResponse<List<BloodPressureMeasurementEntity>>> Handle(
         AddBloodPressureCommand request,
         CancellationToken cancellationToken
     )

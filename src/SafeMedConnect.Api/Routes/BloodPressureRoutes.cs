@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
+using SafeMedConnect.Api.Abstract;
 using SafeMedConnect.Api.Attributes;
-using SafeMedConnect.Api.Interfaces;
 using SafeMedConnect.Application.Commands.BloodPressure;
 using SafeMedConnect.Application.Queries.BloodPressure;
 using SafeMedConnect.Domain.Entities;
@@ -16,7 +16,7 @@ internal sealed class BloodPressureRoutes : IRoutes
 
         group.MapGet("/", async (
                     CancellationToken cnl,
-                    IResponseHandler responseHandler
+                    IResponseFactory responseHandler
                 ) => await responseHandler.SendAndHandle(new GetBloodPressureQuery(), cnl)
             )
             .WithSummary("Get all blood pressure measurements")
@@ -26,7 +26,7 @@ internal sealed class BloodPressureRoutes : IRoutes
         group.MapPost("/", async (
                     [FromBody] AddBloodPressureCommand command,
                     CancellationToken cnl,
-                    IResponseHandler responseHandler
+                    IResponseFactory responseHandler
                 ) => await responseHandler.SendAndHandle(command, cnl)
             )
             .WithSummary("Add a new blood pressure measurement")
@@ -37,7 +37,7 @@ internal sealed class BloodPressureRoutes : IRoutes
         group.MapDelete("/", async (
                     [FromBody] DeleteBloodPressureCommand command,
                     CancellationToken cnl,
-                    IResponseHandler responseHandler
+                    IResponseFactory responseHandler
                 ) => await responseHandler.SendAndHandle(command, cnl)
             )
             .WithSummary("Delete a blood pressure measurement")

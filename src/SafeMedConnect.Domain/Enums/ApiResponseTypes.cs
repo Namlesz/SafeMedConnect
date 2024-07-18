@@ -1,6 +1,6 @@
-namespace SafeMedConnect.Domain.Responses;
+namespace SafeMedConnect.Domain.Enums;
 
-public enum ResponseTypes
+public enum ApiResponseTypes
 {
     Unknown = 0,
     Success = 1,

@@ -1,8 +1,8 @@
 using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
+using SafeMedConnect.Domain.Abstract.Repositories;
 using SafeMedConnect.Domain.Entities;
-using SafeMedConnect.Domain.Interfaces.Repositories;
 using SafeMedConnect.Infrastructure.Data;
 
 namespace SafeMedConnect.Infrastructure.Repositories;
@@ -34,5 +34,5 @@ internal sealed class ApplicationUserRepository(MongoContext db, ILogger<Applica
 
     public async Task<ApplicationUserEntity?> GetUserAsync(string email, CancellationToken cnl = default) =>
         await db.ApplicationUsers.AsQueryable()
-            .FirstOrDefaultAsync(x => x.Email.Equals(email, StringComparison.CurrentCultureIgnoreCase), cancellationToken: cnl);
+            .FirstOrDefaultAsync(x => x.Email.Equals(email, StringComparison.CurrentCultureIgnoreCase), cnl);
 }

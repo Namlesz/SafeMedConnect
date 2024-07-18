@@ -1,7 +1,7 @@
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
-using SafeMedConnect.Domain.Configuration;
 using SafeMedConnect.Domain.Entities;
+using SafeMedConnect.Infrastructure.Configuration;
 using static SafeMedConnect.Infrastructure.Helpers.RepositoryHelper;
 
 namespace SafeMedConnect.Infrastructure.Data;

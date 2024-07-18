@@ -9,10 +9,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <Folder Include="Exceptions\" />
-    </ItemGroup>
-
-    <ItemGroup>
         <PackageReference Include="MongoDB.Bson" Version="2.27.0"/>
     </ItemGroup>
 

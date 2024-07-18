@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace SafeMedConnect.Api.Helpers;
+namespace SafeMedConnect.Api.Swagger.Filters;
 
 internal sealed class BasicAuthOperationsFilter : IOperationFilter
 {

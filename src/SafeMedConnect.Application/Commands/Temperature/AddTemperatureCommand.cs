@@ -2,23 +2,23 @@ using AutoMapper;
 using FluentValidation;
 using MediatR;
 using SafeMedConnect.Application.Factories;
+using SafeMedConnect.Domain.Abstract.Repositories;
+using SafeMedConnect.Domain.Abstract.Services;
 using SafeMedConnect.Domain.Entities;
-using SafeMedConnect.Domain.Interfaces.Repositories;
-using SafeMedConnect.Domain.Interfaces.Services;
-using SafeMedConnect.Domain.Responses;
+using SafeMedConnect.Domain.Models;
 
 namespace SafeMedConnect.Application.Commands.Temperature;
 
 public sealed record AddTemperatureCommand(double Value, DateTime Timestamp)
-    : IRequest<ResponseWrapper<List<TemperatureMeasurementEntity>>>;
+    : IRequest<ApiResponse<List<TemperatureMeasurementEntity>>>;
 
 public class AddTemperatureCommandHandler(
     IMeasurementRepository<TemperatureMeasurementEntity> repository,
     ISessionService session,
     IMapper mapper
-) : IRequestHandler<AddTemperatureCommand, ResponseWrapper<List<TemperatureMeasurementEntity>>>
+) : IRequestHandler<AddTemperatureCommand, ApiResponse<List<TemperatureMeasurementEntity>>>
 {
-    public async Task<ResponseWrapper<List<TemperatureMeasurementEntity>>> Handle(
+    public async Task<ApiResponse<List<TemperatureMeasurementEntity>>> Handle(
         AddTemperatureCommand request,
         CancellationToken cancellationToken
     )

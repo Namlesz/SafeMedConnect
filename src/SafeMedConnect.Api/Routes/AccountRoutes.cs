@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
+using SafeMedConnect.Api.Abstract;
 using SafeMedConnect.Api.Attributes;
-using SafeMedConnect.Api.Interfaces;
 using SafeMedConnect.Application.Commands.Account;
 using SafeMedConnect.Application.Dto;
 
@@ -14,7 +14,7 @@ internal sealed class AccountRoutes : IRoutes
         group.MapPost("/register", async (
                     [FromBody] RegisterApplicationUserCommand command,
                     CancellationToken cnl,
-                    IResponseHandler responseHandler
+                    IResponseFactory responseHandler
                 ) => await responseHandler.SendAndHandle(command, cnl)
             )
             .WithSummary("Register a new user")
@@ -28,7 +28,7 @@ internal sealed class AccountRoutes : IRoutes
         group.MapPost("/login", async (
                     [FromBody] LoginApplicationUserCommand command,
                     CancellationToken cnl,
-                    IResponseHandler responseHandler
+                    IResponseFactory responseHandler
                 ) => await responseHandler.SendAndHandle(command, cnl)
             )
             .WithSummary("Login user")
@@ -47,7 +47,7 @@ internal sealed class AccountRoutes : IRoutes
 
         group.MapPost("/add-mfa-authenticator", async (
                     CancellationToken cnl,
-                    IResponseHandler responseHandler
+                    IResponseFactory responseHandler
                 ) => await responseHandler.SendAndHandle(new AddMfaAuthenticatorCommand(), cnl)
             )
             .WithSummary("Add MFA to user")
@@ -59,7 +59,7 @@ internal sealed class AccountRoutes : IRoutes
         group.MapPost("/verify-mfa-authenticator", async (
                     [FromBody] VerifyMfaAuthenticatorCommand command,
                     CancellationToken cnl,
-                    IResponseHandler responseHandler
+                    IResponseFactory responseHandler
                 ) => await responseHandler.SendAndHandle(command, cnl)
             )
             .WithSummary("Verify MFA configuration")
@@ -70,7 +70,7 @@ internal sealed class AccountRoutes : IRoutes
 
         group.MapPost("/remove-mfa-authenticator", async (
                     CancellationToken cnl,
-                    IResponseHandler responseHandler
+                    IResponseFactory responseHandler
                 ) => await responseHandler.SendAndHandle(new RemoveMfaAuthenticatorCommand(), cnl)
             )
             .WithSummary("Remove MFA from user")

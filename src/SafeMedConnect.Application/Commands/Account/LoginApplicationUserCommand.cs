@@ -1,23 +1,24 @@
 using FluentValidation;
 using MediatR;
 using SafeMedConnect.Application.Dto;
-using SafeMedConnect.Domain.Interfaces.Repositories;
-using SafeMedConnect.Domain.Interfaces.Services;
-using SafeMedConnect.Domain.Responses;
+using SafeMedConnect.Domain.Abstract.Repositories;
+using SafeMedConnect.Domain.Abstract.Services;
+using SafeMedConnect.Domain.Enums;
+using SafeMedConnect.Domain.Models;
 
 namespace SafeMedConnect.Application.Commands.Account;
 
 public sealed record LoginApplicationUserCommand(string Email, string Password, string? MfaCode = null)
-    : IRequest<ResponseWrapper<TokenResponseDto>>;
+    : IRequest<ApiResponse<TokenResponseDto>>;
 
 internal sealed class LoginApplicationUserCommandHandler(
     IMfaService mfaService,
     IApplicationUserRepository repository,
     ITokenService tokenService
 )
-    : IRequestHandler<LoginApplicationUserCommand, ResponseWrapper<TokenResponseDto>>
+    : IRequestHandler<LoginApplicationUserCommand, ApiResponse<TokenResponseDto>>
 {
-    public async Task<ResponseWrapper<TokenResponseDto>> Handle(
+    public async Task<ApiResponse<TokenResponseDto>> Handle(
         LoginApplicationUserCommand request,
         CancellationToken cancellationToken
     )
@@ -25,30 +26,30 @@ internal sealed class LoginApplicationUserCommandHandler(
         var user = await repository.GetUserAsync(request.Email, cancellationToken);
         if (user is null || !BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash))
         {
-            return new ResponseWrapper<TokenResponseDto>(ResponseTypes.Unauthorized, "Invalid login or password");
+            return new ApiResponse<TokenResponseDto>(ApiResponseTypes.Unauthorized, "Invalid login or password");
         }
 
         if (user.MfaEnabled)
         {
             if (request.MfaCode is null)
             {
-                return new ResponseWrapper<TokenResponseDto>(ResponseTypes.InvalidRequest, "MFA code required");
+                return new ApiResponse<TokenResponseDto>(ApiResponseTypes.InvalidRequest, "MFA code required");
             }
 
             var secret = user.MfaSecret;
             if (secret is null)
             {
-                return new ResponseWrapper<TokenResponseDto>(ResponseTypes.Error, "MFA not configured");
+                return new ApiResponse<TokenResponseDto>(ApiResponseTypes.Error, "MFA not configured");
             }
 
             if (!mfaService.IsCodeValid(request.MfaCode, secret))
             {
-                return new ResponseWrapper<TokenResponseDto>(ResponseTypes.Forbidden, "Invalid MFA code");
+                return new ApiResponse<TokenResponseDto>(ApiResponseTypes.Forbidden, "Invalid MFA code");
             }
         }
 
         var token = tokenService.GenerateJwtToken(user, cancellationToken);
-        return new ResponseWrapper<TokenResponseDto>(ResponseTypes.Success, data: new TokenResponseDto(token));
+        return new ApiResponse<TokenResponseDto>(ApiResponseTypes.Success, new TokenResponseDto(token));
     }
 }
 

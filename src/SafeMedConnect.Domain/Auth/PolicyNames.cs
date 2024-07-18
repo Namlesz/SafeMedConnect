@@ -1,4 +1,4 @@
-namespace SafeMedConnect.Domain.Authorization;
+namespace SafeMedConnect.Domain.Auth;
 
 public static class PolicyNames
 {

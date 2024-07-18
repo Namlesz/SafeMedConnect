@@ -1,10 +1,11 @@
 using AutoMapper;
 using MediatR;
 using SafeMedConnect.Application.Dto;
+using SafeMedConnect.Domain.Abstract.Repositories;
+using SafeMedConnect.Domain.Abstract.Services;
 using SafeMedConnect.Domain.Entities;
-using SafeMedConnect.Domain.Interfaces.Repositories;
-using SafeMedConnect.Domain.Interfaces.Services;
-using SafeMedConnect.Domain.Responses;
+using SafeMedConnect.Domain.Enums;
+using SafeMedConnect.Domain.Models;
 
 namespace SafeMedConnect.Application.Commands.User;
 
@@ -19,12 +20,12 @@ public sealed record UpdateUserInformationCommand(
     List<string>? Medications,
     string? HealthInsuranceNumber,
     List<string>? DiagnosedDiseases
-) : IRequest<ResponseWrapper<UserDto>>;
+) : IRequest<ApiResponse<UserDto>>;
 
 public class UpdateUserInformationCommandHandler(IUserRepository repository, ISessionService session, IMapper mapper)
-    : IRequestHandler<UpdateUserInformationCommand, ResponseWrapper<UserDto>>
+    : IRequestHandler<UpdateUserInformationCommand, ApiResponse<UserDto>>
 {
-    public async Task<ResponseWrapper<UserDto>> Handle(
+    public async Task<ApiResponse<UserDto>> Handle(
         UpdateUserInformationCommand request,
         CancellationToken cancellationToken
     )
@@ -36,7 +37,7 @@ public class UpdateUserInformationCommandHandler(IUserRepository repository, ISe
 
         var updatedUser = await repository.UpdateUserAsync(user, cancellationToken);
         return updatedUser is null
-            ? new ResponseWrapper<UserDto>(ResponseTypes.Error, "Error while updating user")
-            : new ResponseWrapper<UserDto>(ResponseTypes.Success, data: mapper.Map<UserDto>(updatedUser));
+            ? new ApiResponse<UserDto>(ApiResponseTypes.Error, "Error while updating user")
+            : new ApiResponse<UserDto>(ApiResponseTypes.Success, mapper.Map<UserDto>(updatedUser));
     }
 }

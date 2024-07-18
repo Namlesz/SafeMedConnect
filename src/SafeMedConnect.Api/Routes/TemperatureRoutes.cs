@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
+using SafeMedConnect.Api.Abstract;
 using SafeMedConnect.Api.Attributes;
-using SafeMedConnect.Api.Interfaces;
 using SafeMedConnect.Application.Commands.Temperature;
 using SafeMedConnect.Application.Queries.Temperature;
 using SafeMedConnect.Domain.Entities;
@@ -16,7 +16,7 @@ internal sealed class TemperatureRoutes : IRoutes
 
         group.MapGet("/", async (
                     CancellationToken cnl,
-                    IResponseHandler responseHandler
+                    IResponseFactory responseHandler
                 ) => await responseHandler.SendAndHandle(new GetTemperatureQuery(), cnl)
             )
             .WithSummary("Get all temperature measurements")
@@ -26,7 +26,7 @@ internal sealed class TemperatureRoutes : IRoutes
         group.MapPost("/", async (
                     [FromBody] AddTemperatureCommand command,
                     CancellationToken cnl,
-                    IResponseHandler responseHandler
+                    IResponseFactory responseHandler
                 ) => await responseHandler.SendAndHandle(command, cnl)
             )
             .WithSummary("Add a new temperature measurement")
@@ -37,7 +37,7 @@ internal sealed class TemperatureRoutes : IRoutes
         group.MapDelete("/", async (
                     [FromBody] DeleteTemperatureCommand command,
                     CancellationToken cnl,
-                    IResponseHandler responseHandler
+                    IResponseFactory responseHandler
                 ) => await responseHandler.SendAndHandle(command, cnl)
             )
             .WithSummary("Delete a temperature measurement")

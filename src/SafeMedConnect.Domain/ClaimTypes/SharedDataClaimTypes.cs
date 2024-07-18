@@ -1,6 +1,6 @@
 namespace SafeMedConnect.Domain.ClaimTypes;
 
-public static class DataShareClaimTypes
+public static class SharedDataClaimTypes
 {
     public const string ShareSensitiveData = "share_sensitive_data";
     public const string ShareBloodPressureMeasurement = "share_blood_pressure_measurement";

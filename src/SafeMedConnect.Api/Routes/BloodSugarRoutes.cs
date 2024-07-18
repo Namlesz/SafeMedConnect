@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
+using SafeMedConnect.Api.Abstract;
 using SafeMedConnect.Api.Attributes;
-using SafeMedConnect.Api.Interfaces;
 using SafeMedConnect.Application.Commands.BloodSugar;
-using SafeMedConnect.Application.Dto;
+using SafeMedConnect.Application.Dto.Measurements;
 using SafeMedConnect.Application.Queries.BloodSugar;
 using SafeMedConnect.Domain.Entities;
 
@@ -17,7 +17,7 @@ internal sealed class BloodSugarRoutes : IRoutes
 
         group.MapGet("/", async (
                     CancellationToken cnl,
-                    IResponseHandler responseHandler
+                    IResponseFactory responseHandler
                 ) => await responseHandler.SendAndHandle(new GetBloodSugarQuery(), cnl)
             )
             .WithSummary("Get all blood sugar measurements")
@@ -27,7 +27,7 @@ internal sealed class BloodSugarRoutes : IRoutes
         group.MapPost("/", async (
                     [FromBody] AddBloodSugarCommand command,
                     CancellationToken cnl,
-                    IResponseHandler responseHandler
+                    IResponseFactory responseHandler
                 ) => await responseHandler.SendAndHandle(command, cnl)
             )
             .WithSummary("Add a new blood sugar measurement")
@@ -38,7 +38,7 @@ internal sealed class BloodSugarRoutes : IRoutes
         group.MapDelete("/", async (
                     [FromBody] DeleteBloodSugarCommand command,
                     CancellationToken cnl,
-                    IResponseHandler responseHandler
+                    IResponseFactory responseHandler
                 ) => await responseHandler.SendAndHandle(command, cnl)
             )
             .WithSummary("Delete a blood sugar measurement")

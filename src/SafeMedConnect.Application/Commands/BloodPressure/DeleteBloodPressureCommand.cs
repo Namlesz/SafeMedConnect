@@ -1,22 +1,22 @@
 using FluentValidation;
 using MediatR;
 using SafeMedConnect.Application.Factories;
+using SafeMedConnect.Domain.Abstract.Repositories;
+using SafeMedConnect.Domain.Abstract.Services;
 using SafeMedConnect.Domain.Entities;
-using SafeMedConnect.Domain.Interfaces.Repositories;
-using SafeMedConnect.Domain.Interfaces.Services;
-using SafeMedConnect.Domain.Responses;
+using SafeMedConnect.Domain.Models;
 
 namespace SafeMedConnect.Application.Commands.BloodPressure;
 
 public sealed record DeleteBloodPressureCommand(string Id)
-    : IRequest<ResponseWrapper<List<BloodPressureMeasurementEntity>>>;
+    : IRequest<ApiResponse<List<BloodPressureMeasurementEntity>>>;
 
 public class DeleteBloodPressureCommandHandler(
     IMeasurementRepository<BloodPressureMeasurementEntity> repository,
     ISessionService session
-) : IRequestHandler<DeleteBloodPressureCommand, ResponseWrapper<List<BloodPressureMeasurementEntity>>>
+) : IRequestHandler<DeleteBloodPressureCommand, ApiResponse<List<BloodPressureMeasurementEntity>>>
 {
-    public Task<ResponseWrapper<List<BloodPressureMeasurementEntity>>> Handle(
+    public Task<ApiResponse<List<BloodPressureMeasurementEntity>>> Handle(
         DeleteBloodPressureCommand request,
         CancellationToken cancellationToken
     )

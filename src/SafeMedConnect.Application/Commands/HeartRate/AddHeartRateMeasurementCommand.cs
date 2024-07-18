@@ -2,23 +2,23 @@ using AutoMapper;
 using FluentValidation;
 using MediatR;
 using SafeMedConnect.Application.Factories;
+using SafeMedConnect.Domain.Abstract.Repositories;
+using SafeMedConnect.Domain.Abstract.Services;
 using SafeMedConnect.Domain.Entities;
-using SafeMedConnect.Domain.Interfaces.Repositories;
-using SafeMedConnect.Domain.Interfaces.Services;
-using SafeMedConnect.Domain.Responses;
+using SafeMedConnect.Domain.Models;
 
 namespace SafeMedConnect.Application.Commands.HeartRate;
 
 public sealed record AddHeartRateMeasurementCommand(DateTime Timestamp, int Value)
-    : IRequest<ResponseWrapper<List<HeartRateMeasurementEntity>>>;
+    : IRequest<ApiResponse<List<HeartRateMeasurementEntity>>>;
 
 public class AddHeartRateMeasurementCommandHandler(
     IMeasurementRepository<HeartRateMeasurementEntity> repository,
     ISessionService session,
     IMapper mapper
-) : IRequestHandler<AddHeartRateMeasurementCommand, ResponseWrapper<List<HeartRateMeasurementEntity>>>
+) : IRequestHandler<AddHeartRateMeasurementCommand, ApiResponse<List<HeartRateMeasurementEntity>>>
 {
-    public async Task<ResponseWrapper<List<HeartRateMeasurementEntity>>> Handle(
+    public async Task<ApiResponse<List<HeartRateMeasurementEntity>>> Handle(
         AddHeartRateMeasurementCommand request,
         CancellationToken cancellationToken
     )

@@ -2,11 +2,10 @@ using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
-using SafeMedConnect.Api.Helpers;
-using SafeMedConnect.Api.Interfaces;
-using SafeMedConnect.Api.Swagger;
-using SafeMedConnect.Domain.Authorization;
-using SafeMedConnect.Domain.Configuration;
+using SafeMedConnect.Api.Abstract;
+using SafeMedConnect.Api.Factories;
+using SafeMedConnect.Domain.Auth;
+using SafeMedConnect.Infrastructure.Configuration;
 
 namespace SafeMedConnect.Api.Startup;
 
@@ -24,7 +23,7 @@ internal static class RegisterStartupServices
         services.RegisterSwaggerService();
 
         services.AddProblemDetails();
-        services.AddScoped<IResponseHandler, ResponseHandler>();
+        services.AddScoped<IResponseFactory, ResponseFactory>();
         services.AddHttpContextAccessor();
 
         services.AddCors();
@@ -36,12 +35,12 @@ internal static class RegisterStartupServices
         {
             options.AddPolicy(PolicyNames.UserPolicy, policy =>
             {
-                policy.RequireRole(Roles.User);
+                policy.RequireRole(AppRoles.User);
             });
 
             options.AddPolicy(PolicyNames.GuestPolicy, policy =>
             {
-                policy.RequireRole(Roles.Guest);
+                policy.RequireRole(AppRoles.Guest);
             });
 
             options.DefaultPolicy = options.GetPolicy(PolicyNames.UserPolicy)

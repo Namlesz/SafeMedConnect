@@ -1,13 +1,13 @@
 using AutoMapper;
 using FluentValidation;
 using MediatR;
-using SafeMedConnect.Application.Dto;
+using SafeMedConnect.Application.Dto.Measurements;
 using SafeMedConnect.Application.Factories;
+using SafeMedConnect.Domain.Abstract.Repositories;
+using SafeMedConnect.Domain.Abstract.Services;
 using SafeMedConnect.Domain.Entities;
 using SafeMedConnect.Domain.Enums;
-using SafeMedConnect.Domain.Interfaces.Repositories;
-using SafeMedConnect.Domain.Interfaces.Services;
-using SafeMedConnect.Domain.Responses;
+using SafeMedConnect.Domain.Models;
 
 namespace SafeMedConnect.Application.Commands.BloodSugar;
 
@@ -16,15 +16,15 @@ public sealed record AddBloodSugarCommand(
     GlucoseUnitType GlucoseUnit,
     BloodSugarMeasurementMethodType MeasurementMethod,
     DateTime Timestamp
-) : IRequest<ResponseWrapper<List<BloodSugarMeasurementDto>>>;
+) : IRequest<ApiResponse<List<BloodSugarMeasurementDto>>>;
 
 public class AddBloodSugarCommandHandler(
     IMeasurementRepository<BloodSugarMeasurementEntity> repository,
     ISessionService session,
     IMapper mapper
-) : IRequestHandler<AddBloodSugarCommand, ResponseWrapper<List<BloodSugarMeasurementDto>>>
+) : IRequestHandler<AddBloodSugarCommand, ApiResponse<List<BloodSugarMeasurementDto>>>
 {
-    public async Task<ResponseWrapper<List<BloodSugarMeasurementDto>>> Handle(
+    public async Task<ApiResponse<List<BloodSugarMeasurementDto>>> Handle(
         AddBloodSugarCommand request,
         CancellationToken cancellationToken
     )

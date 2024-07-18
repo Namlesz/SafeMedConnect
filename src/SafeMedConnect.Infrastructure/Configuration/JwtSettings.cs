@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace SafeMedConnect.Domain.Configuration;
+namespace SafeMedConnect.Infrastructure.Configuration;
 
 public sealed class JwtSettings
 {

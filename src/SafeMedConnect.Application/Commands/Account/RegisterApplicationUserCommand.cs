@@ -1,34 +1,35 @@
 using FluentValidation;
 using MediatR;
 using Microsoft.Extensions.Logging;
+using SafeMedConnect.Domain.Abstract.Repositories;
 using SafeMedConnect.Domain.Entities;
-using SafeMedConnect.Domain.Interfaces.Repositories;
-using SafeMedConnect.Domain.Responses;
+using SafeMedConnect.Domain.Enums;
+using SafeMedConnect.Domain.Models;
 
 namespace SafeMedConnect.Application.Commands.Account;
 
 public sealed record RegisterApplicationUserCommand(string Password, string Email)
-    : IRequest<ResponseWrapper>;
+    : IRequest<ApiResponse>;
 
 internal sealed class RegisterApplicationUserCommandHandler(
     IApplicationUserRepository repository,
     ILogger<RegisterApplicationUserCommandHandler> logger
-) : IRequestHandler<RegisterApplicationUserCommand, ResponseWrapper>
+) : IRequestHandler<RegisterApplicationUserCommand, ApiResponse>
 {
-    public async Task<ResponseWrapper> Handle(RegisterApplicationUserCommand request, CancellationToken cancellationToken)
+    public async Task<ApiResponse> Handle(RegisterApplicationUserCommand request, CancellationToken cancellationToken)
     {
         var userExists = await repository.GetUserAsync(request.Email, cancellationToken);
         if (userExists is not null)
         {
             logger.LogError("User with login {Email} already exists", request.Email);
-            return new ResponseWrapper(ResponseTypes.Conflict, "User already exists");
+            return new ApiResponse(ApiResponseTypes.Conflict, "User already exists");
         }
 
         var hash = BCrypt.Net.BCrypt.HashPassword(request.Password);
         if (hash is null)
         {
             logger.LogError("Failed to hash password");
-            return new ResponseWrapper(ResponseTypes.Error, "An error occurred while registering the user");
+            return new ApiResponse(ApiResponseTypes.Error, "An error occurred while registering the user");
         }
 
         var user = new ApplicationUserEntity
@@ -41,10 +42,10 @@ internal sealed class RegisterApplicationUserCommandHandler(
         if (!isSaved)
         {
             logger.LogError("Failed to save user");
-            return new ResponseWrapper(ResponseTypes.Error, "An error occurred while registering the user");
+            return new ApiResponse(ApiResponseTypes.Error, "An error occurred while registering the user");
         }
 
-        return new ResponseWrapper(ResponseTypes.Success);
+        return new ApiResponse(ApiResponseTypes.Success);
     }
 }
 

@@ -1,4 +1,4 @@
-namespace SafeMedConnect.Domain.Interfaces.Repositories;
+namespace SafeMedConnect.Domain.Abstract.Repositories;
 
 public interface IMfaRepository
 {

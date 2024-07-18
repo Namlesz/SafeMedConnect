@@ -1,6 +1,6 @@
 using SafeMedConnect.Domain.Entities.Base;
 
-namespace SafeMedConnect.Domain.Interfaces.Repositories;
+namespace SafeMedConnect.Domain.Abstract.Repositories;
 
 public interface IMeasurementRepository<T> where T : BaseMeasurementEntity
 {
