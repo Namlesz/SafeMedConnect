@@ -2,7 +2,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using SafeMedConnect.Domain.Abstract.Repositories;
 using SafeMedConnect.Domain.Abstract.Services;
-using SafeMedConnect.Domain.Entities;
 using SafeMedConnect.Infrastructure.Configuration;
 using SafeMedConnect.Infrastructure.Data;
 using SafeMedConnect.Infrastructure.Repositories;
@@ -34,21 +33,8 @@ public static class ServiceCollectionExtensions
     private static void RegisterRepositories(this IServiceCollection services)
     {
         services.AddScoped<IApplicationUserRepository, ApplicationUserRepository>();
-
         services.AddScoped<IUserRepository, UserRepository>();
-
         services.AddScoped<IMfaRepository, MfaRepository>();
-
-        services.AddScoped<IMeasurementRepository<HeartRateMeasurementEntity>,
-            MeasurementRepository<HeartRateMeasurementEntity>>();
-
-        services.AddScoped<IMeasurementRepository<BloodPressureMeasurementEntity>,
-            MeasurementRepository<BloodPressureMeasurementEntity>>();
-
-        services.AddScoped<IMeasurementRepository<TemperatureMeasurementEntity>,
-            MeasurementRepository<TemperatureMeasurementEntity>>();
-
-        services.AddScoped<IMeasurementRepository<BloodSugarMeasurementEntity>,
-            MeasurementRepository<BloodSugarMeasurementEntity>>();
+        services.AddScoped(typeof(IMeasurementRepository<>), typeof(MeasurementRepository<>));
     }
 }

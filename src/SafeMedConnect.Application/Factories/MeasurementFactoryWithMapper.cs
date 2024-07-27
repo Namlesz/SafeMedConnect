@@ -1,3 +1,4 @@
+using AutoMapper;
 using SafeMedConnect.Domain.Abstract.Repositories;
 using SafeMedConnect.Domain.Entities.Base;
 using SafeMedConnect.Domain.Enums;
@@ -5,40 +6,41 @@ using SafeMedConnect.Domain.Models;
 
 namespace SafeMedConnect.Application.Factories;
 
-internal sealed class MeasurementFactory<T>(
+internal sealed class MeasurementFactoryWithMapper<T>(
     IMeasurementRepository<T> repository,
-    string userId
+    string userId,
+    IMapper mapper
 ) where T : BaseMeasurementEntity
 {
-    public async Task<ApiResponse<List<T>>> GetMeasurementsAsync(
+    public async Task<ApiResponse<List<TB>>> GetMeasurementsAsync<TB>(
         CancellationToken cancellationToken = default
-    )
+    ) where TB : class
     {
         var entity = await repository.GetAsync(userId, cancellationToken);
 
         return entity?.Measurements is null
-            ? new ApiResponse<List<T>>(ApiResponseTypes.NotFound)
-            : new ApiResponse<List<T>>(ApiResponseTypes.Success, entity.Measurements);
+            ? new ApiResponse<List<TB>>(ApiResponseTypes.NotFound)
+            : new ApiResponse<List<TB>>(ApiResponseTypes.Success, mapper.Map<List<TB>>(entity.Measurements));
     }
 
-    public async Task<ApiResponse<List<T>>> AddMeasurementAsync(
+    public async Task<ApiResponse<List<TB>>> AddMeasurementAsync<TB>(
         T measurementEntity,
         CancellationToken cancellationToken = default
-    )
+    ) where TB : class
     {
         var result = await repository.AddAsync(userId, measurementEntity, cancellationToken);
         return result?.Measurements is null
-            ? new ApiResponse<List<T>>(
+            ? new ApiResponse<List<TB>>(
                 ApiResponseTypes.Error,
                 "Error while adding measurement"
             )
-            : new ApiResponse<List<T>>(
+            : new ApiResponse<List<TB>>(
                 ApiResponseTypes.Success,
-                result.Measurements
+                mapper.Map<List<TB>>(result.Measurements)
             );
     }
 
-    public async Task<ApiResponse<List<T>>> DeleteMeasurementAsync(
+    public async Task<ApiResponse<List<TB>>> DeleteMeasurementAsync<TB>(
         string id,
         CancellationToken cancellationToken = default
     )
@@ -46,26 +48,26 @@ internal sealed class MeasurementFactory<T>(
         var entity = await repository.GetAsync(userId, cancellationToken);
         if (entity?.Measurements is null)
         {
-            return new ApiResponse<List<T>>(ApiResponseTypes.Error);
+            return new ApiResponse<List<TB>>(ApiResponseTypes.Error);
         }
 
         var measurementToDelete = entity.Measurements.FirstOrDefault(x => x.Id == id);
         if (measurementToDelete is null)
         {
-            return new ApiResponse<List<T>>(ApiResponseTypes.NotFound);
+            return new ApiResponse<List<TB>>(ApiResponseTypes.NotFound);
         }
 
         entity.Measurements.Remove(measurementToDelete);
 
         var result = await repository.UpdateAsync(entity, cancellationToken);
         return result?.Measurements is null
-            ? new ApiResponse<List<T>>(
+            ? new ApiResponse<List<TB>>(
                 ApiResponseTypes.Error,
                 "Error while deleting measurement"
             )
-            : new ApiResponse<List<T>>(
+            : new ApiResponse<List<TB>>(
                 ApiResponseTypes.Success,
-                result.Measurements
+                mapper.Map<List<TB>>(result.Measurements)
             );
     }
 }
