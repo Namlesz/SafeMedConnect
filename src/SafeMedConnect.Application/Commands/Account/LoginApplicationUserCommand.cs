@@ -39,7 +39,7 @@ internal sealed class LoginApplicationUserCommandHandler(
             var secret = user.MfaSecret;
             if (secret is null)
             {
-                return new ApiResponse<TokenResponseDto>(ApiResponseTypes.Error, "MFA not configured");
+                return new ApiResponse<TokenResponseDto>(ApiResponseTypes.Error, "MFA error occurred");
             }
 
             if (!mfaService.IsCodeValid(request.MfaCode, secret))

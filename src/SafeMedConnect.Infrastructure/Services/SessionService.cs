@@ -55,8 +55,11 @@ internal sealed class SessionService(IHttpContextAccessor httpContextAccessor) :
                 continue;
             }
 
-            bool.TryParse(shareClaim.Value, out var shareClaimValue);
-            dataShareClaims.Add(shareClaimType, shareClaimValue);
+            var parseResult = bool.TryParse(shareClaim.Value, out var shareClaimValue);
+            if (parseResult)
+            {
+                dataShareClaims.Add(shareClaimType, shareClaimValue);
+            }
         }
 
         return new GuestClaims
